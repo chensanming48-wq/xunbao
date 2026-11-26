@@ -27,11 +27,10 @@
 
 ## 大文件附件
 
-见 [Releases v1.57.7](../../releases/tag/v1.57.7)，共 6 个附件约 1.3 GB：
+见 [Releases v1.57.7](../../releases/tag/v1.57.7)，共 5 个附件约 644 MB（安装包 zip 未收录）：
 
 | 附件 | 还原路径 | 大小 |
 |---|---|---|
-| 瞬爆一刀不剪-V1.57.7-便.zip | 根目录 | 653 MB |
 | ffmpeg.exe | `Tools/FFmpeg/` | 97 MB |
 | ffprobe.exe | `Tools/FFmpeg/` | 97 MB |
 | ggml-small-q5_1.bin | `Tools/Speech/` | 182 MB |
@@ -43,7 +42,7 @@
 ```bash
 git clone https://github.com/chensanming48-wq/xunbao.git
 cd xunbao
-# 从 Releases 下载 6 个附件，按上表路径放回
+# 从 Releases 下载 5 个附件，按上表路径放回
 ```
 
 ## 未收录内容
