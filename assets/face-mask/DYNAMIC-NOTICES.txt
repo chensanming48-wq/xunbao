@@ -1,0 +1,18 @@
+Dynamic avatar component
+
+MediaPipe 0.10.32 and Face Landmarker model:
+Copyright The MediaPipe Authors. Licensed under Apache License 2.0.
+See MEDIAPIPE-LICENSE.txt and the license files retained in the downloaded wheels.
+Project: https://github.com/google-ai-edge/mediapipe
+Model: https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task
+
+dynamic-component.json pins exact dependency versions, download URLs, byte counts
+and SHA-256 digests. Third-party wheel license and dist-info files are preserved
+when installed. The existing NumPy, OpenCV, Pillow, packaging and six components
+are reused without replacing their files or licenses.
+
+tests/fixtures/face-canonical.json is a modified two-dimensional test fixture
+derived from MediaPipe canonical_face_model.obj, under Apache License 2.0.
+It preserves vertex order, drops depth, centers the bounding box, scales the
+largest extent to 0.8, flips the vertical axis and rounds coordinates to 6 places.
+It is used only by tests, not by the runtime or to infer user avatar positions.

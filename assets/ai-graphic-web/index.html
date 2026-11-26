@@ -1,0 +1,446 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' data:; img-src 'self' data:; media-src 'self' https:; style-src 'self'; script-src 'self'">
+  <title>AI图文创作</title>
+  <link rel="stylesheet" href="styles.css?rev=plan-search-20260915">
+  <link rel="stylesheet" href="drafts.css?rev=20260929">
+  <link rel="stylesheet" href="desktop.css">
+</head>
+<body>
+  <main class="app-shell">
+    <header class="topbar">
+      <div class="title-block">
+        <h1>AI图文创作</h1>
+        <p>选择真实商品，生成一整套可发布的图文作品</p>
+      </div>
+      <div class="header-actions">
+        <button class="outline-button" id="tutorialButton" type="button">
+          <img class="utility-icon" src="icons/play-circle.svg" alt=""><span>使用教程</span>
+        </button>
+        <button class="outline-button" id="draftBoxButton" type="button">
+          <img class="utility-icon" src="icons/folder.svg" alt=""><span>打开草稿箱</span>
+        </button>
+      </div>
+    </header>
+
+    <nav class="stepper" aria-label="AI图文流程">
+      <div class="step active" id="step1">
+        <span class="step-number"><span class="step-index">01</span><svg class="check-icon step-check" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12l4 4L19 6"/></svg></span><span class="step-label">内容方案</span>
+      </div>
+      <div class="step-line"></div>
+      <div class="step" id="step2">
+        <span class="step-number"><span class="step-index">02</span><svg class="check-icon step-check" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12l4 4L19 6"/></svg></span><span class="step-label">一键生成</span>
+      </div>
+      <div class="step-line"></div>
+      <div class="step" id="step3">
+        <span class="step-number"><span class="step-index">03</span><svg class="check-icon step-check" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12l4 4L19 6"/></svg></span><span class="step-label">自动上传</span>
+      </div>
+      <div class="step-line"></div>
+      <div class="step" id="step4">
+        <span class="step-number"><span class="step-index">04</span><svg class="check-icon step-check" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12l4 4L19 6"/></svg></span><span class="step-label">发布结果</span>
+      </div>
+    </nav>
+
+    <section class="workspace" id="contentPlanWorkspace">
+      <aside class="panel product-panel">
+        <div class="panel-heading-row">
+          <h2>选择商品</h2>
+          <button id="syncProductsButton" class="text-button" type="button">刷新</button>
+        </div>
+        <select id="shopFilter" class="field shop-select" aria-label="店铺筛选">
+          <option value="">全部店铺</option>
+        </select>
+        <label class="search-field">
+          <span class="magnifier"></span>
+          <input id="productSearch" type="search" placeholder="搜索商品名称 / ID" autocomplete="off">
+        </label>
+        <div class="parse-row">
+          <input id="productLink" class="field" type="text" placeholder="粘贴商品链接" autocomplete="off">
+          <button id="parseProductButton" class="small-button" type="button">解析</button>
+        </div>
+        <div class="product-status-tabs"><button type="button" data-product-status="selling" class="active">售卖中</button><button type="button" data-product-status="warehouse">仓库中</button></div>
+        <div id="productList" class="product-list" aria-live="polite"></div>
+        <div class="product-pager"><span id="productTotal">共 0 条</span><button id="productPrevious" type="button">上一页</button><span id="productPage">1/1</span><button id="productNext" type="button">下一页</button></div>
+      </aside>
+
+      <section class="center-column">
+        <article class="panel selected-product-card" id="selectedProductCard">
+          <div class="selected-product-content" id="selectedProductContent">
+            <div class="selected-image-wrap" id="selectedImageWrap"></div>
+            <div class="selected-placeholder" id="selectedPlaceholder">
+              <div><strong>请选择真实商品</strong><p>从左侧商品库选择后，系统将自动分析卖点</p></div>
+            </div>
+            <div class="selected-copy is-hidden" id="selectedCopy">
+              <div class="verified"><span class="verified-dot"><svg class="check-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12l4 4L19 6"/></svg></span>真实商品已读取</div>
+              <h3 id="selectedName"></h3>
+              <p><span>店铺：</span><strong id="selectedShop"></strong><span class="product-id-prefix">商品ID：</span><strong id="selectedId"></strong></p>
+            </div>
+          </div>
+        </article>
+
+        <article class="panel plan-card">
+          <div class="plan-credit-heading">
+            <h2>确定内容方案</h2>
+            <div class="graphic-credit-notice" role="status">
+              <strong>价格待获取</strong><span id="planCreditEstimate">预计消耗待获取</span>
+            </div>
+          </div>
+          <section class="plan-count-section">
+            <h3>生成张数</h3>
+            <div class="count-options" id="planCountOptions" role="group" aria-label="内容方案生成张数"></div>
+          </section>
+
+          <section class="plan-section">
+            <h3>发布目标</h3>
+            <div class="goal-options" id="goalOptions">
+              <button class="choice-button" data-goal="商品种草" type="button">
+                <svg class="goal-icon" viewBox="0 0 24 24" aria-hidden="true">
+                  <circle class="goal-icon-ring" cx="12" cy="12" r="10.5"></circle>
+                  <path class="goal-icon-check" d="M6.8 12.4l3.9 3.7 7.2-7.6"></path>
+                  <g class="goal-icon-detail">
+                    <path d="M10.5 16.5C8.9 15 6.3 12.9 6.3 10c0-2.7 3.3-3.3 4.2-.7.9-2.6 4.2-2 4.2.7 0 2.9-2.6 5-4.2 6.5z"></path>
+                    <path d="M16 7.9l.7 1.4 1.4.7-1.4.7-.7 1.4-.7-1.4-1.4-.7 1.4-.7z"></path>
+                  </g>
+                </svg>
+                <span class="goal-label">商品种草</span>
+              </button>
+              <button class="choice-button" data-goal="卖点解析" type="button">
+                <svg class="goal-icon" viewBox="0 0 24 24" aria-hidden="true">
+                  <circle class="goal-icon-ring" cx="12" cy="12" r="10.5"></circle>
+                  <path class="goal-icon-check" d="M6.8 12.4l3.9 3.7 7.2-7.6"></path>
+                  <g class="goal-icon-detail">
+                    <rect x="7" y="10" width="10" height="7.5" rx="1"></rect>
+                    <path d="M9.7 10a2.3 3.1 0 0 1 4.6 0"></path>
+                  </g>
+                </svg>
+                <span class="goal-label">卖点解析</span>
+              </button>
+              <button class="choice-button" data-goal="使用教程" type="button">
+                <svg class="goal-icon" viewBox="0 0 24 24" aria-hidden="true">
+                  <circle class="goal-icon-ring" cx="12" cy="12" r="10.5"></circle>
+                  <path class="goal-icon-check" d="M6.8 12.4l3.9 3.7 7.2-7.6"></path>
+                  <g class="goal-icon-detail">
+                    <path d="M6.4 11.4L12 6.8l5.6 4.6"></path>
+                    <path d="M8 11v6.2h8V11"></path>
+                    <path d="M11 17.2v-3.4h2v3.4"></path>
+                  </g>
+                </svg>
+                <span class="goal-label">使用教程</span>
+              </button>
+              <button class="choice-button" data-goal="促销转化" type="button">
+                <svg class="goal-icon" viewBox="0 0 24 24" aria-hidden="true">
+                  <circle class="goal-icon-ring" cx="12" cy="12" r="10.5"></circle>
+                  <path class="goal-icon-check" d="M6.8 12.4l3.9 3.7 7.2-7.6"></path>
+                  <g class="goal-icon-detail">
+                    <path d="M7 11.3h10v6.2H7z"></path>
+                    <path d="M6.4 10.2h11.2v2.1H6.4z"></path>
+                    <path d="M12 10.2v7.3"></path>
+                    <path d="M12 10.3c-1.9-3.1-4.8-2.3 0 0zm0 0c1.9-3.1 4.8-2.3 0 0z"></path>
+                  </g>
+                </svg>
+                <span class="goal-label">促销转化</span>
+              </button>
+            </div>
+          </section>
+
+          <section class="plan-section direction-section">
+            <h3>AI推荐方案</h3>
+            <div class="direction-options" id="directionOptions"></div>
+          </section>
+
+          <section class="structure-section">
+            <h3 class="structure-heading">图文结构预览<span id="structureCountHint"></span></h3>
+            <div class="structure-table" id="structureTable" tabindex="0" aria-label="图文结构，可滚动查看所有图片"></div>
+          </section>
+
+          <section class="plan-title-section">
+            <h3>标题建议</h3>
+            <div id="titleSuggestions" class="title-suggestions">
+              <div class="suggestion-placeholder">选择商品后生成标题建议</div>
+            </div>
+          </section>
+        </article>
+      </section>
+
+      <aside class="panel assistant-panel">
+        <div class="assistant-content" tabindex="0" aria-label="商品分析结果，可滚动查看完整内容">
+        <h2>AI内容策划助手</h2>
+        <div class="analysis-status" id="analysisStatusCard">
+          <span class="assistant-avatar">⌁</span>
+          <div><strong id="analysisStatus">选择商品后，点击底部按钮继续</strong><p>基于真实商品数据，为你生成内容建议</p></div>
+        </div>
+
+        <section class="assistant-section">
+          <h3>核心卖点</h3>
+          <div class="tag-list" id="sellingPoints">
+            <span class="empty-inline">等待商品分析</span>
+          </div>
+        </section>
+
+        <section class="assistant-section audience-section">
+          <h3>目标人群</h3>
+          <p id="targetAudience">等待选择商品</p>
+        </section>
+
+        </div>
+        <div class="assistant-actions">
+          <button id="reanalyzeProductButton" class="reanalyze-button is-hidden" type="button">重新分析</button>
+        </div>
+      </aside>
+    </section>
+
+    <section class="generation-workspace is-hidden" id="generationWorkspace">
+      <section class="generation-main">
+        <article class="panel generation-settings-card">
+          <div class="generation-setting-row">
+            <h2>生成数量</h2>
+            <div class="segmented-options count-options" id="generationCountOptions" aria-label="生成数量"></div>
+          </div>
+          <div class="generation-setting-row">
+            <h2>图片比例</h2>
+            <div class="segmented-options ratio-options" id="generationRatioOptions" aria-label="图片比例"></div>
+          </div>
+          <div class="generation-structure-row">
+            <div><strong>内容结构</strong><span id="generationStructureSummary">封面1张 · 痛点1张 · 卖点1张 · 细节1张 · 场景1张 · 引导1张</span></div>
+            <button id="rearrangeGenerationButton" class="secondary-blue-button" type="button">重新编排</button>
+          </div>
+          <div class="graphic-credit-notice" role="status">
+            <strong>价格待获取</strong><span id="generationCreditEstimate">预计消耗待获取</span>
+          </div>
+        </article>
+
+        <div class="generation-task-heading">
+          <button id="generationBackButton" class="generation-back-button" type="button"><span aria-hidden="true">←</span> 返回内容方案</button>
+          <h2 id="generationTaskTitle">6张图片的画面任务</h2>
+          <p id="generationTaskHint">这里只定义“每张图画什么”，不配置发布标题</p>
+        </div>
+        <div class="generation-task-grid" id="generationTaskGrid" aria-live="polite"></div>
+      </section>
+
+      <aside class="panel generation-summary-panel">
+        <div class="generation-copy-heading">
+          <span class="generation-copy-heading-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" focusable="false">
+              <path d="M7 3.75h7.2L18 7.55v12.7H7z"></path>
+              <path d="M14.2 3.75v3.8H18M9.6 11h5.8M9.6 14h5.8M9.6 17h4.2"></path>
+            </svg>
+          </span>
+          <div class="generation-copy-heading-content">
+            <div class="generation-copy-title-row">
+              <h2>整套图文文案</h2>
+              <span class="copy-save-badge">已自动保存</span>
+            </div>
+            <p>这组内容用于整套图片发布，不属于某一张图。</p>
+          </div>
+        </div>
+        <div class="publish-copy-rule">
+          <span aria-hidden="true">
+            <svg viewBox="0 0 24 24" focusable="false">
+              <path d="m5 8 7-3.5L19 8l-7 3.5z"></path>
+              <path d="m5 12 7 3.5 7-3.5M5 16l7 3.5 7-3.5"></path>
+            </svg>
+          </span>
+          <strong id="publishCopyRule">6张图片 = 1套图文 = 1组标题与内容</strong>
+        </div>
+
+        <section class="publish-copy-editor">
+          <label class="publish-copy-field">
+            <span>图文标题</span>
+            <textarea id="publishTitleInput" class="publish-title-input" maxlength="50" rows="2" readonly></textarea>
+            <small><b id="publishTitleCount">0</b>/50</small>
+          </label>
+          <label class="publish-copy-field body-field">
+            <span>发布内容</span>
+            <textarea id="publishBodyInput" maxlength="1000" rows="4" readonly></textarea>
+            <small><b id="publishBodyCount">0</b>/1000</small>
+          </label>
+          <div class="publish-topic-row"><span>推荐话题</span><div id="publishHashtags"></div></div>
+        </section>
+
+        <div class="publish-copy-actions" aria-label="整套文案操作">
+          <button id="cyclePublishTitleButton" type="button">
+            <svg class="copy-action-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path d="M20 12a8 8 0 0 0-13.7-5.6L4 9"></path>
+              <path d="M4 4v5h5"></path>
+              <path d="M4 12a8 8 0 0 0 13.7 5.6L20 15"></path>
+              <path d="M20 20v-5h-5"></path>
+            </svg>
+            <span>换一个标题</span>
+          </button>
+          <button id="editPublishCopyButton" type="button">
+            <span class="copy-action-label">编辑文案</span>
+          </button>
+          <button id="rewritePublishCopyButton" class="primary" type="button">
+            <span class="copy-action-symbol" aria-hidden="true">✦</span>
+            <span>AI重新生成整套文案</span>
+          </button>
+        </div>
+
+        <div class="generation-column-footer">
+          <section class="generation-progress-card">
+            <div class="generation-progress-heading">
+              <strong id="generationStatus">等待开始生成</strong>
+              <span id="generationProgressText">0 / 6</span>
+            </div>
+            <div class="generation-progress-track"><span id="generationProgressBar"></span></div>
+            <button id="cancelGenerationButton" class="cancel-generation-button is-hidden" type="button">停止等待</button>
+          </section>
+
+          <p class="generation-copy-note">整套标题、内容和话题会同步到第 03 步；需要修改时可随时返回本页。</p>
+        </div>
+      </aside>
+    </section>
+
+    <section class="upload-workspace is-hidden" id="uploadWorkspace">
+      <section class="panel upload-preview-panel">
+        <div class="upload-section-heading">
+          <div><h2>千川图文预览</h2><p>按图片顺序组成一套图文，第 01 张为封面</p></div>
+          <button id="backToGenerationTopButton" class="compact-outline-button" type="button">返回第02步调整图片</button>
+        </div>
+        <div class="upload-rule-banner">
+          <span class="layers-symbol" aria-hidden="true">◇</span>
+          <strong id="uploadRuleText">6张图片 · 1:1方图 · 将按01–06顺序作为1篇图文上传</strong>
+        </div>
+        <div class="upload-gallery"><div class="upload-preview-grid" id="uploadPreviewGrid" aria-live="polite"></div></div>
+      </section>
+
+      <aside class="upload-side-column">
+        <article class="panel upload-copy-summary">
+          <div class="upload-card-title-row">
+            <span class="document-symbol" aria-hidden="true">▤</span>
+            <h2>本次发布内容</h2>
+            <span class="copy-save-badge">已从第02步同步</span>
+            <button id="backToGenerationCopyButton" class="compact-outline-button summary-back-button" type="button">编辑文案</button>
+          </div>
+          <p class="upload-copy-intro" id="uploadCopyIntro">6张图片共同使用以下标题、内容和话题</p>
+          <div class="upload-summary-line"><strong>图文标题</strong><span id="uploadPublishTitle">这款商品，真实亮点清晰呈现</span></div>
+          <div class="upload-summary-line body"><strong>发布内容</strong><span id="uploadPublishBody">围绕商品的真实外观和已确认信息组织整套图文内容。</span><button id="showUploadBodyButton" type="button">查看全文</button></div>
+          <div class="upload-summary-line topics"><strong>推荐话题</strong><div id="uploadPublishHashtags"></div></div>
+        </article>
+
+        <article class="panel upload-settings-panel">
+          <div class="upload-target-heading"><h2>上传到千川计划</h2><span class="copy-save-badge">整套图文</span></div>
+          <div class="upload-shop-field"><label class="upload-field-label" for="uploadShopSelect">上传店铺</label><select id="uploadShopSelect" data-searchable="shop" aria-label="上传店铺"><option value="">请选择上传店铺</option></select></div>
+          <div class="upload-plan-field">
+            <div class="upload-plan-heading"><label class="upload-field-label" for="uploadPlanSelect">目标计划</label><button id="refreshUploadPlansButton" type="button">刷新计划</button></div>
+            <select id="uploadPlanSelect" data-searchable aria-describedby="uploadPlanDetail"><option value="">请选择千川计划</option></select>
+            <p id="uploadPlanDetail">选择该店铺已有的千川计划</p>
+          </div>
+          <section class="upload-music-section" aria-labelledby="uploadMusicLabel">
+            <div class="music-field-heading"><h3 id="uploadMusicLabel">背景音乐 <span>可选</span></h3><span id="musicSharedHint">整套图文共用一首音乐</span></div>
+            <div class="music-mode-group" role="group" aria-label="背景音乐来源">
+              <button id="musicNoneButton" type="button" aria-pressed="true">不配乐</button>
+              <button id="musicLibraryButton" type="button" aria-pressed="false">千川音乐库</button>
+              <button id="musicLocalButton" type="button" aria-pressed="false" title="选择 MP3、M4A 或 MPEG 音频，最大 20 MB">本地音频</button>
+            </div>
+            <div id="musicEmptyState" class="music-empty-state"><img src="icons/music.svg" alt=""><span>保持纯图文，也可以添加一首背景音乐</span></div>
+            <div id="musicSelectedCard" class="music-selected-card is-hidden">
+              <button id="musicPlayButton" class="music-play-button" type="button" aria-label="试听背景音乐"><img src="icons/play.svg" alt=""></button>
+              <div class="music-track-copy"><strong id="musicSelectedName"></strong><span id="musicSelectedMeta"></span></div>
+              <button id="musicReplaceButton" class="music-text-button" type="button">更换</button>
+              <button id="musicRemoveButton" class="music-icon-button" type="button" aria-label="移除背景音乐"><img src="icons/x.svg" alt=""></button>
+            </div>
+            <p id="musicStatus" class="music-status" role="status"></p>
+          </section>
+          <p class="upload-target-note">图文素材将加入所选计划，投放状态保持不变。</p>
+          <div class="upload-preflight-strip" aria-label="上传准备状态"><ul class="preflight-list" id="preflightList"></ul><p id="uploadReadyBanner" role="status"></p><button id="cancelAtlasUploadButton" class="is-hidden" type="button">停止上传</button></div>
+        </article>
+      </aside>
+    </section>
+
+    <section class="result-workspace is-hidden" id="resultWorkspace">
+      <article class="panel result-card">
+        <span class="result-check">✓</span>
+        <h2>发布结果将在这里显示</h2>
+        <p>自动上传完成后，可在本页查看每张图片的上传状态、作品链接和失败原因。</p>
+        <button id="returnToUploadButton" class="compact-outline-button" type="button">返回自动上传</button>
+      </article>
+    </section>
+
+    <footer class="footerbar" id="contentPlanFooter">
+      <div class="save-state"><span class="save-check"><svg class="check-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12l4 4L19 6"/></svg></span><span id="saveStatus">选择商品后自动保存方案</span></div>
+      <button id="saveDraftButton" class="footer-outline-button" type="button"><img class="utility-icon" src="icons/save.svg" alt=""><span>保存草稿</span></button>
+      <div class="footer-spacer"></div>
+      <button id="nextButton" class="primary-button next-button" type="button" disabled>请先选择商品 <span>〉</span></button>
+    </footer>
+
+    <footer class="generation-footer is-hidden" id="generationFooter">
+      <button id="backToPlanButton" class="back-plan-button" type="button">〈 返回内容方案</button>
+      <div class="generation-save-state"><span class="save-check"><svg class="check-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12l4 4L19 6"/></svg></span><span>设置和整套文案会自动保存</span></div>
+      <button id="generationSaveDraftButton" class="footer-outline-button" type="button">保存草稿</button>
+      <div class="footer-spacer"></div>
+      <button id="startGenerationButton" class="primary-button generation-start-button" type="button">开始生成6张图片 <span>〉</span></button>
+    </footer>
+
+    <footer class="generation-footer upload-footer is-hidden" id="uploadFooter">
+      <button id="backToGenerationButton" class="back-plan-button" type="button"><img src="icons/chevron-left.svg" alt="">返回上一步</button>
+      <div class="generation-save-state"><span class="save-check"><svg class="check-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12l4 4L19 6"/></svg></span><span>方案与配乐会自动保存</span></div>
+      <button id="uploadSaveDraftButton" class="footer-outline-button" type="button">保存草稿</button>
+      <div class="footer-spacer"></div>
+      <button id="startAutoUploadButton" class="primary-button generation-start-button" type="button">开始自动上传整套图文 <span>〉</span></button>
+    </footer>
+
+    <footer class="generation-footer result-footer is-hidden" id="resultFooter">
+      <button id="resultBackButton" class="back-plan-button" type="button">〈 返回自动上传</button>
+      <div class="generation-save-state"><span class="save-check"><svg class="check-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12l4 4L19 6"/></svg></span><span>发布结果会保存在当前草稿中</span></div>
+      <div></div><div class="footer-spacer"></div>
+      <button id="openDraftAfterResultButton" class="primary-button generation-start-button" type="button">打开草稿箱 <span>〉</span></button>
+    </footer>
+  </main>
+
+  <div class="busy-layer is-hidden" id="busyLayer" aria-live="assertive">
+    <div class="busy-card"><span class="spinner"></span><strong id="busyText">正在处理…</strong></div>
+  </div>
+
+  <div class="toast is-hidden" id="toast"></div>
+
+  <div class="modal-backdrop is-hidden" id="tutorialModal">
+    <section class="tutorial-modal" role="dialog" aria-modal="true" aria-labelledby="tutorialTitle">
+      <button class="modal-close" id="closeTutorialButton" type="button" aria-label="关闭">×</button>
+      <div class="tutorial-kicker">AI图文 · 新版内容方案</div>
+      <h2 id="tutorialTitle">三步完成图文方案</h2>
+      <ol>
+        <li><span>1</span><div><strong>选择真实商品</strong><p>从当前登录店铺的商品库选择，或粘贴商品链接解析。</p></div></li>
+        <li><span>2</span><div><strong>确认内容方向</strong><p>选择发布目标和内容结构，也可以直接应用 AI 推荐。</p></div></li>
+        <li><span>3</span><div><strong>进入一键生成</strong><p>确认逐页标题和副标题后生成图片，再进入图片编辑与导出发布。</p></div></li>
+      </ol>
+      <div class="modal-actions">
+        <button id="useLegacyButton" class="legacy-link" type="button">切换到原版内容方案</button>
+        <button id="gotItButton" class="primary-button modal-primary" type="button">知道了</button>
+      </div>
+    </section>
+  </div>
+
+  <div class="modal-backdrop is-hidden" id="musicLibraryModal">
+    <section class="music-library-dialog" role="dialog" aria-modal="true" aria-labelledby="musicLibraryTitle" tabindex="-1">
+      <header class="music-dialog-heading"><div><h2 id="musicLibraryTitle">选择背景音乐</h2><p id="musicLibraryContext"></p></div><button id="closeMusicLibraryButton" class="music-icon-button" type="button" aria-label="关闭音乐库"><img src="icons/x.svg" alt=""></button></header>
+      <div class="music-library-toolbar"><div class="music-library-sources" role="group" aria-label="音乐库来源"><button id="musicPlatformTab" type="button" aria-pressed="true">千川音乐</button><button id="musicMineTab" type="button" aria-pressed="false">我的音频</button></div><button id="musicCatalogRefreshButton" class="music-text-button" type="button"><img src="icons/refresh-cw.svg" alt="">刷新</button></div>
+      <input id="musicSearchInput" class="music-search-input" type="search" placeholder="搜索本页音乐名称" aria-label="搜索本页音乐名称">
+      <p id="musicCatalogStatus" class="music-catalog-status" role="status"></p>
+      <div id="musicCatalogList" class="music-catalog-list"></div>
+      <footer class="music-catalog-footer"><span id="musicCatalogPage">第 1 页</span><div><button id="musicPreviousPage" class="compact-outline-button" type="button">上一页</button><button id="musicNextPage" class="compact-outline-button" type="button">下一页</button></div></footer>
+    </section>
+  </div>
+  <div class="modal-backdrop is-hidden" id="uploadBodyModal"><section class="upload-body-dialog" role="dialog" aria-modal="true" aria-labelledby="uploadBodyTitle" tabindex="-1"><header class="music-dialog-heading"><h2 id="uploadBodyTitle">本次发布内容</h2><button id="closeUploadBodyButton" class="music-icon-button" type="button" aria-label="关闭发布内容"><img src="icons/x.svg" alt=""></button></header><h3 id="uploadFullTitle"></h3><p id="uploadFullBody"></p></section></div>
+  <audio id="musicAudioPlayer" preload="none"></audio>
+  <dialog id="graphicCreditDialog" class="graphic-credit-dialog" aria-labelledby="graphicCreditTitle" aria-describedby="graphicCreditDescription">
+    <header><h2 id="graphicCreditTitle">生成图文图片扣费确认</h2><button type="button" id="closeGraphicCredit" aria-label="关闭扣费确认">×</button></header>
+    <p id="graphicCreditDescription">生成图片需要消耗算力，请确认本次生成数量和费用。</p>
+    <dl>
+      <div><dt>本次生成</dt><dd id="graphicCreditCount">6 张</dd></div>
+      <div><dt>生成单价</dt><dd id="graphicCreditUnit">价格待获取</dd></div>
+      <div class="graphic-credit-total"><dt id="graphicCreditTotalLabel">预计扣除</dt><dd id="graphicCreditTotal">待获取</dd></div>
+    </dl>
+    <p class="graphic-credit-note">点击确认后开始处理；取消不会提交生成任务。</p>
+    <footer><button type="button" id="cancelGraphicCredit" autofocus>取消</button><button type="button" id="confirmGraphicCredit">确认生成，扣除 待获取</button></footer>
+  </dialog>
+  <script src="music.js?rev=music-01"></script>
+  <script src="select-ui.js?rev=plan-search-20260915"></script>
+  <script src="drafts.js?rev=20260929"></script>
+  <script src="desktop.js"></script>
+  <script src="app.js?rev=drafts-20260929"></script>
+</body>
+</html>

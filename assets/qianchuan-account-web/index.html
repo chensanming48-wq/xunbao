@@ -1,0 +1,351 @@
+﻿<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: https:; connect-src 'none'; object-src 'none'; frame-src 'none'; base-uri 'none'; form-action 'none'">
+  <title>千川账户</title>
+  <link rel="stylesheet" href="styles.css?v=20260924-qianchuan-centered-v1">
+  <link rel="stylesheet" href="desktop.css?v=1574-ui-1">
+  <link rel="stylesheet" href="login-wizard.css?v=1574-native-1">
+</head>
+<body class="show-account-details">
+  <main class="qianchuan-page" id="app" aria-busy="true">
+    <header class="native-header">
+      <h1>千川账户 <span class="page-beta-badge" id="creator-alliance-beta" hidden>内测</span></h1>
+      <p>统一管理账户授权、数据同步与投放计划</p>
+      <div class="native-header-actions">
+        <div class="custom-select qianchuan-scope-control" id="qianchuan-scope-control" data-custom-select hidden>
+        <select id="qianchuan-scope-source" class="custom-select-source" aria-hidden="true" tabindex="-1"><option value="" disabled>请选择千川账户（0个）</option></select>
+        <button class="qianchuan-scope-select custom-select-trigger" id="qianchuan-scope-select" type="button" aria-label="选择千川账户范围" aria-haspopup="listbox" aria-expanded="false" aria-controls="qianchuan-scope-menu">
+          <span class="scope-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 10h16l-1.5-5h-13L4 10Z"></path><path d="M5.5 10v9h13v-9M9 19v-5h6v5"></path></svg></span>
+          <span class="custom-select-label">请选择千川账户（0个）</span>
+          <span class="custom-select-chevron scope-chevron" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m7 9 5 5 5-5"></path></svg></span>
+        </button>
+        <div class="custom-select-menu" id="qianchuan-scope-menu" role="listbox" aria-label="千川账户范围" hidden></div>
+        </div>
+        <button class="native-button primary login-entry" id="add-account" type="button">
+          <span class="login-entry-icon" aria-hidden="true"><img src="icons/doudian-logo.svg" alt=""></span>
+          <span class="login-entry-copy"><span class="login-entry-title">登录店铺</span><span class="login-entry-note">抖音电商 · 抖店</span></span>
+        </button>
+        <button class="native-button outline login-entry" id="add-qianchuan-account" type="button" title="无需登录店铺，直接登录千川投放账户">
+          <span class="login-entry-icon" aria-hidden="true"><img src="icons/qianchuan-logo.svg" alt=""></span>
+          <span class="login-entry-copy"><span class="login-entry-title">登录千川</span><span class="login-entry-note">直接登录，无需抖店</span></span>
+        </button>
+        <button class="native-button outline login-entry" id="add-creator-account" type="button">
+          <span class="login-entry-icon" aria-hidden="true"><img src="icons/buyin-logo.ico" alt=""></span>
+          <span class="login-entry-copy"><span class="login-entry-title">登录达人</span><span class="login-entry-note">抖音电商 · 百应</span></span>
+        </button>
+        <button class="native-button outline login-entry" id="official-authorize" type="button" hidden>
+          <span class="login-entry-icon" aria-hidden="true"><img src="icons/qianchuan-logo.svg" alt=""></span>
+          <span class="login-entry-copy"><span class="login-entry-title">官方授权</span><span class="login-entry-note">官方只读数据</span></span>
+        </button>
+        <button class="native-button outline" id="manage-shop-slots" type="button" title="管理同一会员在所有电脑上共享的店铺名额" hidden>共享名额管理</button>
+        <div class="period-switch qianchuan-period-switch" id="qianchuan-period-switch" aria-label="统计周期">
+          <button type="button" data-period="今日">今天</button>
+          <button type="button" data-period="昨日">昨日</button>
+          <button type="button" data-period="近7天">近7天</button>
+          <button type="button" data-period="近30天">近30天</button>
+        </div>
+        <span class="last-sync-label"><span class="sync-clock" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"></circle><path d="M12 7.5V12l3 2"></path></svg></span>最后同步时间：<strong id="last-updated">等待同步</strong></span>
+      </div>
+    </header>
+
+    <div class="qianchuan-hint" id="qianchuan-hint" role="status" hidden>
+      <span class="hint-icon" aria-hidden="true">i</span>
+      <span>只显示已登录且已确认千川身份的账户；金额和计划状态统计对应当前账户、所选周期的已加载计划。</span>
+      <button type="button" id="qianchuan-hint-close" aria-label="关闭提示">×</button>
+    </div>
+
+    <section class="native-card overview-card" id="overview-card" aria-label="投放账户概览">
+      <div class="overview-heading">
+        <h2 id="overview-title">投放账户概览</h2>
+        <span id="overview-account-count">共0个账户</span>
+        <span class="official-update" id="official-update" hidden></span>
+        <span class="official-message" id="official-message" role="status" hidden></span>
+        <button class="operation-link" id="official-done" type="button" hidden>我已完成授权</button>
+        <button class="section-fold-toggle" id="toggle-overview" type="button" aria-expanded="true" aria-controls="metrics">收起概览</button>
+      </div>
+      <div class="alliance-metric-layout" id="alliance-metrics" hidden>
+        <section class="alliance-metric-group creator-metric-group" aria-labelledby="creator-metrics-title">
+          <div class="alliance-metric-heading">
+            <h3 id="creator-metrics-title">达人账号数据</h3>
+            <span>百应账号汇总</span>
+          </div>
+          <div class="metric-grid alliance-metric-grid" id="creator-metrics"></div>
+        </section>
+        <section class="alliance-metric-group qianchuan-metric-group" aria-labelledby="qianchuan-metrics-title">
+          <div class="alliance-metric-heading">
+            <h3 id="qianchuan-metrics-title">千川投流数据</h3>
+            <span>已绑定且已同步账户</span>
+          </div>
+          <div class="metric-grid alliance-metric-grid" id="qianchuan-metrics"></div>
+        </section>
+      </div>
+      <div class="metric-grid" id="metrics"></div>
+      <p id="overview-sync-note" role="status" hidden>数据同步中，当前仅为已返回数据的汇总</p>
+    </section>
+
+    <section class="native-card account-card" id="account-card">
+      <div class="account-selection-hint" id="account-selection-hint" role="status" hidden>
+        抖店已登录，请点击'选择账户'，在千川页面选择广告账户；选择完成后自动同步余额和计划。
+      </div>
+      <div class="section-toolbar account-toolbar">
+        <button class="section-fold-toggle" id="toggle-accounts" type="button" aria-expanded="true" aria-controls="account-list-viewport">收起列表</button>
+      </div>
+      <div class="account-kind-tabs" role="group" aria-label="达人登录状态">
+        <button type="button" data-account-kind="all" aria-pressed="true">全部达人 <span></span></button>
+        <button type="button" data-account-kind="merchant" aria-pressed="false">已登录 <span></span></button>
+        <button type="button" data-account-kind="creator" aria-pressed="false">待处理 <span></span></button>
+        <div class="account-filter-controls" role="group" aria-label="账户筛选和同步操作">
+          <button class="native-button outline" id="official-group-shops" type="button" aria-pressed="false" hidden>按店铺分组</button>
+          <label class="native-search">
+            <span class="sr-only">搜索账户名称或千川 ID</span>
+            <input id="account-search" type="search" maxlength="80" autocomplete="off" placeholder="搜索账户名称或千川 ID">
+            <span class="search-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"></circle><path d="m15.5 15.5 4 4"></path></svg></span>
+          </label>
+          <div class="native-select custom-select" id="login-filter-control" data-custom-select>
+          <span class="sr-only" id="login-filter-description">登录状态</span>
+          <select id="login-filter" class="custom-select-source" aria-hidden="true" tabindex="-1">
+            <option value="all">全部状态</option>
+            <option value="normal">已登录</option>
+            <option value="attention">待处理</option>
+            <option value="loggedOut">未登录</option>
+          </select>
+          <button class="custom-select-trigger" id="login-filter-trigger" type="button" aria-haspopup="listbox" aria-expanded="false" aria-controls="login-filter-menu" aria-describedby="login-filter-description">
+            <span class="custom-select-label" id="login-filter-label">全部状态</span>
+            <span class="custom-select-chevron" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m7 9 5 5 5-5"></path></svg></span>
+          </button>
+          <div class="custom-select-menu" id="login-filter-menu" role="listbox" aria-label="登录状态" hidden>
+            <button class="custom-select-option selected" type="button" role="option" data-value="all" aria-selected="true"><span>全部状态</span><span class="custom-select-check" aria-hidden="true">✓</span></button>
+            <button class="custom-select-option" type="button" role="option" data-value="normal" aria-selected="false"><span>已登录</span><span class="custom-select-check" aria-hidden="true">✓</span></button>
+            <button class="custom-select-option" type="button" role="option" data-value="attention" aria-selected="false"><span>待处理</span><span class="custom-select-check" aria-hidden="true">✓</span></button>
+            <button class="custom-select-option" type="button" role="option" data-value="loggedOut" aria-selected="false"><span>未登录</span><span class="custom-select-check" aria-hidden="true">✓</span></button>
+          </div>
+          </div>
+          <button class="native-button outline account-sync-button" id="sync-all" type="button"><span class="button-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20 6v5h-5"></path><path d="M19 11a7.5 7.5 0 1 0 1 5"></path></svg></span><span id="sync-all-label">同步全部</span></button>
+        </div>
+      </div>
+
+      <div class="creator-actions" id="creator-actions" hidden>
+        <span id="creator-selected">请选择达人账户</span>
+        <button type="button" id="creator-buyin">百应登录</button>
+        <button type="button" id="creator-compass">达人广场</button>
+        <button type="button" id="creator-qianchuan">打开千川</button>
+      </div>
+      <div class="table-viewport account-table-viewport" id="account-list-viewport" tabindex="0" aria-label="账户列表，可滚动查看全部账户">
+          <table class="native-table account-table">
+            <thead>
+            <tr>
+              <th>排序</th>
+              <th id="account-name-heading">账户名称</th>
+              <th id="account-login-heading">登录状态</th>
+              <th id="account-balance-heading">账户余额</th>
+              <th id="account-gmv-heading" aria-sort="none"><button type="button" class="table-sort-button" data-sort-table="accounts" data-sort-key="gmv"><span class="sort-label">今日成交额</span><span class="sort-arrows" aria-hidden="true"><span class="sort-up" data-sort-direction="asc"></span><span class="sort-down" data-sort-direction="desc"></span></span></button></th>
+              <th id="account-spend-heading" aria-sort="none"><button type="button" class="table-sort-button" data-sort-table="accounts" data-sort-key="spend"><span class="sort-label">今日消耗</span><span class="sort-arrows" aria-hidden="true"><span class="sort-up" data-sort-direction="asc"></span><span class="sort-down" data-sort-direction="desc"></span></span></button></th>
+              <th id="account-roi-heading">ROI</th>
+              <th id="account-plan-heading">计划状态</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody id="account-rows"></tbody>
+        </table>
+        <div class="native-empty" id="account-empty" hidden><span class="empty-state-icon" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M8 18h32l-3 20H11L8 18Z"></path><path d="M12 18l5-8h14l5 8"></path><path d="M8 25h10a6 6 0 0 0 12 0h10"></path></svg></span><span>当前没有符合筛选条件的千川账户</span></div>
+      </div>
+    </section>
+
+    <div class="qianchuan-status-strip" id="qianchuan-status-strip" hidden aria-label="投放计划状态">
+      <span class="qianchuan-status-item good"><i aria-hidden="true"></i>盈利计划 <strong id="qianchuan-profit-count">0</strong></span>
+      <span class="qianchuan-status-divider" aria-hidden="true"></span>
+      <span class="qianchuan-status-item bad"><i aria-hidden="true"></i>ROI异常 <strong id="qianchuan-loss-count">0</strong></span>
+      <span class="qianchuan-status-divider" aria-hidden="true"></span>
+      <span class="qianchuan-status-item warn"><i aria-hidden="true"></i>待处理 <strong id="qianchuan-pending-count">0</strong></span>
+    </div>
+
+    <section class="native-card diagnosis-card">
+      <div class="diagnosis-heading">
+        <div class="diagnosis-title-group">
+          <h2>当前账户投放计划</h2>
+          <span id="plan-freshness">按净成交ROI与保本ROI判断计划盈亏，无真实计划包时显示数据不足</span>
+        </div>
+        <details class="more-menu" id="more-menu">
+          <summary>更多诊断</summary>
+          <div class="more-menu-list" role="menu">
+            <button type="button" data-tab="plans" role="menuitem">计划明细</button>
+            <button type="button" data-tab="volume" role="menuitem">放量投放</button>
+            <button type="button" data-tab="cost" role="menuitem">控成本投放</button>
+            <button type="button" data-tab="multiply" role="menuitem">乘方投放</button>
+            <button type="button" data-tab="actions" role="menuitem">动作日志</button>
+            <button type="button" data-tab="logs" role="menuitem">运行日志</button>
+          </div>
+        </details>
+      </div>
+
+      <div class="diagnosis-toolbar" id="plan-tools">
+        <div class="qianchuan-plan-controls" id="qianchuan-plan-controls" hidden>
+          <button type="button" class="qianchuan-account-groups-button" id="qianchuan-account-groups-button">
+            <span class="button-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"></circle><circle cx="16.5" cy="9" r="2.4"></circle><path d="M3.8 18c.4-3 2.3-4.7 5.2-4.7s4.8 1.7 5.2 4.7M14.2 14.6c2.7-.3 4.8 1 5.3 3.4"></path></svg></span>
+            查看账户组
+          </button>
+          <button type="button" class="qianchuan-filter-button" id="qianchuan-account-filter" disabled title="使用账户下拉框切换，统计与当前账户计划一致">当前账户</button>
+          <button type="button" class="qianchuan-filter-button" id="qianchuan-status-filter">全部状态<span aria-hidden="true">⌄</span></button>
+        </div>
+        <div class="store-selector" id="store-selector">
+          <button class="current-store-badge" id="selected-account-trigger" type="button"
+                  aria-haspopup="listbox" aria-expanded="false" aria-controls="account-picker">
+            <span class="store-badge-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 10h16l-1.5-5h-13L4 10Z"></path><path d="M5.5 10v9h13v-9M9 19v-5h6v5"></path></svg></span>
+            <span class="store-badge-label">当前账户</span>
+            <strong id="selected-account-name">尚未选择</strong>
+            <span class="store-badge-status" id="selected-account-status">等待选择</span>
+            <span class="store-selector-chevron" aria-hidden="true"><svg viewBox="0 0 20 20"><path d="m5 7.5 5 5 5-5"></path></svg></span>
+          </button>
+          <div class="store-picker" id="account-picker" role="listbox" aria-label="选择计划店铺" hidden></div>
+        </div>
+        <label class="native-search plan-search">
+          <span class="sr-only">搜索计划名称</span>
+          <input id="plan-search" type="search" maxlength="80" autocomplete="off" placeholder="搜索计划名称">
+          <span class="search-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"></circle><path d="m15.5 15.5 4 4"></path></svg></span>
+        </label>
+        <div class="native-select custom-select plan-type-select" id="plan-type-filter-control" data-custom-select>
+          <span class="sr-only" id="plan-type-filter-description">计划类型</span>
+          <select id="plan-type-filter" class="custom-select-source" aria-hidden="true" tabindex="-1">
+            <option value="all">全部类型</option>
+            <option value="volume">放量投放</option>
+            <option value="cost">控成本投放</option>
+            <option value="multiply">乘方投放</option>
+            <option value="other">其他</option>
+          </select>
+          <button class="custom-select-trigger" id="plan-type-filter-trigger" type="button" aria-haspopup="listbox" aria-expanded="false" aria-controls="plan-type-filter-menu" aria-describedby="plan-type-filter-description">
+            <span class="custom-select-label">全部类型</span>
+            <span class="custom-select-chevron" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m7 9 5 5 5-5"></path></svg></span>
+          </button>
+          <div class="custom-select-menu" id="plan-type-filter-menu" role="listbox" aria-label="计划类型" hidden></div>
+        </div>
+        <span class="official-scope" id="official-scope" hidden>官方数据暂仅含全域推广</span>
+        <span class="official-plan-updated" id="official-plan-updated" hidden></span>
+        <div class="official-source-switch" id="official-source-switch" hidden><button type="button" id="official-source-web">网页数据</button><button type="button" id="official-source-api">官方数据</button></div>
+        <div class="toolbar-spacer"></div>
+        <div class="period-switch" id="period-switch" aria-label="统计周期">
+          <button type="button" data-period="今日">今日</button>
+          <button type="button" data-period="昨日">昨日</button>
+          <button type="button" data-period="近7天">近7天</button>
+          <button type="button" data-period="近30天">近30天</button>
+        </div>
+      </div>
+
+      <div class="qianchuan-plan-tabs" id="qianchuan-plan-tabs" role="tablist" aria-label="千川投放计划状态" hidden>
+        <button type="button" role="tab" aria-selected="true" data-qianchuan-plan-filter="all">全部计划 <strong>0</strong></button>
+        <button type="button" role="tab" aria-selected="false" data-qianchuan-plan-filter="running">投放中 <strong>0</strong></button>
+        <button type="button" role="tab" aria-selected="false" data-qianchuan-plan-filter="paused">已暂停 <strong>0</strong></button>
+        <button type="button" role="tab" aria-selected="false" data-qianchuan-plan-filter="roi-error">ROI异常 <strong>0</strong></button>
+      </div>
+
+      <div class="diagnosis-view" id="plans-panel">
+        <div class="table-viewport plan-table-viewport" tabindex="0" aria-label="计划列表，可滚动查看全部计划和指标">
+          <table class="native-table plan-table">
+            <thead>
+              <tr class="standard-plan-header">
+                <th>计划名称</th>
+                <th class="official-product-column">推广商品</th><th class="official-amount-column">日预算</th><th class="official-amount-column">净成交额</th>
+                <th>投放状态</th>
+                <th aria-sort="descending"><button type="button" class="table-sort-button" data-sort-table="plans" data-sort-key="spend"><span class="sort-label">消耗</span><span class="sort-arrows" aria-hidden="true"><span class="sort-up" data-sort-direction="asc"></span><span class="sort-down" data-sort-direction="desc"></span></span></button></th>
+                <th aria-sort="none"><button type="button" class="table-sort-button" data-sort-table="plans" data-sort-key="gmv"><span class="sort-label">净成交额</span><span class="sort-arrows" aria-hidden="true"><span class="sort-up" data-sort-direction="asc"></span><span class="sort-down" data-sort-direction="desc"></span></span></button></th>
+                <th aria-sort="none"><button type="button" class="table-sort-button" data-sort-table="plans" data-sort-key="orders"><span id="plan-orders-heading" class="sort-label">订单数</span><span class="sort-arrows" aria-hidden="true"><span class="sort-up" data-sort-direction="asc"></span><span class="sort-down" data-sort-direction="desc"></span></span></button></th>
+                <th id="plan-cpa-heading">成交成本</th>
+                <th id="plan-roi-heading">净成交ROI</th>
+                <th>目标ROI</th>
+                <th>保本ROI</th>
+                <th>预估利润</th>
+                <th>盈亏状态</th>
+              </tr>
+              <tr class="qianchuan-plan-header" hidden>
+                <th>千川账户</th>
+                <th>计划名称</th>
+                <th>投放状态</th>
+                <th>消耗</th>
+                <th>净成交额</th>
+                <th>订单数</th>
+                <th>净成交ROI</th>
+                <th>目标ROI</th>
+                <th title="与千川账户共用设置，回车或离开输入框保存">保本ROI</th>
+                <th>盈亏状态</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody id="plan-rows"></tbody>
+          </table>
+          <div class="native-empty plan-empty" id="plan-empty" hidden><span class="empty-state-icon" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M8 18h32l-3 20H11L8 18Z"></path><path d="M12 18l5-8h14l5 8"></path><path d="M8 25h10a6 6 0 0 0 12 0h10"></path></svg></span><span id="plan-empty-message">等待同步：当前账户尚未获得通过校验的真实计划数据</span><button id="official-plan-retry" class="operation-link" type="button" hidden>重试</button></div>
+        </div>
+      </div>
+      <div class="qianchuan-plan-pagination" id="qianchuan-plan-pagination" hidden>
+        <span id="qianchuan-plan-count">共 0 个计划 · 每页 10 条</span>
+        <nav class="qianchuan-page-buttons" aria-label="投放计划分页">
+          <button type="button" id="qianchuan-page-prev" aria-label="上一页">‹</button>
+          <div id="qianchuan-page-numbers"></div>
+          <button type="button" id="qianchuan-page-next" aria-label="下一页">›</button>
+        </nav>
+      </div>
+
+      <div class="diagnosis-view" id="actions-panel" hidden>
+        <div class="table-viewport plan-table-viewport">
+          <table class="native-table action-table">
+            <thead><tr><th>时间</th><th>模式</th><th>计划名称</th><th>动作</th><th>原因</th></tr></thead>
+            <tbody id="action-rows"></tbody>
+          </table>
+          <div class="native-empty plan-empty" id="action-empty" hidden><span class="empty-state-icon" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M8 18h32l-3 20H11L8 18Z"></path><path d="M12 18l5-8h14l5 8"></path><path d="M8 25h10a6 6 0 0 0 12 0h10"></path></svg></span><span>暂无动作日志</span></div>
+        </div>
+      </div>
+
+      <div class="diagnosis-view run-log-view" id="logs-panel" hidden>
+        <pre id="run-logs">暂无运行日志</pre>
+      </div>
+    </section>
+  </main>
+
+  <div class="account-context-menu" id="account-context-menu" role="menu" aria-label="账户操作" hidden>
+    <div class="account-context-menu-target" role="presentation">
+      <span>将删除店铺</span>
+      <strong id="context-account-name">未命名店铺</strong>
+    </div>
+    <button id="delete-account-action" type="button" role="menuitem">
+      <span class="context-menu-delete-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M7 7l1 13h8l1-13M10 11v5M14 11v5"></path></svg>
+      </span>
+      删除此店铺
+    </button>
+  </div>
+  <dialog id="multiply-metrics-dialog" class="multiply-metrics-dialog" aria-labelledby="multiply-metrics-title">
+    <form method="dialog" class="multiply-dialog-header">
+      <h2 id="multiply-metrics-title">乘方数据</h2>
+      <button type="submit" aria-label="关闭乘方数据">关闭</button>
+    </form>
+    <p id="multiply-metrics-scope"></p>
+    <dl id="multiply-plan-settings" class="multiply-plan-settings"></dl>
+    <dl id="multiply-metrics-values" class="multiply-metrics-values"></dl>
+    <p class="multiply-metrics-note">仅含所选日期的乘方期间数据，金额单位为元。综合成本与整体消耗按平台各自口径展示，横线表示平台未提供有效数值。</p>
+  </dialog>
+  <div class="busy-overlay" id="busy-overlay" hidden>
+    <div class="busy-box"><span class="spinner" aria-hidden="true"></span><strong id="busy-text">正在处理，请稍候…</strong></div>
+  </div>
+  <div class="toast-region" id="toast-region" aria-live="polite" aria-atomic="true"></div>
+  <dialog class="official-loading-dialog" id="official-loading-dialog" aria-labelledby="official-loading-title" aria-describedby="official-loading-description official-loading-note">
+    <span class="spinner" aria-hidden="true"></span>
+    <h2 id="official-loading-title">数据正在获取中…</h2>
+    <p id="official-loading-description">首次加载账户可能需要一些时间，请耐心等待</p>
+    <p id="official-loading-note">获取完成后将自动关闭</p>
+  </dialog>
+  <div class="sr-only" id="bridge-status" aria-live="polite">正在连接桌面程序</div>
+  <button id="sync-selected" type="button" hidden></button>
+  <button id="open-selected" type="button" hidden></button>
+
+  <script src="creator-buyin-summary.js?v=20260924-buyin-data-v1"></script>
+  <script src="login-wizard.js?v=1574-native-1"></script>
+  <script src="account-ui.js?v=1574-ui-1"></script>
+  <script src="web-target-roi.js?v=1574-safe-1"></script>
+  <script src="app.js?v=20260924-qianchuan-centered-v1"></script>
+</body>
+</html>
+
+
+
+

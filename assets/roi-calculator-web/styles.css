@@ -1,0 +1,1451 @@
+:root {
+  --bg:#f9fbfe;
+  --panel:#fff;
+  --line:#dce5f1;
+  --line-strong:#cbd7e8;
+  --text:#14213b;
+  --muted:#687892;
+  --blue:#2d6feb;
+  --blue-soft:#eff5ff;
+  --green:#12a36e;
+  --green-soft:#edf9f4;
+  --orange:#d58a19;
+  --orange-soft:#fff8eb;
+  --violet:#7857e7;
+  --violet-soft:#f4f0ff;
+  --font-ui:"Microsoft YaHei UI","Microsoft YaHei","PingFang SC","Noto Sans CJK SC","Segoe UI",sans-serif;
+  --ink-title:#0f1d3a;
+  --ink-strong:#172a4b;
+  --ink-label:#223451;
+  --ink-body:#415574;
+  --ink-support:#526480;
+  --ink-muted:#687892;
+  --ink-number:#14213b;
+  --ink-formula:#596b85;
+  --detail-font-size:10px;
+  --shadow:0 10px 30px rgba(31,53,91,.09);
+  font-family:var(--font-ui);
+}
+
+* { box-sizing:border-box; }
+[hidden] { display:none !important; }
+html,body { width:100%; height:100%; margin:0; overflow:hidden; color:var(--text); background:#dce6f3; }
+button,input { font:inherit; }
+button { color:inherit; }
+svg { display:block; width:1em; height:1em; fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+
+.roi-app {
+  width:100%; height:100vh; overflow:hidden;
+  display:grid; grid-template-rows:104px 62px minmax(0,1fr) 82px;
+  padding:0 24px;
+  background:linear-gradient(145deg,#fbfdff 0%,#f8fafc 100%);
+}
+
+.window-header {
+  display:grid; grid-template-columns:56px minmax(360px,1fr) auto 164px 48px;
+  align-items:center; gap:14px; user-select:none;
+}
+.brand-icon {
+  display:grid; place-items:center; width:48px; height:48px; border-radius:11px;
+  color:#fff; background:linear-gradient(145deg,#4e8df5,#2668ea); font-size:25px;
+  box-shadow:0 7px 16px rgba(45,111,235,.2),inset 0 0 0 1px rgba(255,255,255,.2);
+}
+.header-copy h1 { margin:0; font-size:27px; font-weight:700; line-height:1.18; letter-spacing:-.5px; }
+.header-copy p { margin:5px 0 0; color:var(--muted); font-size:12px; }
+.header-spacer { min-width:0; }
+.reset-button {
+  height:48px; display:flex; align-items:center; justify-content:center; gap:8px;
+  border:1px solid var(--blue); border-radius:9px; background:#fff; color:#17315d;
+  cursor:pointer; font-size:14px; font-weight:600;
+}
+.reset-button svg { color:var(--blue); font-size:19px; }
+.reset-button:hover { background:var(--blue-soft); }
+.close-button {
+  display:grid; place-items:center; width:44px; height:44px; border:0; border-radius:9px;
+  background:transparent; color:#263957; cursor:pointer; font-size:23px;
+}
+.close-button:hover { background:#edf1f6; color:#d0473e; }
+
+.context-strip {
+  display:grid; grid-template-columns:30px 1fr auto; align-items:center; gap:10px;
+  padding:0 16px; border:1px solid #c9daf5; border-radius:9px;
+  background:linear-gradient(90deg,#f2f7ff,#f7faff);
+}
+.info-dot {
+  display:grid; place-items:center; width:24px; height:24px; border-radius:50%;
+  background:#3b7deb; color:#fff; font-size:12px; font-weight:800;
+}
+.context-strip p { margin:0; color:#415574; font-size:11px; }
+.context-strip b { color:#172a4b; }
+.live-status,.result-ready {
+  display:flex; align-items:center; gap:7px; color:var(--green);
+  font-family:"Microsoft YaHei UI","Microsoft YaHei",sans-serif;
+  font-size:12px; font-weight:600; line-height:1.35; letter-spacing:0; white-space:nowrap;
+}
+.live-status { padding:7px 12px; border:1px solid #d9efe6; border-radius:8px; background:#edf9f4; }
+.live-status i,.result-ready i { width:8px; height:8px; border-radius:50%; background:var(--green); box-shadow:0 0 0 5px rgba(18,163,110,.1); }
+
+.calculator-workspace {
+  min-height:0; overflow:hidden; display:grid; grid-template-columns:47fr 53fr;
+  gap:14px; padding:16px 0 12px;
+}
+.panel {
+  min-width:0; min-height:0; overflow:hidden;
+  border:1px solid var(--line); border-radius:13px; background:var(--panel);
+}
+
+.input-panel {
+  display:grid; grid-template-rows:62px 42px 206px 58px 92px 132px;
+  align-content:space-between; padding:22px 24px 22px;
+}
+.simple-heading { margin:0; display:flex; align-items:flex-start; font-size:18px; font-weight:700; line-height:1.2; }
+.section-label { display:flex; align-items:center; gap:10px; }
+.section-label.second { border-top:1px solid #e3e9f2; padding-top:12px; }
+.section-label > span {
+  display:grid; place-items:center; width:25px; height:25px; border-radius:50%;
+  background:var(--blue); color:#fff; font-size:11px; font-weight:800;
+}
+.section-label b { color:#223451; font-size:12px; font-weight:600; }
+
+.input-grid { display:grid; grid-template-columns:1fr 1fr; grid-template-rows:1fr 1fr; gap:13px 24px; padding:7px 0 14px; }
+.input-grid.compact { grid-template-rows:1fr; padding:8px 0 14px; }
+.field-group { min-width:0; display:grid; grid-template-rows:25px minmax(48px,1fr); gap:6px; }
+.field-group > b { align-self:end; color:#223451; font-size:11px; font-weight:500; }
+.number-shell {
+  min-width:0; display:grid; grid-template-columns:1fr 42px; align-items:center;
+  border:1px solid var(--line-strong); border-radius:8px; background:#fff; overflow:hidden;
+  transition:border-color .14s,box-shadow .14s;
+}
+.number-shell:focus-within { border-color:#2d6feb; box-shadow:0 0 0 2px rgba(45,111,235,.08); }
+.number-shell input {
+  min-width:0; width:100%; height:100%; padding:0 14px; border:0; outline:0;
+  color:#172744; background:#fff; font-size:14px; font-weight:400; text-align:left;
+  appearance:textfield; -moz-appearance:textfield;
+}
+.number-shell input::-webkit-inner-spin-button,.number-shell input::-webkit-outer-spin-button { appearance:none; margin:0; }
+.number-shell em { display:grid; place-items:center; height:100%; color:#4f617f; font-size:11px; font-style:normal; }
+
+.mode-section { min-height:0; display:grid; grid-template-rows:42px 88px; align-content:end; padding-top:10px; border-top:1px solid #e3e9f2; }
+.mode-section h3 { margin:0; display:flex; align-items:center; font-size:12px; }
+.mode-grid { min-height:0; display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+.mode-card {
+  position:relative; min-width:0; display:flex; align-items:flex-start; gap:10px;
+  padding:16px 14px; border:1px solid var(--line); border-radius:9px;
+  background:#fff; text-align:left; cursor:pointer;
+}
+.mode-card:hover { border-color:#9abaf2; }
+.mode-card:focus { outline:none; }
+.mode-card.active { border-color:var(--blue); background:var(--blue-soft); box-shadow:inset 0 0 0 1px rgba(45,111,235,.04); }
+.mode-card .radio {
+  flex:0 0 auto; display:grid; place-items:center; width:20px; height:20px;
+  border:1px solid #b5c2d4; border-radius:50%; background:#fff;
+}
+.mode-card.active .radio { border:2px solid var(--blue); }
+.mode-card.active .radio i { width:9px; height:9px; border-radius:50%; background:var(--blue); }
+.mode-card > span:last-child { min-width:0; display:flex; flex-direction:column; gap:7px; }
+.mode-card b { font-size:var(--detail-font-size); font-weight:600; line-height:1.35; white-space:nowrap; }
+.mode-card small { color:var(--muted); font-size:var(--detail-font-size); font-weight:400; line-height:1.35; white-space:nowrap; }
+
+.result-panel {
+  display:grid; grid-template-rows:54px 244px 100px 144px 62px;
+  align-content:space-between; padding:22px 24px 20px;
+  border-color:#d7e9e2;
+  background:linear-gradient(150deg,#fbfffd,#f8fdfb);
+}
+.result-heading { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; }
+.result-heading h2 { margin:0; font-size:18px; font-weight:700; }
+.result-ready { padding:7px 12px; border:1px solid #cfeadd; border-radius:999px; background:#f2fbf7; }
+
+.roi-hero {
+  min-height:0; display:grid; grid-template-rows:minmax(0,1fr) 72px;
+  padding:19px 22px 14px; border:1px solid #cbdbe8; border-radius:10px;
+  background:#fff; overflow:hidden;
+}
+.hero-top { min-height:0; display:grid; grid-template-columns:1fr auto; align-items:center; gap:18px; }
+.hero-copy { min-width:0; display:flex; flex-direction:column; justify-content:center; }
+.hero-copy > span { color:#2b3d59; font-size:13px; }
+.hero-copy strong { margin:7px 0 5px; color:var(--green); font-size:44px; line-height:1; letter-spacing:-1px; }
+.hero-copy strong.invalid { color:var(--blue); font-size:30px; letter-spacing:-.4px; }
+.hero-copy p {
+  margin:0; color:#526480;
+  font-family:"Microsoft YaHei UI","Microsoft YaHei",sans-serif;
+  font-size:12px; font-weight:500; line-height:1.45; letter-spacing:0;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.decision-status {
+  display:flex; align-items:center; justify-content:center; gap:7px; min-width:108px; height:42px;
+  padding:0 16px; border:1px solid #a8dfca; border-radius:999px;
+  background:#f1fbf6; color:var(--green); font-size:12px;
+}
+.decision-status i { font-style:normal; font-size:13px; }
+.decision-status.valid i {
+  display:grid; place-items:center; width:17px; height:17px; border-radius:50%;
+  background:var(--green); color:#fff; font-size:11px; font-weight:900;
+}
+.decision-status b { font-size:13px; font-weight:600; }
+.decision-status.invalid { border-color:#efc1ba; background:#fff4f2; color:#d34f43; }
+.decision-status.invalid i { color:#d34f43; }
+.decision-status.scenario-loss { border-color:#efc1ba; background:#fff4f2; color:#d34f43; }
+.decision-status.scenario-loss i { background:#d34f43; color:#fff; }
+.decision-status.scenario-even { border-color:#b9cff7; background:#f1f6ff; color:var(--blue); }
+.decision-status.scenario-even i { background:var(--blue); color:#fff; }
+.decision-status.scenario-profit { border-color:#a8dfca; background:#f1fbf6; color:var(--green); }
+.decision-status.scenario-profit i { background:var(--green); color:#fff; }
+.threshold-wrap { min-width:0; display:grid; grid-template-rows:31px 1fr; }
+.roi-slider-shell { position:relative; align-self:center; width:100%; height:31px; display:flex; align-items:center; }
+.roi-slider {
+  --thumb-color:var(--blue); position:relative; z-index:2; width:100%; height:8px; margin:0;
+  appearance:none; -webkit-appearance:none; border:0; border-radius:999px; outline:0;
+  background:linear-gradient(90deg,#286de8 0%,#288acb 43%,#18a866 100%); cursor:ew-resize;
+}
+.roi-slider:disabled { cursor:not-allowed; filter:saturate(.45); opacity:.55; }
+.roi-slider::-webkit-slider-runnable-track { height:8px; border:0; border-radius:999px; background:transparent; }
+.roi-slider::-webkit-slider-thumb {
+  width:25px; height:25px; margin-top:-8.5px; appearance:none; -webkit-appearance:none;
+  border:4px solid #fff; border-radius:50%; background:var(--thumb-color);
+  box-shadow:0 0 0 1px rgba(23,90,130,.28),0 2px 7px rgba(17,70,100,.22);
+}
+.roi-slider:focus-visible::-webkit-slider-thumb { box-shadow:0 0 0 1px var(--thumb-color),0 0 0 5px rgba(45,111,235,.16),0 2px 7px rgba(17,70,100,.22); }
+.break-even-marker {
+  position:absolute; z-index:1; left:0; top:50%; width:3px; height:16px; border-radius:999px;
+  background:#fff; box-shadow:0 0 0 1px #1c3155; pointer-events:none; transform:translate(-50%,-50%);
+}
+.break-even-marker[hidden] { display:none; }
+.threshold-labels { display:grid; grid-template-columns:1fr 1fr 1fr; align-items:end; color:#475b79; font-size:var(--detail-font-size); font-weight:400; line-height:1.35; }
+.threshold-labels b { text-align:center; font-size:var(--detail-font-size); font-weight:600; }
+.threshold-labels span:last-child { text-align:right; }
+
+.metric-grid { min-height:0; display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; padding:14px 0 10px; }
+.metric {
+  min-width:0; display:grid; grid-template-columns:48px 1fr; align-items:center; gap:11px;
+  padding:10px 12px; border:1px solid var(--line); border-radius:9px; background:#fff;
+}
+.metric-icon { display:grid; place-items:center; width:42px; height:42px; border-radius:9px; background:var(--blue-soft); color:var(--blue); font-size:21px; }
+.metric-icon.violet { background:var(--violet-soft); color:var(--violet); }
+.metric-icon.green { background:var(--green-soft); color:var(--green); }
+.metric > div { min-width:0; display:flex; flex-direction:column; gap:5px; }
+.metric small { color:var(--muted); font-size:var(--detail-font-size); font-weight:400; line-height:1.35; letter-spacing:-.1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.metric strong { color:#15243c; font-size:19px; font-weight:700; white-space:nowrap; }
+
+.formula-card { min-height:0; display:grid; grid-template-rows:46px minmax(0,1fr); border:1px solid var(--line); border-radius:9px; background:#fff; overflow:hidden; }
+.formula-heading {
+  width:100%; display:grid; grid-template-columns:26px 1fr 24px; align-items:center;
+  padding:0 16px; border:0; border-bottom:1px solid #e6ebf2; background:#fff; cursor:pointer; text-align:left;
+}
+.formula-heading:hover { background:#f8fbff; }
+.formula-heading > span { color:#1a2f52; font-size:20px; }
+.formula-heading b { font-size:14px; font-weight:600; }
+.formula-heading > i { display:grid; place-items:center; color:#1f3558; font-size:15px; }
+.formula-heading > i svg { transition:transform .16s ease; }
+.formula-body { min-height:0; display:grid; grid-template-rows:1fr 1fr; padding:3px 16px 5px; }
+.formula-card.collapsed { grid-template-rows:46px 0; }
+.formula-card.collapsed .formula-heading { border-bottom:0; }
+.formula-card.collapsed .formula-heading > i svg { transform:rotate(-90deg); }
+.formula-card.collapsed .formula-body { visibility:hidden; padding-top:0; padding-bottom:0; }
+.formula-row { min-width:0; display:grid; grid-template-columns:116px 1fr; align-items:center; gap:10px; border-bottom:1px dashed #edf1f5; }
+.formula-row:last-child { border-bottom:0; }
+.formula-row span { color:#273b5d; font-size:var(--detail-font-size); font-weight:600; line-height:1.35; }
+.formula-row code { overflow:hidden; color:#596b85; font-family:"Microsoft YaHei UI",sans-serif; font-size:var(--detail-font-size); font-weight:400; line-height:1.35; letter-spacing:-.1px; white-space:nowrap; text-overflow:ellipsis; }
+
+.decision-note {
+  min-height:0; display:flex; align-items:center; gap:8px; margin-top:6px;
+  padding:6px 12px; border:1px solid #f0cd8b; border-radius:9px;
+  background:var(--orange-soft); color:#9a6110; overflow:hidden;
+}
+.decision-note > svg { flex:0 0 auto; font-size:17px; }
+.decision-note div { min-width:0; }
+.decision-note b { display:block; font-size:11px; font-weight:600; }
+.decision-note p { margin:4px 0 0; color:#74644e; font-size:9px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+
+.footer-bar { display:flex; align-items:center; justify-content:space-between; gap:18px; border-top:1px solid var(--line); }
+.footer-bar > p { min-width:0; display:flex; align-items:center; gap:8px; margin:0; color:var(--muted); font-size:10px; }
+.footer-bar > p svg { flex:0 0 auto; color:var(--blue); font-size:16px; }
+.footer-bar > div { display:flex; gap:12px; }
+.footer-bar button { height:48px; display:flex; align-items:center; justify-content:center; gap:8px; border-radius:9px; cursor:pointer; font-size:12px; font-weight:700; }
+.copy-button { min-width:178px; padding:0 20px; border:1px solid var(--blue); background:#fff; color:#18335e; font-weight:600; }
+.copy-button svg { color:var(--blue); font-size:16px; }
+.copy-button:hover { background:var(--blue-soft); }
+.done-button { min-width:218px; padding:0 28px; border:1px solid var(--blue); background:linear-gradient(145deg,#3c7cf0,#2263e6); color:#fff; font-weight:700; box-shadow:0 7px 16px rgba(45,111,235,.2); }
+.done-button:hover { filter:brightness(1.03); }
+
+.toast { position:fixed; left:50%; bottom:76px; z-index:10; padding:10px 16px; border-radius:8px; background:#173153; color:#fff; font-size:11px; opacity:0; pointer-events:none; transform:translate(-50%,12px); transition:.18s ease; box-shadow:0 10px 28px rgba(0,0,0,.2); }
+.toast.show { opacity:1; transform:translate(-50%,0); }
+.toast.error { background:#c9483f; }
+
+/* 图 2 字体与信息层级规范：所有文字均由语义层级统一控制，避免系统默认样式造成偏差。 */
+.header-copy h1 {
+  color:var(--ink-title); font-family:var(--font-ui); font-size:27px; font-weight:700;
+  line-height:1.18; letter-spacing:-.5px;
+}
+.header-copy p {
+  color:var(--ink-muted); font-size:12px; font-weight:400; line-height:1.45;
+}
+.reset-button { color:#17315d; font-size:14px; font-weight:600; line-height:1; }
+.context-strip p { color:var(--ink-body); font-size:11px; font-weight:400; line-height:1.45; }
+.context-strip b { color:var(--ink-strong); font-weight:700; }
+.live-status,.result-ready {
+  color:var(--green); font-family:"Microsoft YaHei UI","Microsoft YaHei",sans-serif;
+  font-size:12px; font-weight:600; line-height:1.35;
+}
+.simple-heading,.result-heading h2 {
+  color:var(--ink-title); font-size:18px; font-weight:700; line-height:1.2;
+}
+.section-label b { color:var(--ink-label); font-size:12px; font-weight:600; line-height:1.35; }
+.field-group > b { color:var(--ink-label); font-size:11px; font-weight:500; line-height:1.35; }
+.number-shell input {
+  color:var(--ink-number); font-size:14px; font-weight:400; line-height:1;
+  font-variant-numeric:tabular-nums lining-nums;
+}
+.number-shell em { color:#4f617f; font-size:11px; font-weight:400; line-height:1; }
+.mode-section h3 { color:var(--ink-title); font-size:12px; font-weight:600; line-height:1.35; }
+.mode-card b { color:var(--ink-strong); font-size:10px; font-weight:600; line-height:1.35; }
+.mode-card small { color:var(--ink-muted); font-size:10px; font-weight:400; line-height:1.35; }
+.hero-copy > span { color:#2b3d59; font-size:13px; font-weight:400; line-height:1.35; }
+.hero-copy strong {
+  color:var(--green); font-size:44px; font-weight:700; line-height:1;
+  letter-spacing:-1px; font-variant-numeric:tabular-nums lining-nums;
+}
+.hero-copy strong.invalid { color:var(--blue); font-size:30px; letter-spacing:-.4px; }
+.hero-copy p {
+  color:var(--ink-support); font-family:"Microsoft YaHei UI","Microsoft YaHei",sans-serif;
+  font-size:12px; font-weight:500; line-height:1.45;
+}
+.decision-status b { font-size:13px; font-weight:600; line-height:1; }
+.threshold-labels { color:#475b79; font-size:10px; font-weight:400; line-height:1.35; }
+.threshold-labels b { font-size:10px; font-weight:600; line-height:1.35; }
+.metric small { color:var(--ink-muted); font-size:10px; font-weight:400; line-height:1.35; }
+.metric strong {
+  color:var(--ink-title); font-size:19px; font-weight:700; line-height:1.1;
+  font-variant-numeric:tabular-nums lining-nums;
+}
+.formula-heading b { color:var(--ink-title); font-size:14px; font-weight:600; line-height:1.35; }
+.formula-row span { color:#273b5d; font-size:10px; font-weight:600; line-height:1.35; }
+.formula-row code {
+  color:var(--ink-formula); font-family:var(--font-ui); font-size:10px; font-weight:400;
+  line-height:1.35; font-variant-numeric:tabular-nums lining-nums;
+}
+.decision-note b { color:#9a6110; font-size:11px; font-weight:600; line-height:1.35; }
+.decision-note p { color:#74644e; font-size:9px; font-weight:400; line-height:1.35; }
+.footer-bar > p { color:var(--ink-muted); font-size:10px; font-weight:400; line-height:1.4; }
+.footer-bar button { font-size:12px; font-weight:700; line-height:1; }
+.copy-button { color:#18335e; font-weight:600; }
+.done-button { color:#fff; font-weight:700; }
+
+@media (max-width:1120px) {
+  .roi-app { grid-template-rows:76px 48px minmax(0,1fr) 66px; padding:0 16px; }
+  .window-header { grid-template-columns:44px minmax(250px,1fr) auto 120px 38px; gap:9px; }
+  .brand-icon { width:40px; height:40px; border-radius:9px; font-size:21px; }
+  .header-copy h1 { font-size:22px; }
+  .header-copy p { font-size:10.5px; }
+  .reset-button { height:38px; font-size:11.5px; }
+  .reset-button svg { font-size:16px; }
+  .close-button { width:36px; height:36px; font-size:19px; }
+  .context-strip { padding:0 12px; }
+  .live-status { padding:5px 10px; font-size:11.5px; }
+  .calculator-workspace { gap:10px; padding:11px 0 9px; }
+  .input-panel,.result-panel { padding-left:16px; padding-right:16px; }
+  .input-panel { grid-template-rows:46px 34px 166px 45px 76px 102px; }
+  .result-panel { grid-template-rows:45px 190px 76px 110px 48px; }
+  .simple-heading,.result-heading h2 { font-size:17px; }
+  .section-label b { font-size:11px; }
+  .input-grid { column-gap:14px; }
+  .roi-hero { padding:15px 17px 12px; }
+  .hero-copy strong { font-size:35px; }
+  .metric-grid { gap:8px; }
+  .metric { grid-template-columns:41px 1fr; gap:7px; padding:7px 8px; }
+  .metric-icon { width:37px; height:37px; }
+  .metric strong { font-size:15px; }
+  .formula-row { grid-template-columns:98px 1fr; }
+  .copy-button { min-width:160px; }
+  .done-button { min-width:190px; }
+}
+
+@media (max-height:780px) {
+  :root { --detail-font-size:9px; }
+  .roi-app { grid-template-rows:70px 42px minmax(0,1fr) 60px; }
+  .window-header { grid-template-columns:42px minmax(240px,1fr) auto 110px 36px; gap:8px; }
+  .brand-icon { width:38px; height:38px; font-size:20px; }
+  .header-copy h1 { font-size:21px; }
+  .header-copy p { margin-top:3px; font-size:10.5px; }
+  .reset-button { height:36px; gap:6px; font-size:12px; }
+  .reset-button svg { font-size:16px; }
+  .close-button { width:34px; height:34px; }
+  .context-strip { grid-template-columns:26px 1fr auto; gap:8px; border-radius:8px; }
+  .info-dot { width:17px; height:17px; font-size:9px; }
+  .context-strip p { font-size:10px; }
+  .live-status { padding:5px 10px; font-size:11.5px; }
+  .calculator-workspace { padding:8px 0 7px; }
+  .input-panel,.result-panel { padding-top:13px; padding-bottom:13px; border-radius:11px; }
+  .input-panel { grid-template-rows:36px 28px 140px 40px 68px 86px; }
+  .simple-heading,.result-heading h2 { font-size:15px; }
+  .section-label { gap:8px; }
+  .section-label.second { padding-top:8px; }
+  .section-label > span { width:17px; height:17px; font-size:9px; }
+  .section-label b { font-size:10.5px; }
+  .input-grid { gap:8px 14px; padding:4px 0 8px; }
+  .input-grid.compact { padding:5px 0 8px; }
+  .field-group { grid-template-rows:17px minmax(36px,1fr); gap:3px; }
+  .field-group > b { font-size:9.5px; }
+  .number-shell { grid-template-columns:1fr 34px; border-radius:7px; }
+  .number-shell input { padding:0 11px; font-size:13px; font-weight:400; }
+  .number-shell em { font-size:10.5px; }
+  .mode-section { grid-template-rows:27px minmax(56px,1fr); padding-top:4px; }
+  .mode-section h3 { font-size:10px; }
+  .mode-grid { gap:9px; }
+  .mode-card { gap:8px; padding:10px 11px; border-radius:8px; }
+  .mode-card .radio { width:17px; height:17px; }
+  .mode-card.active .radio i { width:8px; height:8px; }
+  .mode-card > span:last-child { gap:6px; }
+  .mode-card b { font-size:9.5px; font-weight:600; line-height:1.25; }
+  .mode-card small { font-size:8.75px; font-weight:400; line-height:1.3; }
+  .result-panel { grid-template-rows:44px 162px 60px 90px 48px; }
+  .result-heading { align-items:flex-start; }
+  .result-ready { padding:5px 10px; font-size:11.5px; }
+  .roi-hero { grid-template-rows:minmax(0,1fr) 50px; padding:11px 15px 9px; border-radius:8px; }
+  .hero-top { gap:12px; }
+  .hero-copy > span { font-size:12px; }
+  .hero-copy strong { margin:5px 0 3px; font-size:41px; }
+  .hero-copy strong.invalid { font-size:27px; }
+  .hero-copy p { font-size:12px; font-weight:500; }
+  .decision-status { min-width:88px; height:29px; padding:0 11px; gap:5px; }
+  .decision-status b { font-size:12px; }
+  .decision-status i { font-size:10px; }
+  .decision-status.valid i { width:14px; height:14px; font-size:9px; }
+  .threshold-wrap { grid-template-rows:23px 1fr; }
+  .roi-slider-shell { height:23px; }
+  .roi-slider { height:6px; }
+  .roi-slider::-webkit-slider-runnable-track { height:6px; }
+  .roi-slider::-webkit-slider-thumb { width:20px; height:20px; margin-top:-7px; border-width:3px; }
+  .break-even-marker { width:2px; height:13px; }
+  .threshold-labels,.threshold-labels b { font-size:var(--detail-font-size); }
+  .metric-grid { gap:6px; padding:7px 0 5px; }
+  .metric { grid-template-columns:34px 1fr; gap:6px; padding:5px 7px; border-radius:7px; }
+  .metric-icon { width:33px; height:33px; border-radius:7px; font-size:19px; }
+  .metric > div { gap:3px; }
+  .metric small { font-size:var(--detail-font-size); }
+  .metric strong { font-size:16px; }
+  .formula-card { grid-template-rows:32px minmax(0,1fr); border-radius:7px; }
+  .formula-card.collapsed { grid-template-rows:32px 0; }
+  .formula-heading { grid-template-columns:24px 1fr 18px; padding:0 11px; }
+  .formula-heading > span { font-size:18px; }
+  .formula-heading b { font-size:14px; }
+  .formula-heading > i { font-size:12px; }
+  .formula-body { padding:2px 11px 3px; }
+  .formula-row { grid-template-columns:88px 1fr; gap:7px; }
+  .formula-row span,.formula-row code { font-size:var(--detail-font-size); }
+  .decision-note { gap:7px; margin-top:4px; padding:5px 10px; border-radius:7px; }
+  .decision-note > svg { font-size:15px; }
+  .decision-note b { font-size:10.5px; }
+  .decision-note p { margin-top:2px; font-size:8.75px; }
+  .footer-bar > p { font-size:10px; }
+  .footer-bar > p svg { font-size:14px; }
+  .footer-bar button { height:38px; border-radius:7px; font-size:12px; }
+  .copy-button { min-width:144px; padding:0 15px; }
+  .done-button { min-width:170px; padding:0 20px; }
+}
+
+/* 软件当前 WebView2 高度使用该档位：按图 2 保持可读性，同时不改变弹窗尺寸。 */
+@media (max-height:780px) {
+  .header-copy h1 { font-size:22px; }
+  .header-copy p { font-size:11px; line-height:1.4; }
+  .reset-button { font-size:12.5px; }
+  .context-strip p { font-size:10.5px; line-height:1.4; }
+  .live-status,.result-ready {
+    font-family:"Microsoft YaHei UI","Microsoft YaHei",sans-serif;
+    font-size:11.5px; font-weight:600;
+  }
+  .simple-heading,.result-heading h2 { font-size:16px; }
+  .section-label b { font-size:11px; }
+  .field-group > b { font-size:10px; }
+  .number-shell input { font-size:13.5px; }
+  .number-shell em { font-size:10.5px; }
+  .mode-section h3 { color:var(--ink-strong); font-size:11px; font-weight:600; line-height:1.35; }
+  .mode-card > span:last-child { gap:5px; }
+  .mode-card b { color:var(--ink-strong); font-size:11px; font-weight:600; line-height:1.3; }
+  .mode-card small { color:#64748f; font-size:9.5px; font-weight:400; line-height:1.35; }
+  .hero-copy > span { font-size:12.5px; }
+  .hero-copy strong { font-size:41px; line-height:1.12; }
+  .hero-copy strong.invalid { font-size:28px; }
+  .hero-copy p {
+    font-family:"Microsoft YaHei UI","Microsoft YaHei",sans-serif;
+    font-size:12px; font-weight:500;
+  }
+  .decision-status b { font-size:12.5px; }
+  .threshold-labels { color:#405675; font-size:10px; font-weight:400; line-height:1.4; }
+  .threshold-labels b { color:#1c3155; font-size:10px; font-weight:600; line-height:1.4; }
+  .metric small { font-size:9.25px; letter-spacing:-.15px; }
+  .metric strong { font-size:17px; }
+  .formula-heading b { font-size:14px; }
+  .formula-row { grid-template-columns:92px minmax(0,1fr); gap:8px; }
+  .formula-row span { color:#1f3558; font-size:10px; font-weight:600; line-height:1.4; }
+  .formula-row code { color:#526580; font-size:10px; font-weight:400; line-height:1.4; letter-spacing:-.2px; }
+  .decision-note b { font-size:10.5px; }
+  .decision-note p { font-size:9px; }
+  .footer-bar > p { font-size:10px; }
+  .footer-bar button { font-size:12.5px; }
+}
+
+@media (min-height:681px) and (max-height:780px) {
+  .input-panel { grid-template-rows:36px 28px 166px 40px 76px 86px; }
+  .result-panel { grid-template-rows:44px 190px 70px 106px 48px; }
+}
+
+/*
+ * 高 DPI 紧凑布局：WinForms 在 175% 缩放下会为 WebView2 留下约 754 × 537
+ * 个 CSS 像素。此档位重新分配纵向空间，并让信息按语义换行，避免固定行高
+ * 与 overflow:hidden 共同裁掉成本口径、指标标题、公式和使用提示。
+ */
+@media (max-width:900px), (max-height:620px) {
+  .roi-app {
+    grid-template-rows:56px 36px minmax(0,1fr) 50px;
+    padding:0 12px;
+  }
+
+  .window-header {
+    grid-template-columns:34px minmax(0,1fr) auto 96px 30px;
+    gap:8px;
+  }
+  .brand-icon { width:34px; height:34px; border-radius:8px; font-size:18px; }
+  .header-copy { min-width:0; }
+  .header-copy h1 { font-size:19px; line-height:1.15; }
+  .header-copy p {
+    margin-top:2px; font-size:9.5px; line-height:1.25;
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  }
+  .reset-button { height:32px; gap:5px; border-radius:7px; font-size:10.5px; }
+  .reset-button svg { font-size:14px; }
+  .close-button { width:30px; height:30px; font-size:17px; }
+
+  .context-strip {
+    grid-template-columns:18px minmax(0,1fr) auto;
+    gap:7px; padding:0 9px; border-radius:7px;
+  }
+  .info-dot { width:16px; height:16px; font-size:8px; }
+  .context-strip p {
+    min-width:0; font-size:9px; line-height:1.25;
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  }
+  .live-status,.result-ready { gap:5px; font-size:10px; line-height:1.2; }
+  .live-status { padding:4px 7px; border-radius:7px; }
+  .live-status i,.result-ready i {
+    width:6px; height:6px; box-shadow:0 0 0 3px rgba(18,163,110,.1);
+  }
+
+  .calculator-workspace {
+    grid-template-columns:46fr 54fr;
+    gap:8px; padding:5px 0;
+  }
+  .panel { border-radius:9px; }
+  .input-panel,.result-panel {
+    padding:10px;
+    align-content:stretch;
+  }
+
+  .input-panel {
+    grid-template-rows:26px 22px 116px 26px 52px minmax(0,1fr);
+    gap:5px;
+  }
+  .simple-heading,.result-heading h2 { font-size:14px; line-height:1.2; }
+  .section-label { gap:6px; }
+  .section-label.second { padding-top:4px; }
+  .section-label > span { width:16px; height:16px; font-size:8px; }
+  .section-label b { font-size:9.5px; line-height:1.25; }
+
+  .input-grid {
+    grid-template-rows:1fr 1fr;
+    gap:4px 10px; padding:0;
+  }
+  .input-grid.compact { grid-template-rows:1fr; padding:0; }
+  .field-group { grid-template-rows:15px minmax(0,1fr); gap:3px; }
+  .field-group > b { font-size:9px; line-height:1.2; }
+  .number-shell { grid-template-columns:minmax(0,1fr) 28px; border-radius:6px; }
+  .number-shell input { padding:0 8px; font-size:12px; }
+  .number-shell em { font-size:9px; }
+
+  .mode-section {
+    grid-template-rows:18px minmax(0,1fr);
+    gap:4px; padding-top:4px;
+    align-content:stretch;
+  }
+  .mode-section h3 { font-size:9.5px; line-height:1.2; }
+  .mode-grid { gap:6px; }
+  .mode-card {
+    display:grid;
+    grid-template-columns:15px max-content;
+    align-content:center;
+    align-items:center;
+    justify-content:center;
+    gap:7px; padding:7px 8px; border-radius:7px;
+    text-align:center;
+  }
+  .mode-card .radio { width:15px; height:15px; }
+  .mode-card.active .radio i { width:7px; height:7px; }
+  .mode-card > span:last-child {
+    align-items:center;
+    gap:3px;
+    text-align:center;
+  }
+  .mode-card b,.mode-card small {
+    white-space:nowrap; overflow:visible; text-overflow:clip;
+    overflow-wrap:normal;
+  }
+  .mode-card b { font-size:11px; line-height:1.25; }
+  .mode-card small { font-size:9.5px; line-height:1.25; }
+
+  .result-panel {
+    grid-template-rows:26px 120px 60px minmax(104px,1fr) 34px;
+    gap:4px;
+  }
+  .result-heading { align-items:center; }
+  .result-ready { padding:4px 7px; }
+
+  .roi-hero {
+    position:relative;
+    grid-template-rows:minmax(0,1fr) 32px;
+    padding:8px 10px 7px; border-radius:7px;
+  }
+  .hero-top { display:block; min-width:0; }
+  .hero-copy { min-width:0; width:100%; }
+  .hero-copy > span { font-size:10px; line-height:1.2; }
+  .hero-copy strong {
+    margin:2px 0 1px; padding-right:82px;
+    font-size:32px; line-height:1.05;
+  }
+  .hero-copy strong.invalid { font-size:22px; line-height:1.12; }
+  .hero-copy p {
+    margin-top:4px;
+    font-size:10px; line-height:1.25;
+    white-space:normal; overflow:visible; text-overflow:clip;
+    overflow-wrap:anywhere;
+  }
+  .decision-status {
+    position:absolute; top:9px; right:10px;
+    min-width:70px; height:25px; padding:0 8px; gap:4px;
+  }
+  .decision-status b { font-size:10px; }
+  .decision-status.valid i { width:12px; height:12px; font-size:8px; }
+  .threshold-wrap { grid-template-rows:17px 15px; }
+  .roi-slider-shell { height:17px; }
+  .roi-slider { height:5px; }
+  .roi-slider::-webkit-slider-runnable-track { height:5px; }
+  .roi-slider::-webkit-slider-thumb {
+    width:17px; height:17px; margin-top:-6px; border-width:3px;
+  }
+  .break-even-marker { width:2px; height:11px; }
+  .threshold-labels,.threshold-labels b { font-size:8px; line-height:1.2; }
+
+  .metric-grid { gap:5px; padding:0; }
+  .metric {
+    grid-template-columns:28px minmax(0,1fr);
+    gap:5px; padding:5px; border-radius:6px;
+  }
+  .metric-icon { width:28px; height:28px; border-radius:6px; font-size:16px; }
+  .metric > div { gap:1px; }
+  .metric small {
+    min-height:2.3em;
+    font-size:8.5px; line-height:1.15; letter-spacing:0;
+    white-space:normal; overflow:visible; text-overflow:clip;
+    overflow-wrap:anywhere;
+  }
+  .metric strong { font-size:14px; line-height:1.05; }
+
+  .formula-card {
+    grid-template-rows:28px minmax(0,1fr);
+    border-radius:6px;
+  }
+  .formula-card.collapsed { grid-template-rows:28px 0; }
+  .formula-heading {
+    grid-template-columns:21px minmax(0,1fr) 16px;
+    padding:0 8px;
+  }
+  .formula-heading > span { font-size:17px; }
+  .formula-heading b { font-size:13px; }
+  .formula-heading > i { font-size:10px; }
+  .formula-body { padding:2px 8px 3px; }
+  .formula-row {
+    grid-template-columns:64px minmax(0,1fr);
+    gap:5px; padding:1px 0;
+  }
+  .formula-row span { font-size:10px; line-height:1.2; }
+  .formula-row code {
+    font-size:9px; line-height:1.2; letter-spacing:-.25px;
+    white-space:nowrap; overflow:hidden; text-overflow:clip;
+    overflow-wrap:normal;
+  }
+
+  .decision-note {
+    gap:6px; margin-top:0; padding:3px 8px; border-radius:6px;
+  }
+  .decision-note > svg { font-size:13px; }
+  .decision-note b { font-size:9px; line-height:1.15; }
+  .decision-note p {
+    margin-top:1px; font-size:7.75px; line-height:1.15;
+    white-space:normal; overflow:visible; text-overflow:clip;
+  }
+
+  .footer-bar { gap:10px; }
+  .footer-bar > p { gap:5px; font-size:8px; line-height:1.25; }
+  .footer-bar > p svg { font-size:12px; }
+  .footer-bar > div { gap:8px; }
+  .footer-bar button { height:34px; border-radius:6px; font-size:10px; }
+  .copy-button { min-width:132px; padding:0 10px; }
+  .copy-button svg { font-size:13px; }
+  .done-button { min-width:146px; padding:0 14px; }
+}
+
+/* 用户红框文字统一规范：所有窗口尺寸均使用同一套字体参数。 */
+.header-copy p,
+.context-strip p,
+.context-strip p b,
+.field-group > b,
+.hero-copy > span,
+.hero-copy p,
+.threshold-labels,
+.threshold-labels b,
+.metric small {
+  color:#0f1f3d;
+  font-family:"Microsoft YaHei UI","Microsoft YaHei",sans-serif;
+  font-size:12px;
+  font-weight:500;
+}
+
+/* 计算依据需要在紧凑窗口中完整保持单行，因此不继承上面的统一 12px。 */
+.formula-row span,
+.formula-row code {
+  color:#0f1f3d;
+  font-family:"Microsoft YaHei UI","Microsoft YaHei",sans-serif;
+  font-weight:500;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:clip;
+  overflow-wrap:normal;
+  font-variant-numeric:tabular-nums lining-nums;
+}
+
+/* 标签按内容占宽，公式紧随其后；两条标签使用相同的放大字号。 */
+.formula-row {
+  grid-template-columns:max-content max-content;
+  justify-content:center;
+  gap:2px;
+}
+.formula-row span {
+  font-size:12px;
+  line-height:1.2;
+}
+.formula-row code {
+  font-size:10.5px;
+  line-height:1.2;
+  letter-spacing:-.35px;
+}
+.formula-body {
+  padding-left:4px;
+  padding-right:4px;
+}
+
+/* 三个结果指标：图标与名称组成居中的标题行，数值独立居中显示。 */
+@media (max-width:900px), (max-height:620px) {
+  .metric {
+    grid-template-columns:22px max-content;
+    grid-template-rows:22px 18px;
+    justify-content:center;
+    align-content:center;
+    align-items:center;
+    column-gap:5px;
+    row-gap:2px;
+    padding:4px 5px;
+  }
+  .metric > div { display:contents; }
+  .metric-icon {
+    grid-column:1;
+    grid-row:1;
+    width:22px;
+    height:22px;
+    border-radius:6px;
+    font-size:13px;
+    box-shadow:inset 0 0 0 1px rgba(15,31,61,.04);
+  }
+  .metric small {
+    grid-column:2;
+    grid-row:1;
+    align-self:center;
+    min-height:0;
+    line-height:1.2;
+    white-space:nowrap;
+    overflow:visible;
+    text-overflow:clip;
+    overflow-wrap:normal;
+  }
+  .metric strong {
+    grid-column:1 / -1;
+    grid-row:2;
+    justify-self:center;
+    font-size:14px;
+    line-height:1;
+  }
+}
+
+.decision-note,
+.decision-note b,
+.decision-note p {
+  font-family:"Microsoft YaHei UI","Microsoft YaHei",sans-serif;
+}
+
+/* 红框区域统一文字规格：字号、字重、行高和字体家族保持一致，仅保留各控件的语义颜色。 */
+.reset-button,
+.live-status,
+.result-ready,
+.decision-status b,
+.decision-note b,
+.decision-note p,
+.footer-bar > p,
+.footer-bar button {
+  font-family:"Microsoft YaHei UI","Microsoft YaHei",sans-serif;
+  font-size:12px;
+  font-weight:500;
+  line-height:1.2;
+  letter-spacing:0;
+}
+
+.decision-note p { margin-top:2px; }
+
+@media (max-width:900px), (max-height:620px) {
+  /* 两行说明使用统一 12px 后，为其预留完整高度，避免文字被裁切。 */
+  .result-panel {
+    grid-template-rows:26px 120px 60px minmax(100px,1fr) 38px;
+  }
+  .decision-status { min-width:76px; }
+}
+
+/* 计算版本卡片：放大标题与说明，保持两行文字清晰可读。 */
+.mode-card b,
+.mode-card small {
+  font-family:"Microsoft YaHei UI","Microsoft YaHei",sans-serif;
+  line-height:1.35;
+  letter-spacing:0;
+  white-space:nowrap;
+  overflow:visible;
+  text-overflow:clip;
+  overflow-wrap:normal;
+}
+.mode-card b {
+  color:#0f1f3d;
+  font-size:18px;
+  font-weight:700;
+}
+.mode-card small {
+  color:#687892;
+  font-size:14px;
+  font-weight:400;
+}
+
+/* 单选圆点与两行文字作为一个整体，在每张口径卡片中水平、垂直居中。 */
+.mode-card {
+  grid-template-columns:max-content max-content;
+  justify-content:center;
+  align-content:center;
+  align-items:center;
+  column-gap:10px;
+  row-gap:0;
+  text-align:center;
+}
+.mode-card .radio { align-self:center; }
+.mode-card > span:last-child {
+  align-items:center;
+  justify-content:center;
+  gap:4px;
+  text-align:center;
+}
+
+/* 左侧分组标题与“计算依据”共用同一字号，所有缩放档位同步变化。 */
+.section-label b,
+.formula-heading b {
+  font-size:14px;
+}
+
+@media (max-width:900px), (max-height:620px) {
+  .section-label b,
+  .formula-heading b {
+    font-size:13px;
+  }
+}
+
+/*
+ * 计算完成后的使用提示可能变为两到三行。结果面板的最后一行按内容自动增高，
+ * 公式卡片承担剩余弹性空间，确保提示完整显示且不扩大弹窗。
+ */
+.decision-note {
+  min-height:52px;
+  overflow:visible;
+}
+.decision-note div {
+  flex:1 1 auto;
+  min-width:0;
+}
+.decision-note b,
+.decision-note p {
+  white-space:normal;
+  overflow:visible;
+  text-overflow:clip;
+  overflow-wrap:anywhere;
+}
+
+@media (max-width:1120px) {
+  .result-panel {
+    grid-template-rows:45px 190px 76px minmax(82px,1fr) minmax(52px,max-content);
+    align-content:stretch;
+    gap:4px;
+  }
+}
+
+@media (max-height:780px) {
+  .result-panel {
+    grid-template-rows:44px 162px 60px minmax(70px,1fr) minmax(52px,max-content);
+    align-content:stretch;
+    gap:4px;
+  }
+}
+
+@media (min-height:681px) and (max-height:780px) {
+  .result-panel {
+    grid-template-rows:44px 190px 70px minmax(82px,1fr) minmax(52px,max-content);
+  }
+}
+
+@media (max-width:900px), (max-height:620px) {
+  .result-panel {
+    grid-template-rows:26px 120px 60px minmax(76px,1fr) minmax(52px,max-content);
+  }
+  .decision-note {
+    padding-top:3px;
+    padding-bottom:3px;
+  }
+}
+
+/* ROI 核心经营参数需要在高 DPI 紧凑窗口中清晰可录入。 */
+.field-group > b {
+  font-size:13px;
+  line-height:1.2;
+}
+.number-shell input { font-size:20px; font-weight:500; }
+.number-shell em { font-size:14px; font-weight:500; }
+
+@media (max-height:780px) {
+  .field-group > b { font-size:13px; }
+  .number-shell input { font-size:18px; }
+  .number-shell em { font-size:13px; }
+}
+
+@media (max-width:900px), (max-height:620px) {
+  .field-group { grid-template-rows:16px minmax(0,1fr); }
+  .field-group > b { font-size:13px; }
+  .number-shell input { font-size:17px; }
+  .number-shell em { font-size:12.5px; }
+}
+
+/*
+ * “计算依据”只保留两条公式所需高度；多余纵向空间交给上方结果区，
+ * 减少公式之间的空白，并缓解 ROI 摘要与指标卡片的拥挤感。
+ */
+.result-panel {
+  grid-template-rows:54px minmax(244px,1fr) 108px minmax(96px,112px) minmax(52px,max-content);
+  align-content:stretch;
+  gap:8px;
+}
+
+@media (max-width:1120px) {
+  .result-panel {
+    grid-template-rows:45px minmax(190px,1fr) 84px minmax(84px,96px) minmax(52px,max-content);
+    gap:6px;
+  }
+}
+
+@media (max-height:780px) {
+  .result-panel {
+    grid-template-rows:44px minmax(162px,1fr) 72px minmax(80px,90px) minmax(52px,max-content);
+    gap:4px;
+  }
+}
+
+@media (min-height:681px) and (max-height:780px) {
+  .result-panel {
+    grid-template-rows:44px minmax(190px,1fr) 76px minmax(82px,92px) minmax(52px,max-content);
+  }
+}
+
+@media (max-width:900px), (max-height:620px) {
+  .result-panel {
+    grid-template-rows:26px minmax(120px,1fr) 64px minmax(72px,82px) minmax(52px,max-content);
+    gap:4px;
+  }
+}
+
+/*
+ * 测算结果主卡片：放大核心数值，并让摘要内容在可用高度内垂直居中。
+ * 进度条与刻度获得独立空间，避免文字贴顶、卡片中部大面积留白。
+ */
+.result-heading h2 { font-size:20px; }
+.result-ready { font-size:13px; }
+.roi-hero {
+  grid-template-rows:minmax(0,1fr) 64px;
+  padding:22px 24px 16px;
+}
+.hero-top { align-items:stretch; }
+.hero-copy { height:100%; justify-content:center; }
+.hero-copy > span { font-size:15px; line-height:1.35; }
+.hero-copy strong {
+  margin:8px 0 6px;
+  font-size:60px;
+  line-height:1;
+}
+.hero-copy strong.invalid { font-size:38px; line-height:1.08; }
+.hero-copy p { font-size:14px; line-height:1.45; }
+.decision-status { height:44px; }
+.decision-status b { font-size:14px; }
+.threshold-wrap { grid-template-rows:35px minmax(20px,1fr); }
+.threshold-labels,
+.threshold-labels b { font-size:13px; }
+.metric small { font-size:12.5px; }
+.metric strong { font-size:21px; }
+
+@media (max-width:1120px), (max-height:780px) {
+  .result-heading h2 { font-size:18px; }
+  .result-ready { font-size:12.5px; }
+  .roi-hero {
+    grid-template-rows:minmax(0,1fr) 54px;
+    padding:15px 18px 12px;
+  }
+  .hero-copy > span { font-size:14px; }
+  .hero-copy strong { margin:6px 0 5px; font-size:52px; }
+  .hero-copy strong.invalid { font-size:36px; }
+  .hero-copy p { font-size:13.5px; }
+  .decision-status b { font-size:13px; }
+  .threshold-wrap { grid-template-rows:30px minmax(20px,1fr); }
+  .threshold-labels,
+  .threshold-labels b { font-size:12.5px; }
+  .metric small { font-size:12px; }
+  .metric strong { font-size:18px; }
+}
+
+@media (max-width:900px), (max-height:620px) {
+  .result-heading h2 { font-size:17px; }
+  .result-ready { font-size:12px; }
+  .roi-hero {
+    grid-template-rows:minmax(0,1fr) 50px;
+    padding:12px 14px 10px;
+  }
+  .hero-top { display:flex; align-items:stretch; }
+  .hero-copy { width:100%; height:100%; justify-content:center; }
+  .hero-copy > span { font-size:14px; line-height:1.3; }
+  .hero-copy strong {
+    margin:4px 0;
+    padding-right:100px;
+    font-size:52px;
+    line-height:1;
+  }
+  .hero-copy strong.invalid { font-size:36px; line-height:1.08; }
+  .hero-copy p {
+    margin:0;
+    font-size:13px;
+    line-height:1.35;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+  .decision-status { top:12px; right:14px; height:31px; }
+  .decision-status b { font-size:13px; }
+  .threshold-wrap { grid-template-rows:28px 22px; }
+  .roi-slider-shell { height:28px; }
+  .roi-slider,
+  .roi-slider::-webkit-slider-runnable-track { height:7px; }
+  .roi-slider::-webkit-slider-thumb {
+    width:23px; height:23px; margin-top:-8px; border-width:3px;
+  }
+  .break-even-marker { height:14px; }
+  .threshold-labels,
+  .threshold-labels b { font-size:12.5px; line-height:1.25; }
+  .metric small { font-size:12px; }
+  .metric strong { font-size:17px; }
+}
+
+/* 主结果三级信息拉开间距：标题上移、说明下移，核心数值保持原位。 */
+.hero-copy > span { transform:translateY(-6px); }
+.hero-copy p { transform:translateY(6px); }
+
+@media (max-width:900px), (max-height:620px) {
+  .hero-copy > span { transform:translateY(-8px); }
+  .hero-copy p { transform:translateY(8px); }
+}
+
+/* 两个实时状态标签已从结构中删除；计算口径栏改为纯图标 + 文案两列。 */
+.context-strip { grid-template-columns:32px minmax(0,1fr); }
+
+@media (max-width:1120px) {
+  .context-strip { grid-template-columns:28px minmax(0,1fr); }
+}
+
+@media (max-width:900px), (max-height:620px) {
+  .context-strip { grid-template-columns:26px minmax(0,1fr); }
+}
+
+/*
+ * v10.568 紧凑窗口结果区修复：计算完成后，放大的保本 ROI 数值会让
+ * 标题与说明超出 hero-copy 的可用高度。将公式区的富余高度让给主结果
+ * 卡片，并取消标题/说明的位移，确保“最低保本 ROI”、数值和摘要完整显示。
+ */
+@media (max-width:900px), (max-height:620px) {
+  .result-panel {
+    grid-template-rows:
+      26px
+      minmax(148px,1fr)
+      60px
+      minmax(64px,68px)
+      minmax(52px,max-content);
+  }
+
+  .roi-hero {
+    grid-template-rows:minmax(0,1fr) 42px;
+    padding:10px 14px 8px;
+  }
+  .hero-top { min-height:0; }
+  .hero-copy {
+    min-height:0;
+    height:100%;
+    justify-content:center;
+    overflow:visible;
+  }
+  .hero-copy > span {
+    transform:none;
+    font-size:13px;
+    line-height:1.25;
+  }
+  .hero-copy strong { margin:3px 0; }
+  .hero-copy p {
+    transform:none;
+    font-size:12px;
+    line-height:1.3;
+  }
+
+  .threshold-wrap { grid-template-rows:23px 19px; }
+  .roi-slider-shell { height:23px; }
+}
+
+/*
+ * v10.611 全屏幕自适应层
+ *
+ * WinForms 的窗口尺寸使用设备像素，WebView2 内部使用 CSS 像素。DPI
+ * 缩放后不能再依赖一组固定行高，否则底部内容会在 621~680px 等中间
+ * 高度区间被 overflow:hidden 裁掉。这里由 app.js 写入的 density 档位
+ * 连续接管纵向分配；工作区保留滚动兜底，正常尺寸下仍保持无滚动条。
+ */
+.roi-app {
+  height:100vh;
+  height:100dvh;
+  min-width:0;
+  min-height:0;
+  grid-template-rows:minmax(76px,auto) minmax(48px,auto) minmax(0,1fr) minmax(64px,auto);
+  padding-inline:clamp(12px,1.5vw,24px);
+}
+
+.calculator-workspace {
+  min-width:0;
+  min-height:0;
+  grid-template-columns:minmax(300px,47fr) minmax(400px,53fr);
+  align-items:stretch;
+  overflow-x:hidden;
+  overflow-y:auto;
+  overscroll-behavior:contain;
+  scrollbar-gutter:stable;
+  scrollbar-width:thin;
+}
+
+.panel {
+  min-width:0;
+  min-height:540px;
+}
+
+.input-panel {
+  grid-template-rows:
+    auto
+    auto
+    minmax(132px,1.55fr)
+    auto
+    minmax(56px,.65fr)
+    minmax(104px,1fr);
+  align-content:stretch;
+  gap:8px;
+}
+
+.mode-section {
+  grid-template-rows:auto minmax(72px,1fr);
+  align-content:stretch;
+  gap:6px;
+  padding-top:6px;
+}
+
+.result-panel {
+  grid-template-rows:
+    auto
+    minmax(210px,1.8fr)
+    minmax(82px,.75fr)
+    minmax(86px,.85fr)
+    minmax(52px,max-content);
+  align-content:stretch;
+  gap:8px;
+}
+
+.roi-app[data-density="comfortable"] {
+  grid-template-rows:68px 42px minmax(0,1fr) 58px;
+  padding-inline:16px;
+}
+.roi-app[data-density="comfortable"] .calculator-workspace {
+  gap:10px;
+  padding:8px 0 7px;
+}
+.roi-app[data-density="comfortable"] .panel {
+  min-height:460px;
+  padding:13px 16px;
+}
+.roi-app[data-density="comfortable"] .input-panel {
+  grid-template-rows:auto auto minmax(122px,1.45fr) auto minmax(54px,.65fr) minmax(88px,.9fr);
+  gap:6px;
+}
+.roi-app[data-density="comfortable"] .result-panel {
+  grid-template-rows:auto minmax(180px,1.65fr) minmax(70px,.7fr) minmax(82px,.78fr) minmax(52px,max-content);
+  gap:6px;
+}
+.roi-app[data-density="comfortable"] .mode-section {
+  grid-template-rows:auto minmax(66px,1fr);
+  gap:5px;
+  padding-top:5px;
+}
+
+.roi-app[data-density="compact"] {
+  grid-template-rows:58px 36px minmax(0,1fr) 52px;
+  padding-inline:12px;
+}
+.roi-app[data-density="compact"] .calculator-workspace {
+  gap:8px;
+  padding:5px 0;
+}
+.roi-app[data-density="compact"] .panel {
+  min-height:400px;
+  padding:10px 12px;
+}
+.roi-app[data-density="compact"] .input-panel {
+  grid-template-rows:auto auto minmax(112px,1.35fr) auto minmax(48px,.58fr) minmax(80px,.82fr);
+  gap:4px;
+}
+.roi-app[data-density="compact"] .result-panel {
+  grid-template-rows:auto minmax(150px,1.5fr) minmax(64px,.68fr) minmax(72px,.72fr) minmax(52px,max-content);
+  gap:4px;
+}
+.roi-app[data-density="compact"] .mode-section {
+  grid-template-rows:auto minmax(60px,1fr);
+  gap:4px;
+  padding-top:4px;
+}
+.roi-app[data-density="compact"] .roi-hero {
+  grid-template-rows:minmax(0,1fr) 44px;
+}
+.roi-app[data-density="compact"] .hero-copy > span,
+.roi-app[data-density="compact"] .hero-copy p {
+  transform:none;
+}
+.roi-app[data-density="compact"] .footer-bar button {
+  height:42px;
+}
+.roi-app[data-density="compact"] .copy-button { min-width:150px; }
+.roi-app[data-density="compact"] .done-button { min-width:176px; }
+
+.roi-app[data-density="ultra-compact"] {
+  grid-template-rows:54px 34px minmax(0,1fr) 48px;
+  padding-inline:10px;
+}
+.roi-app[data-density="ultra-compact"] .calculator-workspace {
+  gap:7px;
+  padding:4px 0;
+}
+.roi-app[data-density="ultra-compact"] .panel {
+  min-height:380px;
+  padding:8px 10px;
+}
+.roi-app[data-density="ultra-compact"] .input-panel {
+  grid-template-rows:auto auto minmax(104px,1.3fr) auto minmax(46px,.55fr) minmax(76px,.78fr);
+  gap:4px;
+}
+.roi-app[data-density="ultra-compact"] .result-panel {
+  grid-template-rows:auto minmax(140px,1.45fr) minmax(60px,.65fr) minmax(68px,.7fr) minmax(52px,max-content);
+  gap:4px;
+}
+.roi-app[data-density="ultra-compact"] .mode-section {
+  grid-template-rows:auto minmax(56px,1fr);
+  gap:3px;
+  padding-top:3px;
+}
+.roi-app[data-density="ultra-compact"] .roi-hero {
+  grid-template-rows:minmax(0,1fr) 42px;
+  padding:8px 12px 7px;
+}
+.roi-app[data-density="ultra-compact"] .hero-copy > span,
+.roi-app[data-density="ultra-compact"] .hero-copy p {
+  transform:none;
+}
+.roi-app[data-density="ultra-compact"] .footer-bar {
+  gap:8px;
+}
+.roi-app[data-density="ultra-compact"] .footer-bar > div {
+  gap:7px;
+}
+.roi-app[data-density="ultra-compact"] .footer-bar button {
+  height:38px;
+}
+.roi-app[data-density="ultra-compact"] .copy-button {
+  min-width:136px;
+  padding-inline:12px;
+}
+.roi-app[data-density="ultra-compact"] .done-button {
+  min-width:150px;
+  padding-inline:14px;
+}
+
+/* 极窄视口不再强塞双栏；上下排列后由工作区统一滚动。 */
+@media (max-width:720px) {
+  .calculator-workspace {
+    grid-template-columns:1fr;
+    align-items:start;
+  }
+  .panel {
+    min-height:max-content;
+  }
+  .footer-bar > p {
+    display:none;
+  }
+}
+
+/*
+ * v10.613 主结果摘要防裁剪
+ *
+ * 旧版通过 transform 分别上移标题、下移摘要；transform 不参与网格
+ * 高度计算，在临界视口会把摘要推入滑杆行并被 roi-hero 裁掉。改为给
+ * 三行文字和滑杆分配真实高度，所有状态均保持在 hero-top 内部。
+ */
+.roi-hero {
+  grid-template-rows:minmax(118px,1fr) 56px;
+  padding:18px 24px 14px;
+}
+.hero-top {
+  min-height:0;
+  align-items:center;
+  overflow:visible;
+}
+.hero-copy {
+  min-height:0;
+  height:auto;
+  align-self:center;
+  justify-content:center;
+  overflow:visible;
+}
+.hero-copy > span,
+.hero-copy p {
+  transform:none;
+}
+.hero-copy strong {
+  margin:4px 0;
+}
+.hero-copy p {
+  line-height:1.5;
+  padding-bottom:1px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.threshold-wrap {
+  grid-template-rows:35px 20px;
+}
+
+.roi-app[data-density="comfortable"] .result-panel {
+  grid-template-rows:auto minmax(190px,1.65fr) minmax(70px,.7fr) minmax(82px,.78fr) minmax(52px,max-content);
+}
+.roi-app[data-density="comfortable"] .roi-hero {
+  grid-template-rows:minmax(108px,1fr) 48px;
+  padding:12px 18px 10px;
+}
+.roi-app[data-density="comfortable"] .threshold-wrap {
+  grid-template-rows:26px 20px;
+}
+.roi-app[data-density="comfortable"] .roi-slider-shell {
+  height:26px;
+}
+
+.roi-app[data-density="compact"] .result-panel {
+  grid-template-rows:auto minmax(164px,1.5fr) minmax(64px,.68fr) minmax(72px,.72fr) minmax(52px,max-content);
+}
+.roi-app[data-density="compact"] .roi-hero {
+  grid-template-rows:minmax(106px,1fr) 40px;
+  padding:10px 14px 8px;
+}
+.roi-app[data-density="compact"] .threshold-wrap {
+  grid-template-rows:23px 17px;
+}
+.roi-app[data-density="compact"] .roi-slider-shell {
+  height:23px;
+}
+
+.roi-app[data-density="ultra-compact"] .result-panel {
+  grid-template-rows:auto minmax(158px,1.45fr) minmax(60px,.65fr) minmax(68px,.7fr) minmax(52px,max-content);
+}
+.roi-app[data-density="ultra-compact"] .roi-hero {
+  grid-template-rows:minmax(104px,1fr) 38px;
+  padding:8px 12px 7px;
+}
+.roi-app[data-density="ultra-compact"] .threshold-wrap {
+  grid-template-rows:22px 16px;
+}
+.roi-app[data-density="ultra-compact"] .roi-slider-shell {
+  height:22px;
+}
+
+/* 商家 / 达人共用布局，保留两种版本各自的经营参数。 */
+.return-cost-setting {
+  margin-left:auto;
+  display:flex;
+  align-items:center;
+  gap:6px;
+  color:var(--muted);
+  font-size:12px;
+  white-space:nowrap;
+}
+.return-cost-setting select {
+  max-width:105px;
+  padding:4px 6px;
+  border:1px solid var(--line-strong);
+  border-radius:6px;
+  color:var(--text);
+  background:#fff;
+  font:inherit;
+}
+.creator-explainer {
+  grid-column:1 / -1;
+  align-self:stretch;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  gap:8px;
+  padding:14px 16px;
+  border:1px solid #d7e9e1;
+  border-radius:9px;
+  background:var(--green-soft);
+  color:#365d50;
+  font-size:13px;
+  line-height:1.6;
+}
+.creator-explainer b { color:#147653; font-size:14px; }
+.creator-explainer p { margin:0; }
+.mode-card:focus-visible,
+.return-cost-setting select:focus-visible { outline:2px solid var(--blue); outline-offset:2px; }
+.roi-app[data-version="creator"] .formula-row code { letter-spacing:-.25px; }
+@media (max-width:980px), (max-height:680px) {
+  .return-cost-setting { font-size:10px; gap:3px; }
+  .return-cost-setting select { max-width:82px; padding:2px 3px; }
+  .creator-explainer { padding:8px 10px; gap:4px; font-size:11px; line-height:1.4; }
+  .creator-explainer b { font-size:12px; }
+}

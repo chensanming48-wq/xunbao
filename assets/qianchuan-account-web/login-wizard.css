@@ -1,0 +1,62 @@
+.login-wizard { position: fixed; inset: 0; z-index: 40; background: #f5f8ff; padding: 20px; overflow: auto; }
+.login-wizard[hidden] { display: none; }
+.login-wizard .aui-wizard { display: flex; flex-direction: column; gap: 10px; flex:none; }
+.login-wizard .aui-steps { order: -1; display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 8px; padding: 8px 12px; }
+.login-wizard .aui-step { min-width: 0; padding: 4px; margin: 0; gap: 8px; }
+.login-wizard .aui-step h2 { font-size: 15px; margin: 0; }
+.login-wizard .aui-step p { font-size: 12px; margin: 3px 0 0; }
+.login-wizard .aui-step-number { flex-shrink: 0; }
+.login-wizard-platform { padding: 12px; min-width: 0; }
+.login-wizard-platform h2 { margin: 0 0 10px; font-size: 16px; }
+.login-wizard-host { height: calc(100vh - 320px); min-height: 120px; position: relative; background: #fff; display: grid; place-items: center; overflow: hidden; }
+.login-wizard-toolbar { display:flex; align-items:center; gap:8px; margin-bottom:6px; min-width:0; }
+.login-wizard-toolbar h2 { flex:1; margin:0; }
+.login-wizard-toolbar .aui-button { padding:4px 10px; min-height:30px; white-space:nowrap; }
+.login-wizard-host .login-wizard-loading { text-align: center; color: #617695; }
+.login-wizard-host.is-loading .login-wizard-loading::before { content: ''; display: block; margin: 0 auto 12px; width: 24px; height: 24px; border: 3px solid #e1eafa; border-top-color: #1765f2; border-radius: 50%; animation: login-wizard-spin .8s linear infinite; }
+@keyframes login-wizard-spin { to { transform: rotate(360deg); } }
+.login-wizard .error { color: #bb351f; }
+.login-wizard-quota { padding: 20px; background: white; min-width: 0; overflow: auto; max-height: calc(100vh - 200px); }
+.login-wizard-quota[hidden], .login-wizard-platform[hidden] { display: none; }
+.login-quota-row { display: flex; align-items: center; gap: 16px; padding: 10px 0; border-bottom: 1px solid #edf1f7; }
+.login-quota-row span { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.login-quota-confirm { margin-top: 16px; }
+.login-quota-confirm button + button { margin-left: 12px; }
+/* The browser gets the remaining real viewport instead of overflowing below
+   the shell. Its native child must never be hidden merely by a short window. */
+.login-wizard { overflow:hidden; }
+.login-wizard .aui-wizard { flex:1;min-height:0; }
+.login-wizard-platform { display:flex;flex-direction:column;flex:1;min-height:0; }
+.login-wizard-host { flex:1;height:auto;min-height:0; }
+.login-wizard .aui-steps,.login-wizard-toolbar,.login-wizard>.aui-notice,.login-wizard>header { flex-shrink:0; }
+@media (max-width: 850px) { .login-wizard { padding: 10px; } .login-wizard .aui-steps { gap: 4px; padding: 6px; } .login-wizard .aui-step { gap: 4px; } }
+/* Reserve toolbar space; native browser fits this viewport at the actual DPI. */
+@media (max-height:800px) {
+ .login-wizard { padding:10px;gap:6px; }
+ .login-wizard .aui-wizard { gap:6px;flex:1; }
+ .login-wizard .aui-steps { padding:4px 6px; }
+ .login-wizard .aui-step { padding:0; }
+ .login-wizard .aui-step p { display:none; }
+ .login-wizard-platform { padding:6px; }
+ .login-wizard-toolbar h2 { font-size:13px; }
+ .login-wizard-host { height:auto; }
+ .login-wizard>.aui-notice { padding:6px 10px;line-height:1.4; }
+}
+@media(max-height:500px) {
+ .login-wizard {padding:4px;gap:3px;}
+ .login-wizard .aui-workspace-header h1 {font-size:18px;}
+ .login-wizard .aui-button {height:28px;min-height:28px;font-size:12px;}
+ .login-wizard .aui-step-number {width:22px;height:22px;font-size:12px;}
+ .login-wizard .aui-step h2 {font-size:12px;}
+ .login-wizard .aui-wizard {gap:3px;}
+ .login-wizard-platform {padding:3px;}
+ .login-wizard-toolbar {margin-bottom:3px;gap:4px;}
+ .login-wizard>.aui-notice {font-size:12px;padding:2px 4px;}
+}
+
+/* Failure/loading status never overlays the provider browser. */
+.login-wizard-status { display:flex; align-items:center; gap:8px; flex:none; min-height:32px; }
+.login-wizard-status[hidden] { display:none; }
+.login-wizard-status .aui-notice { flex:1; min-width:0; margin:0; padding:4px 0; background:none; font-size:12px; line-height:1.4; }
+.login-wizard-status .aui-button { flex:none; min-height:28px; padding:4px 12px; }
+.login-wizard-status.is-loading .aui-notice::before { content:''; display:inline-block; width:12px; height:12px; margin-right:8px; border:2px solid #e1eafa; border-top-color:#1765f2; border-radius:50%; animation:login-wizard-spin .8s linear infinite; }

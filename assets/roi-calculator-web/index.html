@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ROI计算器 - 创爆</title>
+  <link rel="stylesheet" href="styles.css?v=20260916-mode-font-larger">
+</head>
+<body>
+  <main class="roi-app">
+    <header class="window-header" id="windowHeader">
+      <div class="brand-icon" data-icon="calculator"></div>
+      <div class="header-copy">
+        <h1>ROI计算器</h1>
+        <p id="headerDescription">输入商品成本与售后参数，实时测算最低不亏投放线</p>
+      </div>
+      <div class="header-spacer"></div>
+      <button class="reset-button" id="resetButton"><span data-icon="refresh"></span>重置数据</button>
+      <button class="close-button" id="closeButton" title="关闭"><span data-icon="close"></span></button>
+    </header>
+
+    <section class="context-strip">
+      <span class="info-dot">i</span>
+      <p><b>计算口径：</b><span id="contextText">支付 GMV ÷ 广告消耗；退货订单不计收入与扣点，运费按已发生费用计入。</span></p>
+    </section>
+
+    <section class="calculator-workspace">
+      <article class="panel input-panel">
+        <h2 class="simple-heading">经营参数</h2>
+        <div class="section-label"><span>1</span><b id="incomeSectionTitle">商品收入与成本</b></div>
+
+        <div class="input-grid">
+          <label class="field-group"><b>商品售价</b><span class="number-shell"><input id="salePrice" type="number" min="0" max="100000000" step="0.1" value="0.00"><em>元</em></span></label>
+          <label class="field-group" data-version="merchant"><b>商品成本</b><span class="number-shell"><input id="productCost" type="number" min="0" max="100000000" step="0.1" value="0.00"><em>元</em></span></label>
+          <label class="field-group" data-version="creator" hidden><b>商品佣金比例</b><span class="number-shell"><input id="commissionPercent" type="number" min="0" max="100" step="0.1" value="0.00"><em>%</em></span></label>
+          <label class="field-group" data-version="merchant"><b>商品运费</b><span class="number-shell"><input id="freight" type="number" min="0" max="100000000" step="0.1" value="0.00"><em>元</em></span></label>
+          <label class="field-group" data-version="merchant"><b>运费险</b><span class="number-shell"><input id="insurance" type="number" min="0" max="100000000" step="0.1" value="0.00"><em>元</em></span></label>
+          <div class="creator-explainer" data-version="creator" hidden><b>按实际结算佣金测算</b><p>退货订单不计佣金，平台服务费从佣金中扣除。</p><p>结算佣金 = 售价 × 佣金比例 × (1 − 服务费) × (1 − 退货率)</p></div>
+        </div>
+
+        <div class="section-label second"><span>2</span><b>平台与售后</b><label class="return-cost-setting" data-version="merchant">退货成本<select id="returnCostMode" aria-label="商家退货商品成本口径"><option value="resell">可回收</option><option value="lost">全部损失</option></select></label></div>
+        <div class="input-grid compact">
+          <label class="field-group" data-version="merchant"><b>平台扣点</b><span class="number-shell"><input id="platformFee" type="number" min="0" max="100" step="0.1" value="0.00"><em>%</em></span></label>
+          <label class="field-group" data-version="creator" hidden><b>平台服务费（按佣金扣除）</b><span class="number-shell"><input id="serviceFee" type="number" min="0" max="100" step="0.1" value="0.00"><em>%</em></span></label>
+          <label class="field-group"><b>预计退货率</b><span class="number-shell"><input id="refundRate" type="number" min="0" max="100" step="0.1" value="0.00"><em>%</em></span></label>
+        </div>
+
+        <section class="mode-section">
+          <h3>计算版本</h3>
+          <div class="mode-grid">
+            <button class="mode-card active" type="button" data-mode="merchant" aria-pressed="true"><span class="radio"><i></i></span><span><b>商家版</b><small>按商品成本测算</small></span></button>
+            <button class="mode-card" type="button" data-mode="creator" aria-pressed="false"><span class="radio"><i></i></span><span><b>达人版</b><small>按带货佣金测算</small></span></button>
+          </div>
+        </section>
+      </article>
+
+      <article class="panel result-panel">
+        <div class="result-heading"><h2>测算结果</h2></div>
+
+        <section class="roi-hero" id="roiHero">
+          <div class="hero-top">
+            <div class="hero-copy"><span>最低保本 ROI</span><strong id="breakEvenRoi">请输入信息</strong><p id="resultMeaning">填写售价和成本后，即可获得最低不亏投放线</p></div>
+            <span class="decision-status" id="decisionStatus"><i>●</i><b>待测算</b></span>
+          </div>
+          <div class="threshold-wrap">
+            <div class="roi-slider-shell" id="roiSliderShell">
+              <span class="break-even-marker" id="breakEvenMarker" hidden></span>
+              <input class="roi-slider" id="roiSlider" type="range" min="0.10" max="5.00" step="0.01" value="1.00" aria-label="目标投放 ROI" disabled>
+            </div>
+            <div class="threshold-labels"><span>低 ROI（亏损）</span><b id="breakEvenLabel">盈亏平衡线</b><span>高 ROI（盈利）</span></div>
+          </div>
+        </section>
+
+        <section class="metric-grid">
+          <article class="metric"><span class="metric-icon" data-icon="ad"></span><div><small id="adMetricLabel">可承受广告费 / 单</small><strong id="maxAdSpend">¥0.00</strong></div></article>
+          <article class="metric"><span class="metric-icon violet" data-icon="platform"></span><div><small id="feeMetricLabel">预计平台扣点</small><strong id="platformFeeValue">¥0.00</strong></div></article>
+          <article class="metric"><span class="metric-icon green" data-icon="percent"></span><div><small id="marginMetricLabel">推广前毛利率</small><strong id="marginValue">0.00%</strong></div></article>
+        </section>
+
+        <section class="formula-card" id="formulaCard">
+          <button class="formula-heading" id="formulaToggle" type="button" aria-expanded="true" aria-controls="formulaBody"><span data-icon="calculator-small"></span><b>计算依据</b><i data-icon="chevron"></i></button>
+          <div class="formula-body" id="formulaBody">
+            <div class="formula-row"><span id="formulaValueLabel">可承受广告费</span><code id="formulaValue">等待输入有效参数</code></div>
+            <div class="formula-row"><span>保本 ROI</span><code id="formulaRoi">等待输入有效参数</code></div>
+          </div>
+        </section>
+
+        <section class="decision-note"><span data-icon="lightbulb"></span><div><b>如何使用这个结果？</b><p id="usageTip">请先完善经营参数，再拖动目标 ROI 测算预计盈利或亏损。</p></div></section>
+      </article>
+    </section>
+
+    <footer class="footer-bar">
+      <p><span data-icon="info"></span>测算结果仅供投放决策参考，请结合真实经营数据定期校准。</p>
+      <div><button class="copy-button" id="copyButton"><span data-icon="copy"></span>复制测算结果</button><button class="done-button" id="doneButton">保存并关闭</button></div>
+    </footer>
+  </main>
+  <div class="toast" id="toast"></div>
+  <script src="app.js?v=20260916-merchant-creator"></script>
+</body>
+</html>

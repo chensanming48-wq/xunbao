@@ -1,0 +1,642 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>经营总览</title>
+  <link rel="stylesheet" href="styles.css?v=account-layout-20261001">
+  <link rel="stylesheet" href="recharge-center.css?v=20260918.1">
+<style id="membershipComparisonStyles">
+/* Selected three-version membership design. Kept with the inventoried page. */
+#purchaseModal .rc-center { width:min(1400px,calc(100vw - 36px)); display:flex; flex-direction:column; overflow:hidden; }
+#purchaseModal .rc-window-header { height:60px; flex-shrink:0; }
+#purchaseModal .rc-window-header h2 { font-size:18px; }
+#purchaseModal .rc-tabs { height:54px; flex-shrink:0; }
+#purchaseModal .rc-tab { font-size:16px; }
+#purchaseModal .rc-version-selection h3,#purchaseModal .rc-detail-header h3 { margin:0; }
+#purchaseModal .rc-membership { padding:22px 30px 16px; display:flex; flex-direction:column; min-height:0; }
+#purchaseModal .rc-membership-heading,#purchaseModal .activation-panel,#purchaseModal .rc-membership-disclaimer { flex-shrink:0; }
+#purchaseModal .rc-compute { min-height:0; overflow:auto; }
+#purchaseModal .rc-membership-v2-heading { position:relative; min-height:74px; margin-bottom:12px; display:flex; align-items:flex-start; justify-content:center; gap:20px; }
+#purchaseModal .rc-membership-v2-heading h2 { font-size:34px; line-height:1.4; }
+#purchaseModal .rc-membership-v2-heading p { font-size:17px; margin-top:4px; }
+#purchaseModal .rc-durations { position:absolute; right:0; bottom:6px; display:flex; border:1px solid #d7e4ff; border-radius:6px; overflow:hidden; background:#f5f8ff; }
+#purchaseModal .rc-durations button { min-width:80px; height:36px; padding:0 12px; font-size:15px; color:#7189b2; border-right:1px solid #d7e4ff; background:transparent; cursor:pointer; }
+#purchaseModal .rc-durations button:last-child { border-right:0; }
+#purchaseModal .rc-durations .selected { color:white; background:#2e70ff; }
+#purchaseModal .rc-membership-layout { display:grid; grid-template-columns:minmax(300px,.57fr) minmax(0,1fr); gap:20px; align-items:stretch; min-height:0; overflow:auto; }
+#purchaseModal .rc-version-selection { display:flex; flex-direction:column; gap:14px; }
+#purchaseModal .rc-version-selection h3 { font-size:21px; line-height:1.3; }
+#purchaseModal .rc-version-list { display:grid; grid-template-rows:repeat(3,1fr); gap:15px; flex:1; }
+#purchaseModal .rc-version { --accent:#008fbf; position:relative; display:flex; align-items:center; gap:14px; min-width:0; min-height:148px; padding:20px 20px 20px 16px; border:1px solid #d9e9fa; border-radius:12px; background:#fff; cursor:pointer; }
+#purchaseModal .rc-version:hover { border-color:var(--accent); }
+#purchaseModal .rc-version-advanced { --accent:#d15e00; }
+#purchaseModal .rc-version-flagship { --accent:#621ef0; }
+#purchaseModal .rc-version.selected { border-color:var(--accent); background:#fffbf5; box-shadow:inset 3px 0 var(--accent); }
+#purchaseModal .rc-version-basic.selected { background:#f4fcff; }
+#purchaseModal .rc-version-flagship.selected { background:#faf6ff; }
+#purchaseModal .rc-version input { width:22px; height:22px; flex:0 0 22px; accent-color:var(--accent); cursor:pointer; }
+#purchaseModal .rc-plan-icon { width:90px; height:95px; flex:0 0 auto; object-fit:contain; mix-blend-mode:multiply; clip-path:polygon(50% 7%,91% 25%,91% 74%,50% 94%,9% 74%,9% 25%); }
+#purchaseModal .rc-version-advanced .rc-plan-icon,#purchaseModal .rc-detail-advanced .rc-plan-icon { filter:hue-rotate(165deg) brightness(2.7); }
+#purchaseModal .rc-version-flagship .rc-plan-icon,#purchaseModal .rc-detail-flagship .rc-plan-icon { filter:hue-rotate(230deg); }
+#purchaseModal .rc-version-copy { display:flex; flex-direction:column; gap:5px; min-width:0; }
+#purchaseModal .rc-version-name { font-size:26px; font-weight:700; }
+#purchaseModal .rc-version-price { display:flex; align-items:baseline; gap:6px; color:var(--accent); }
+#purchaseModal .rc-version-price b { font:700 34px/1.25 Arial,sans-serif; }
+#purchaseModal .rc-duration { font-size:17px; color:#6f85b0; }
+#purchaseModal .rc-version-summary,#purchaseModal .rc-version-quota { font-size:16px; line-height:1.5; color:#7188b0; }
+#purchaseModal .rc-recommend { position:absolute; right:0; top:0; padding:4px 12px; border-radius:0 11px 0 9px; background:#fff0d9; color:#b44f00; font-size:14px; font-weight:700; }
+#purchaseModal .rc-version-detail { --accent:#d15e00; --surface:#fff6ea; display:flex; flex-direction:column; min-width:0; margin-top:25px; padding:18px 22px; border:1px solid #f5e6d5; border-radius:12px; background:#fffcf8; }
+#purchaseModal .rc-detail-basic { --accent:#008fbf; --surface:#eefaff; border-color:#d9edf4; background:#fcfeff; }
+#purchaseModal .rc-detail-flagship { --accent:#621ef0; --surface:#f4efff; border-color:#e9e0ff; background:#fdfbff; }
+#purchaseModal .rc-detail-header { display:flex; align-items:center; justify-content:space-between; gap:15px; margin-bottom:16px; }
+#purchaseModal .rc-detail-header>div { display:flex; align-items:center; gap:16px; }
+#purchaseModal .rc-detail-header h3 { font-size:40px; line-height:1.35; }
+#purchaseModal .rc-detail-header p { font-size:17px; margin-top:5px; }
+#purchaseModal .rc-detail-price { display:flex; align-items:baseline; white-space:nowrap; color:var(--accent); }
+#purchaseModal .rc-detail-price>span { font:700 27px Arial,sans-serif; }
+#purchaseModal .rc-detail-price strong { font:700 49px/1.2 Arial,sans-serif; }
+#purchaseModal .rc-detail-price small { font-size:22px; font-weight:600; }
+#purchaseModal .rc-detail-quotas { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); padding:14px 4px; border-radius:9px; background:var(--surface); }
+#purchaseModal .rc-detail-quotas>div { display:flex; flex-direction:column-reverse; align-items:center; gap:6px; border-right:1px solid #eadcc8; }
+#purchaseModal .rc-detail-quotas>div:last-child { border-right:0; }
+#purchaseModal .rc-detail-quotas dt { color:#7189ae; font-size:15px; }
+#purchaseModal .rc-detail-quotas dd { color:var(--accent); font:700 29px/1.2 Arial,sans-serif; white-space:nowrap; }
+#purchaseModal .rc-detail-quotas small { font-size:16px; font-family:inherit; font-weight:500; }
+#purchaseModal .rc-gift-note { margin:7px 0 13px; color:#7b8fb4; font-size:12px; text-align:right; }
+#purchaseModal .rc-extra-features h4,#purchaseModal .rc-core-features h4 { font-size:22px; line-height:1.4; margin:0 0 10px; }
+#purchaseModal .rc-feature-list { margin:0; padding:15px 19px; list-style:none; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); column-gap:16px; row-gap:13px; border-radius:8px; }
+#purchaseModal .rc-extra-list { background:var(--surface); }
+#purchaseModal .rc-core-list { background:#eff7ff; }
+#purchaseModal .rc-feature-list li { display:flex; align-items:center; gap:15px; font-size:20px; line-height:1.35; min-width:0; }
+#purchaseModal .rc-feature-check { width:25px; height:25px; flex:0 0 25px; filter:invert(36%) sepia(94%) saturate(3700%) hue-rotate(213deg) brightness(101%) contrast(104%); }
+#purchaseModal .rc-extra-list .rc-feature-check { filter:invert(49%) sepia(99%) saturate(3429%) hue-rotate(3deg) brightness(100%) contrast(107%); }
+#purchaseModal .rc-detail-flagship .rc-extra-list .rc-feature-check { filter:invert(24%) sepia(96%) saturate(6498%) hue-rotate(255deg) brightness(91%) contrast(103%); }
+#purchaseModal .rc-detail-basic .rc-extra-list { background:#f4f6f9; }
+#purchaseModal .rc-detail-basic .rc-extra-list li { color:#8995a8; }
+#purchaseModal .rc-detail-basic .rc-extra-list .rc-feature-check { visibility:hidden; }
+#purchaseModal .rc-basic-upgrade { font-size:13px; color:#63799c; margin-top:6px; }
+#purchaseModal .rc-core-features { margin-top:16px; }
+#purchaseModal .rc-capacity-note { margin-top:14px; padding:11px 14px; color:#6423db; background:#f4efff; border-radius:7px; font-size:14px; line-height:1.5; }
+#purchaseModal .activation-panel { display:grid; grid-template-columns:auto minmax(0,1fr); column-gap:30px; align-items:center; margin-top:18px; padding:13px 20px; }
+#purchaseModal .activation-form { grid-template-columns:minmax(0,1fr) 175px; margin-top:0; }
+#purchaseModal .activation-feedback { grid-column:1/-1; }
+#purchaseModal .activation-helper { grid-column:1/-1; margin-top:8px; }
+#purchaseModal .rc-membership-disclaimer { text-align:right; margin-top:8px; color:#7b8fb4; font-size:12px; }
+@media(min-width:1001px) and (max-width:1270px) {
+ #purchaseModal .rc-membership-v2-heading { justify-content:flex-start; min-height:75px; }
+ #purchaseModal .rc-membership-v2-heading h2 { font-size:27px; }
+ #purchaseModal .rc-membership-v2-heading p { font-size:15px; }
+ #purchaseModal .rc-durations { bottom:0; }
+ #purchaseModal .rc-durations button { min-width:67px; }
+ #purchaseModal .rc-version { gap:10px; padding:16px 12px; }
+ #purchaseModal .rc-version .rc-plan-icon { width:56px; height:60px; }
+ #purchaseModal .rc-version-detail { padding:20px; }
+ #purchaseModal .rc-detail-header h3 { font-size:29px; }
+ #purchaseModal .rc-detail-price strong { font-size:39px; }
+ #purchaseModal .rc-detail-header p { font-size:15px; }
+ #purchaseModal .rc-detail-quotas dd { font-size:23px; }
+ #purchaseModal .rc-feature-list li { font-size:16px; gap:10px; }
+}
+@media(max-height:900px) and (min-width:1001px) {
+ #purchaseModal .rc-membership { padding:16px 24px 12px; }
+ #purchaseModal .rc-membership-v2-heading { min-height:74px; margin-bottom:10px; }
+ #purchaseModal .rc-version-selection { gap:10px; }
+ #purchaseModal .rc-version { min-height:126px; padding-top:13px; padding-bottom:13px; }
+ #purchaseModal .rc-version-detail { padding:18px; }
+ #purchaseModal .rc-detail-header { margin-bottom:12px; }
+ #purchaseModal .rc-detail-header h3 { font-size:29px; }
+ #purchaseModal .rc-detail-header .rc-plan-icon { width:62px; height:65px; }
+ #purchaseModal .rc-detail-quotas { padding:11px 2px; }
+ #purchaseModal .rc-feature-list { padding:11px 14px; row-gap:9px; }
+ #purchaseModal .rc-feature-list li { font-size:16px; }
+ #purchaseModal .rc-core-features { margin-top:13px; }
+ #purchaseModal .rc-capacity-note { margin-top:12px; padding:8px 10px; font-size:12px; }
+ #purchaseModal .rc-extra-features h4,#purchaseModal .rc-core-features h4 { font-size:18px; margin-bottom:7px; }
+ #purchaseModal .activation-panel { margin-top:13px; padding:11px 15px; }
+ #purchaseModal .activation-helper { font-size:10px; margin-top:5px; }
+}
+@media(max-width:1000px) {
+ #purchaseModal .rc-membership-v2-heading { flex-direction:column; align-items:center; min-height:0; gap:12px; }
+ #purchaseModal .rc-membership-v2-heading h2 { font-size:26px; }
+ #purchaseModal .rc-durations { position:static; }
+ #purchaseModal .rc-membership-layout { grid-template-columns:1fr; gap:16px; }
+ #purchaseModal .rc-version-detail { margin-top:0; }
+ #purchaseModal .rc-version-list { grid-template-columns:repeat(3,minmax(0,1fr)); grid-template-rows:auto; gap:10px; }
+ #purchaseModal .rc-version { flex-wrap:wrap; gap:8px; padding:13px 12px; min-height:0; }
+ #purchaseModal .rc-version .rc-plan-icon { width:42px; height:44px; }
+ #purchaseModal .rc-version-copy { flex-basis:100%; }
+ #purchaseModal .rc-version-name { font-size:19px; }
+ #purchaseModal .rc-version-price b { font-size:25px; }
+ #purchaseModal .rc-version-quota { font-size:12px; }
+ #purchaseModal .activation-panel { grid-template-columns:1fr; gap:10px; }
+}
+@media(max-width:650px) {
+ #purchaseModal .rc-membership { padding:16px; }
+ #purchaseModal .rc-membership-v2-heading h2 { font-size:22px; }
+ #purchaseModal .rc-membership-v2-heading p { font-size:13px; }
+ #purchaseModal .rc-durations button { min-width:65px; padding:0 8px; }
+ #purchaseModal .rc-version-list { grid-template-columns:1fr; }
+ #purchaseModal .rc-version { flex-wrap:nowrap; }
+ #purchaseModal .rc-version-copy { flex-basis:auto; }
+ #purchaseModal .rc-version-quota { font-size:13px; }
+ #purchaseModal .rc-version-detail { padding:16px; }
+ #purchaseModal .rc-detail-header { flex-wrap:wrap; }
+ #purchaseModal .rc-detail-header h3 { font-size:26px; }
+ #purchaseModal .rc-detail-header p { font-size:14px; }
+ #purchaseModal .rc-detail-header .rc-plan-icon { width:50px; height:54px; }
+ #purchaseModal .rc-detail-price strong { font-size:35px; }
+ #purchaseModal .rc-detail-price small { font-size:18px; }
+ #purchaseModal .rc-detail-quotas { grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px 0; }
+ #purchaseModal .rc-detail-quotas>div:nth-child(2) { border-right:0; }
+ #purchaseModal .rc-feature-list { grid-template-columns:1fr; }
+ #purchaseModal .rc-feature-list li { font-size:16px; }
+ #purchaseModal .activation-form { grid-template-columns:1fr; }
+}
+
+/* Fit membership content to the dialog; do not conceal overflowing content. */
+#purchaseModal .rc-center { height:min(960px,calc(100vh - 28px)); max-height:calc(100vh - 28px); }
+#purchaseModal .rc-window-header { height:52px; }
+#purchaseModal .rc-tabs { height:46px; }
+#purchaseModal .rc-membership { flex:1; padding:16px 22px 12px; overflow:visible; }
+#purchaseModal .rc-membership-v2-heading { position:static; min-height:60px; margin-bottom:12px; flex-direction:row; justify-content:space-between; align-items:center; gap:16px; text-align:left; }
+#purchaseModal .rc-membership-v2-heading h2 { font-size:28px; line-height:1.25; }
+#purchaseModal .rc-membership-v2-heading p { font-size:14px; line-height:1.4; margin-top:5px; }
+#purchaseModal .rc-durations { position:static; display:grid; grid-template-columns:repeat(4,1fr); flex:0 0 auto; gap:8px; padding:0; border:0; border-radius:0; overflow:visible; background:transparent; }
+#purchaseModal .rc-durations button { min-width:76px; height:56px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px; padding:7px 12px; border:1px solid #d9e5f8; border-radius:10px; color:#536b93; background:#f8faff; line-height:1.15; transition:background .12s,border-color .12s,box-shadow .12s; }
+#purchaseModal .rc-durations button:last-child { border-right:1px solid #d9e5f8; }
+#purchaseModal .rc-durations button span { font-size:16px; font-weight:600; }
+#purchaseModal .rc-durations button small { font-size:11px; color:#899cbb; }
+#purchaseModal .rc-durations button:hover { border-color:#7ea5ff; background:#eff5ff; }
+#purchaseModal .rc-durations button.selected { border-color:#2e70ff; background:#2e70ff; color:#fff; box-shadow:0 3px 9px #2e70ff24; }
+#purchaseModal .rc-durations button.selected small { color:#e5edff; }
+#purchaseModal .rc-durations button:focus-visible { outline:2px solid #7da6ff; outline-offset:3px; }
+#purchaseModal .rc-membership-layout { flex:1; grid-template-columns:minmax(260px,.55fr) minmax(0,1fr); gap:18px; overflow:visible; min-height:0; }
+#purchaseModal .rc-version-selection { min-height:0; gap:8px; }
+#purchaseModal .rc-version-selection h3 { font-size:17px; line-height:1.25; }
+#purchaseModal .rc-version-list { min-height:0; grid-template-columns:1fr; grid-template-rows:repeat(3,minmax(0,1fr)); gap:10px; }
+#purchaseModal .rc-version { min-height:0; flex-wrap:nowrap; gap:10px; padding:12px; }
+#purchaseModal .rc-version .rc-plan-icon { width:60px; height:64px; }
+#purchaseModal .rc-version input { width:19px; height:19px; flex-basis:19px; }
+#purchaseModal .rc-version-copy { flex-basis:auto; gap:3px; }
+#purchaseModal .rc-version-name { font-size:22px; }
+#purchaseModal .rc-version-price b { font-size:30px; }
+#purchaseModal .rc-duration { font-size:14px; }
+#purchaseModal .rc-version-summary { font-size:14px; line-height:1.35; }
+#purchaseModal .rc-version-quota { font-size:12px; line-height:1.35; }
+#purchaseModal .rc-recommend { padding:3px 9px; font-size:12px; }
+#purchaseModal .rc-version-detail { display:grid; grid-template-rows:auto auto auto minmax(min-content,2fr) minmax(min-content,3fr) auto; gap:8px; min-height:0; margin-top:0; padding:12px 16px; }
+#purchaseModal .rc-detail-header { flex-wrap:nowrap; min-width:0; gap:10px; margin:0; }
+#purchaseModal .rc-detail-header>div { min-width:0; gap:10px; }
+#purchaseModal .rc-detail-header .rc-plan-icon { width:55px; height:58px; }
+#purchaseModal .rc-detail-header h3 { font-size:30px; line-height:1.25; }
+#purchaseModal .rc-detail-header p { font-size:14px; line-height:1.35; margin-top:4px; }
+#purchaseModal .rc-detail-price>span { font-size:21px; }
+#purchaseModal .rc-detail-price strong { font-size:40px; }
+#purchaseModal .rc-detail-price small { font-size:18px; }
+#purchaseModal .rc-detail-quotas { grid-template-columns:repeat(4,minmax(0,1fr)); gap:0; padding:9px 2px; }
+#purchaseModal .rc-detail-quotas>div { gap:4px; }
+#purchaseModal .rc-detail-quotas>div:nth-child(2) { border-right:1px solid #eadcc8; }
+#purchaseModal .rc-detail-quotas dt { font-size:12px; line-height:1.3; }
+#purchaseModal .rc-detail-quotas dd { font-size:24px; }
+#purchaseModal .rc-detail-quotas small { font-size:13px; }
+#purchaseModal .rc-gift-note { margin:0; font-size:11px; line-height:1.3; }
+#purchaseModal .rc-extra-features,#purchaseModal .rc-core-features { display:flex; flex-direction:column; min-height:min-content; margin:0; }
+#purchaseModal .rc-extra-features h4,#purchaseModal .rc-core-features h4 { flex:0 0 auto; font-size:18px; line-height:1.25; margin:0 0 6px; }
+#purchaseModal .rc-feature-list { flex:1; min-height:min-content; align-content:center; grid-template-columns:repeat(2,minmax(0,1fr)); padding:8px 12px; column-gap:12px; row-gap:6px; }
+#purchaseModal .rc-feature-list li { font-size:16px; line-height:1.25; gap:9px; }
+#purchaseModal .rc-feature-check { width:20px; height:20px; flex-basis:20px; }
+#purchaseModal .rc-basic-upgrade { font-size:11px; line-height:1.3; margin-top:4px; }
+#purchaseModal .rc-capacity-note { margin:0; padding:7px 10px; font-size:12px; line-height:1.35; }
+#purchaseModal .activation-panel { grid-template-columns:auto minmax(0,1fr); gap:0 22px; margin-top:12px; padding:10px 14px; }
+#purchaseModal .activation-form { grid-template-columns:minmax(0,1fr) 142px; margin:0; }
+#purchaseModal .activation-helper { margin-top:6px; font-size:10px; }
+#purchaseModal .rc-membership-disclaimer { margin-top:6px; font-size:11px; line-height:1.3; }
+@media(max-width:1100px) {
+ #purchaseModal .rc-membership-v2-heading h2 { font-size:24px; }
+ #purchaseModal .rc-membership-v2-heading p { font-size:13px; }
+ #purchaseModal .rc-durations button { min-width:66px; padding-inline:9px; }
+ #purchaseModal .rc-membership-layout { grid-template-columns:minmax(240px,.54fr) minmax(0,1fr); gap:12px; }
+ #purchaseModal .rc-version .rc-plan-icon { width:42px; height:46px; }
+ #purchaseModal .rc-version { gap:7px; padding:10px; }
+ #purchaseModal .rc-version-name { font-size:20px; }
+ #purchaseModal .rc-version-price b { font-size:27px; }
+ #purchaseModal .rc-version-summary { font-size:12px; }
+ #purchaseModal .rc-version-quota { font-size:11px; }
+ #purchaseModal .rc-detail-header .rc-plan-icon { width:42px; height:46px; }
+ #purchaseModal .rc-detail-header h3 { font-size:25px; }
+ #purchaseModal .rc-detail-header p { font-size:12px; }
+ #purchaseModal .rc-detail-price strong { font-size:34px; }
+ #purchaseModal .rc-detail-price small { font-size:16px; }
+ #purchaseModal .rc-detail-quotas dd { font-size:21px; }
+ #purchaseModal .rc-feature-list li { font-size:14px; }
+}
+@media(max-height:780px) {
+ #purchaseModal .rc-center { height:calc(100vh - 20px); max-height:calc(100vh - 20px); }
+ #purchaseModal .rc-window-header { height:46px; }
+ #purchaseModal .rc-tabs { height:40px; }
+ #purchaseModal .rc-membership { padding:10px 18px 8px; }
+ #purchaseModal .rc-membership-v2-heading { min-height:52px; margin-bottom:8px; }
+ #purchaseModal .rc-membership-v2-heading h2 { font-size:23px; }
+ #purchaseModal .rc-membership-v2-heading p { font-size:12px; margin-top:3px; }
+ #purchaseModal .rc-durations button { height:46px; min-width:65px; padding:5px 9px; }
+ #purchaseModal .rc-durations button span { font-size:14px; }
+ #purchaseModal .rc-version { padding:8px 10px; }
+ #purchaseModal .rc-version-quota { display:none; }
+ #purchaseModal .rc-version-name { font-size:19px; }
+ #purchaseModal .rc-version-price b { font-size:26px; }
+ #purchaseModal .rc-version-summary { font-size:12px; }
+ #purchaseModal .rc-version-detail { gap:5px; padding:9px 12px; }
+ #purchaseModal .rc-detail-header .rc-plan-icon { width:40px; height:42px; }
+ #purchaseModal .rc-detail-header h3 { font-size:23px; }
+ #purchaseModal .rc-detail-header p { font-size:11px; margin-top:2px; }
+ #purchaseModal .rc-detail-price strong { font-size:32px; }
+ #purchaseModal .rc-detail-price small { font-size:15px; }
+ #purchaseModal .rc-detail-quotas { padding:6px 2px; }
+ #purchaseModal .rc-detail-quotas dt { font-size:11px; }
+ #purchaseModal .rc-detail-quotas dd { font-size:20px; }
+ #purchaseModal .rc-detail-quotas small { font-size:11px; }
+ #purchaseModal .rc-gift-note { font-size:10px; }
+ #purchaseModal .rc-extra-features h4,#purchaseModal .rc-core-features h4 { font-size:16px; margin-bottom:4px; }
+ #purchaseModal .rc-feature-list { padding:6px 9px; row-gap:4px; column-gap:8px; }
+ #purchaseModal .rc-feature-list li { font-size:13px; line-height:1.25; gap:6px; }
+ #purchaseModal .rc-feature-check { width:17px; height:17px; flex-basis:17px; }
+ #purchaseModal .rc-capacity-note { padding:6px 8px; font-size:11px; }
+ #purchaseModal .activation-panel { margin-top:8px; padding:8px 12px; }
+ #purchaseModal .activation-code-field,#purchaseModal .activate-now { height:36px; }
+ #purchaseModal .activation-helper { margin-top:4px; }
+ #purchaseModal .rc-membership-disclaimer { margin-top:4px; font-size:10px; }
+}
+@media(max-width:760px) {
+ #purchaseModal .rc-center { width:calc(100vw - 20px); }
+ #purchaseModal .rc-window-header { height:46px; padding-inline:16px; }
+ #purchaseModal .rc-tabs { height:42px; padding-inline:12px; }
+ #purchaseModal .rc-membership { padding:10px 12px 8px; }
+ #purchaseModal .rc-membership-v2-heading { flex-direction:column; gap:8px; min-height:0; align-items:stretch; text-align:center; margin-bottom:7px; }
+ #purchaseModal .rc-membership-v2-heading h2 { font-size:21px; }
+ #purchaseModal .rc-membership-v2-heading p { font-size:12px; }
+ #purchaseModal .rc-durations { width:100%; gap:7px; }
+ #purchaseModal .rc-durations button { min-width:0; height:44px; }
+ #purchaseModal .rc-durations button span { font-size:14px; }
+ #purchaseModal .rc-membership-layout { grid-template-columns:minmax(0,1fr); grid-template-rows:auto minmax(0,1fr); gap:8px; }
+ #purchaseModal .rc-version-selection { gap:6px; }
+ #purchaseModal .rc-version-selection h3 { display:none; }
+ #purchaseModal .rc-version-list { grid-template-columns:repeat(3,minmax(0,1fr)); grid-template-rows:auto; gap:7px; }
+ #purchaseModal .rc-version { padding:8px; gap:6px; min-height:68px; }
+ #purchaseModal .rc-version .rc-plan-icon,#purchaseModal .rc-version-quota { display:none; }
+ #purchaseModal .rc-version-name { font-size:17px; }
+ #purchaseModal .rc-version-price b { font-size:23px; }
+ #purchaseModal .rc-duration { font-size:11px; }
+ #purchaseModal .rc-version-summary { display:none; }
+ #purchaseModal .rc-version input { width:15px; height:15px; flex-basis:15px; }
+ #purchaseModal .rc-recommend { padding:2px 5px; font-size:9px; }
+ #purchaseModal .rc-version-detail { padding:7px 12px; gap:3px; }
+ #purchaseModal .rc-basic-upgrade { margin-top:2px; }
+ #purchaseModal .rc-detail-header .rc-plan-icon { width:38px; height:40px; }
+ #purchaseModal .rc-detail-header h3 { font-size:23px; }
+ #purchaseModal .rc-detail-header p { font-size:11px; }
+ #purchaseModal .rc-detail-price strong { font-size:32px; }
+ #purchaseModal .rc-detail-price small { font-size:15px; }
+ #purchaseModal .rc-detail-quotas { padding:6px 2px; }
+ #purchaseModal .rc-detail-quotas dd { font-size:20px; }
+ #purchaseModal .rc-detail-quotas small,#purchaseModal .rc-detail-quotas dt { font-size:11px; }
+ #purchaseModal .rc-extra-features h4,#purchaseModal .rc-core-features h4 { font-size:16px; margin-bottom:4px; }
+ #purchaseModal .rc-feature-list { padding:6px 9px; row-gap:4px; }
+ #purchaseModal .rc-feature-list li { font-size:13px; }
+ #purchaseModal .rc-feature-check { width:17px; height:17px; flex-basis:17px; }
+ #purchaseModal .rc-gift-note { font-size:10px; }
+ #purchaseModal .rc-capacity-note { padding:6px 8px; font-size:11px; }
+ #purchaseModal .activation-panel { gap:6px 10px; padding:8px 10px; margin-top:8px; }
+ #purchaseModal .activation-panel-title { grid-column:auto; gap:6px; }
+ #purchaseModal .activation-panel-title small { display:none; }
+ #purchaseModal .rc-key-circle { width:24px; height:24px; flex-basis:24px; }
+ #purchaseModal .rc-key-circle svg { width:18px; height:18px; }
+ #purchaseModal .activation-panel-title strong { font-size:13px; }
+ #purchaseModal .activation-form { grid-column:auto; grid-template-columns:minmax(0,1fr) 105px; }
+ #purchaseModal .activation-code-field,#purchaseModal .activate-now { height:36px; }
+ #purchaseModal .activation-helper { margin-top:2px; font-size:9px; }
+ #purchaseModal .rc-membership-disclaimer { margin-top:4px; font-size:10px; }
+}
+/* Match the native tutorial button; keep the existing support action. */
+#purchaseModal .rc-support-button {
+  box-sizing:border-box; display:inline-flex; align-items:center; justify-content:center;
+  width:120px; min-width:120px; height:38px; min-height:38px; padding:0 17px; margin:0;
+  border:1px solid #79a6ff; border-radius:9px; background:rgba(255,255,255,.92); color:#1765f2;
+  font-family:"Microsoft YaHei UI","Microsoft YaHei",sans-serif; font-size:14px; line-height:20px;
+  font-weight:650; white-space:nowrap; cursor:pointer; flex-shrink:0; gap:8px;
+  box-shadow:none; appearance:none; transition:background .15s ease,border-color .15s ease,transform .15s ease;
+}
+#purchaseModal .rc-support-button svg {
+  width:19px; height:19px; flex-shrink:0; fill:none; stroke:currentColor;
+  stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; pointer-events:none;
+}
+#purchaseModal .rc-support-button:hover { background:#f3f7ff; border-color:#3e7cf4; }
+#purchaseModal .rc-support-button:active { transform:translateY(1px); }
+#purchaseModal .rc-support-button:focus-visible { outline:2px solid rgba(23,101,242,.34); outline-offset:2px; }
+</style>
+</head>
+<body>
+  <main class="dashboard" aria-label="经营总览">
+    <header class="topbar">
+      <section class="headline">
+        <div class="headline-row">
+          <h1>经营总览</h1>
+        </div>
+        <p>店铺经营、投放与素材任务统一查看</p>
+      </section>
+
+      <section class="header-actions" aria-label="软件账号与刷新">
+        <div class="account-overview-card">
+          <div class="account-menu-wrap" id="accountMenuWrap">
+            <button class="account-summary" id="accountMenuButton" type="button" aria-haspopup="menu" aria-expanded="false" aria-controls="accountDropdown">
+              <span class="account-icon" aria-hidden="true"><img src="icons/user-round.svg" alt=""></span>
+              <span class="account-copy">
+                <strong id="accountName">软件账号</strong>
+                <span class="account-identity-line">
+                  <span id="accountId">未登录</span>
+                  <img class="account-chevron" src="icons/chevron-down.svg" alt="" aria-hidden="true">
+                </span>
+              </span>
+            </button>
+            <div class="account-dropdown" id="accountDropdown" role="menu" aria-label="软件账号菜单" hidden>
+              <div class="account-dropdown-profile">
+                <span>当前登录账号</span>
+                <strong id="accountDropdownIdentifier">未登录</strong>
+              </div>
+              <button class="account-dropdown-action" id="accountDropdownPurchase" type="button" role="menuitem">
+                <span class="account-dropdown-action-icon" aria-hidden="true"><img src="icons/key-round.svg" alt=""></span>
+                <span class="account-dropdown-action-copy"><strong>充值 / 激活</strong><small>查看版本与授权服务</small></span>
+              </button>
+            </div>
+          </div>
+          <i class="account-divider" aria-hidden="true"></i>
+          <div class="authorization-summary" id="authorizationSummary">
+            <span class="authorization-icon" aria-hidden="true"><img src="icons/shield-check.svg" alt=""></span>
+            <div class="authorization-copy">
+              <strong id="authorizationLabel">授权状态</strong>
+              <span class="activation-status inactive" id="activationStatus" aria-live="polite">
+                <span class="activation-plan-name" id="activationPlanName">未激活</span>
+                <span class="activation-status-detail" id="activationStatusDetail" hidden></span>
+              </span>
+            </div>
+          </div>
+          <i class="account-divider" aria-hidden="true"></i>
+          <div class="points-summary">
+            <span class="points-icon" aria-hidden="true"><img src="icons/badge-japanese-yen.svg" alt=""></span>
+            <div class="points-copy"><strong>可用算力</strong><span id="pointsValue">—</span></div>
+          </div>
+          <button class="purchase-entry" id="purchaseEntryButton" type="button" aria-haspopup="dialog" aria-controls="purchaseModal">
+            <img class="purchase-entry-icon" src="icons/key-round.svg" alt="">
+            充值 / 激活
+          </button>
+        </div>
+      </section>
+    </header>
+
+    <section class="metric-grid" aria-label="账户余额与经营指标">
+      <article class="metric-card">
+        <div class="metric-icon blue" aria-hidden="true">
+          <svg viewBox="0 0 32 32"><rect x="4" y="8" width="24" height="19" rx="3"></rect><path d="M5 9V6h19v2M28 15h-8v6h8M23 18h1"></path></svg>
+        </div>
+        <div class="metric-content"><span class="metric-title">账户总余额</span><strong id="metricBalance">—</strong><small id="metricBalanceNote">同步后展示账户余额</small></div>
+      </article>
+      <article class="metric-card">
+        <div class="metric-icon blue" aria-hidden="true">
+          <svg viewBox="0 0 32 32"><path d="M9 6l7 10 7-10M10 15h12M10 20h12M16 15v11"></path></svg>
+        </div>
+        <div class="metric-content"><span class="metric-title">今日成交金额</span><strong id="metricGmv">¥0.00</strong><small id="metricGmvNote">暂无可比数据</small></div>
+      </article>
+      <article class="metric-card">
+        <div class="metric-icon green" aria-hidden="true">
+          <svg viewBox="0 0 32 32"><rect x="5" y="8" width="22" height="16" rx="2"></rect><path d="M5 13h22M20 19h3"></path></svg>
+        </div>
+        <div class="metric-content"><span class="metric-title">今日广告消耗</span><strong id="metricSpend">¥0.00</strong><small id="metricSpendNote">暂无可比数据</small></div>
+      </article>
+      <article class="metric-card">
+        <div class="metric-icon orange" aria-hidden="true">
+          <svg viewBox="0 0 32 32"><path d="M6 25V7M6 25h21M10 20l5-6 4 4 7-9"></path><path d="M22 9h4v4"></path></svg>
+        </div>
+        <div class="metric-content"><span class="metric-title">综合 ROI</span><strong id="metricRoi">—</strong><small id="metricRoiNote">数据不足</small></div>
+      </article>
+      <article class="metric-card">
+        <div class="metric-icon purple" aria-hidden="true">
+          <svg viewBox="0 0 32 32"><path d="M5 12l3-6h16l3 6"></path><path d="M7 15v11h18V15M12 26v-7h8v7"></path><path d="M5 12c0 3 4 4 6 1 2 3 6 3 8 0 2 3 6 2 8-1"></path></svg>
+        </div>
+        <div class="metric-content"><span class="metric-title">正常店铺</span><strong id="metricHealthy">0 / 0</strong><small class="warning" id="metricHealthyNote">暂无店铺</small></div>
+      </article>
+    </section>
+
+    <section class="middle-grid">
+      <article class="card trend-card">
+        <div class="card-head">
+          <div class="title-with-info"><h2>经营趋势</h2><span class="info" title="根据当前选择周期展示汇总趋势">i</span></div>
+          <div class="period-tabs" role="tablist" aria-label="经营趋势周期">
+            <button class="period active" data-period="Today" type="button">今日</button>
+            <button class="period" data-period="Last7Days" type="button">7天</button>
+            <button class="period" data-period="Last30Days" type="button">30天</button>
+          </div>
+        </div>
+        <div class="legend"><span><i class="dot blue-dot"></i>成交金额</span><span><i class="dot green-dot"></i>广告消耗</span></div>
+        <div class="chart" id="trendChart" tabindex="0" aria-label="成交金额与广告消耗趋势图，可移动鼠标或使用左右方向键查看每个时间点的数据">
+          <svg id="trendSvg" viewBox="0 0 760 205" preserveAspectRatio="none" aria-hidden="true"></svg>
+          <div class="chart-tooltip" id="trendTooltip" role="status" aria-live="polite" aria-hidden="true" hidden>
+            <strong id="trendTooltipLabel">--:--</strong>
+            <span><i class="tooltip-swatch blue"></i><em>成交金额</em><b id="trendTooltipGmv">¥0.00</b></span>
+            <span><i class="tooltip-swatch green"></i><em>广告消耗</em><b id="trendTooltipSpend">¥0.00</b></span>
+          </div>
+          <div class="chart-empty" id="chartEmpty">
+            <span class="empty-chart-icon"><i></i><i></i><i></i></span>
+            <strong id="chartEmptyMessage" role="status">同步数据后展示经营趋势</strong>
+          </div>
+        </div>
+      </article>
+
+      <article class="card pending-card">
+        <div class="card-head"><h2>待处理事项</h2></div>
+        <div class="pending-list" id="pendingList"></div>
+      </article>
+    </section>
+
+    <section class="card store-card">
+      <div class="store-toolbar">
+        <h2>店铺经营概览</h2>
+        <div class="filters">
+          <label class="search-box">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"></circle><path d="M15.5 15.5L21 21"></path></svg>
+            <input id="shopSearch" type="search" placeholder="搜索店铺名称" autocomplete="off">
+          </label>
+          <div class="filter-select" data-filter-select>
+            <select id="loginFilter" class="filter-select-source" aria-hidden="true" tabindex="-1"><option value="">登录状态</option></select>
+            <button class="filter-select-trigger" id="loginFilterTrigger" type="button" aria-haspopup="listbox" aria-expanded="false" aria-controls="loginFilterMenu" aria-label="登录状态">
+              <span class="filter-select-label">登录状态</span>
+              <span class="filter-select-chevron" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m7 9 5 5 5-5"></path></svg></span>
+            </button>
+            <div class="filter-select-menu" id="loginFilterMenu" role="listbox" aria-label="登录状态" hidden></div>
+          </div>
+          <div class="filter-select" data-filter-select>
+            <select id="syncFilter" class="filter-select-source" aria-hidden="true" tabindex="-1"><option value="">同步状态</option></select>
+            <button class="filter-select-trigger" id="syncFilterTrigger" type="button" aria-haspopup="listbox" aria-expanded="false" aria-controls="syncFilterMenu" aria-label="同步状态">
+              <span class="filter-select-label">同步状态</span>
+              <span class="filter-select-chevron" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m7 9 5 5 5-5"></path></svg></span>
+            </button>
+            <div class="filter-select-menu" id="syncFilterMenu" role="listbox" aria-label="同步状态" hidden></div>
+          </div>
+        </div>
+        <div class="store-actions">
+          <div class="store-meta">
+            <span id="shopCount">共0家店铺</span>
+            <span class="updated" id="lastUpdated">最近更新 --:--</span>
+          </div>
+          <div class="store-sync-slot">
+            <button class="outline store-sync" id="refreshStores" type="button" aria-busy="false">
+              <svg class="store-sync-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 7v5h-5"></path><path d="M19 12a7 7 0 10-1.7 4.6"></path></svg>
+              <span class="store-sync-label">同步数据</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="table-wrap" tabindex="0" role="region" aria-label="店铺经营概览，每页最多六家店铺">
+        <table>
+          <thead><tr><th>店铺</th><th>账户余额</th><th>成交金额</th><th>广告消耗</th><th>ROI</th><th>登录状态</th><th>同步状态</th><th class="action-head">操作</th></tr></thead>
+          <tbody id="shopRows"></tbody>
+        </table>
+        <div class="table-empty" id="tableEmpty">暂无符合条件的店铺</div>
+      </div>
+
+      <footer class="store-footer">
+        <span id="pageSummary">每页最多显示 6 家店铺</span>
+        <nav class="pagination" id="pagination" aria-label="店铺分页"></nav>
+      </footer>
+    </section>
+  </main>
+
+  <div class="purchase-modal-layer" id="purchaseModal" aria-hidden="true">
+    <section class="purchase-modal rc-center" role="dialog" aria-modal="true" aria-labelledby="purchaseModalTitle" aria-describedby="purchaseModalDescription">
+      <header class="rc-window-header"><h2 id="purchaseModalTitle"><img src="icons/recharge-center/brand-mark.png" alt="">创爆 · 充值中心</h2><div class="rc-window-actions"><button class="rc-support-button" id="purchaseContactSupport" type="button" aria-haspopup="dialog"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 13v-2a8 8 0 0 1 16 0v2M4 12H3v6h4v-6H4Zm16 0h1v6h-4v-6h3ZM20 18v1a2 2 0 0 1-2 2h-5"/></svg>联系客服</button><button class="purchase-modal-close" id="purchaseModalClose" type="button" aria-label="关闭充值与激活窗口"><img src="icons/license-close.png" alt=""></button></div></header>
+      <p id="purchaseModalDescription" class="rc-sr-only">查看会员套餐并输入激活码，或选择算力金额。</p>
+      <div class="rc-tabs" role="tablist" aria-label="充值中心选项">
+        <button id="membershipTab" class="rc-tab active" type="button" role="tab" aria-selected="true" aria-controls="membershipPanel" tabindex="0"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 7 4 3 5-6 5 6 4-3-2 12H5L3 7Z"/><path d="M6 22h12"/></svg>会员激活</button>
+        <button id="computeTab" class="rc-tab" type="button" role="tab" aria-selected="false" aria-controls="computePanel" tabindex="-1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m14 2-9 12h7l-2 10 10-14h-7l1-8Z"/></svg>购买算力</button>
+      </div>
+      <div id="membershipPanel" class="rc-membership" role="tabpanel" aria-labelledby="membershipTab">
+<div class="rc-membership-heading rc-membership-v2-heading">
+          <div><h2>先看功能，再选适合你的版本</h2><p>高级版与旗舰版功能相同，区别在使用额度。</p></div>
+          <div class="rc-durations" role="radiogroup" aria-label="会员套餐周期">
+            <button type="button" role="radio" aria-checked="true" tabindex="0" data-period="0" class="selected" aria-label="1个月"><span>1个月</span><small aria-hidden="true">30天</small></button>
+            <button type="button" role="radio" aria-checked="false" tabindex="-1" data-period="1" aria-label="3个月"><span>3个月</span><small aria-hidden="true">90天</small></button>
+            <button type="button" role="radio" aria-checked="false" tabindex="-1" data-period="2" aria-label="6个月"><span>6个月</span><small aria-hidden="true">180天</small></button>
+            <button type="button" role="radio" aria-checked="false" tabindex="-1" data-period="3" aria-label="1年"><span>1年</span><small aria-hidden="true">365天</small></button>
+          </div>
+        </div>
+        <div class="rc-membership-layout">
+          <section class="rc-version-selection" aria-labelledby="rcVersionHeading"><h3 id="rcVersionHeading">选择版本</h3><div class="rc-version-list"><label class="rc-version rc-version-basic" data-tier="basic"><input type="radio" name="membershipVersion" value="basic" aria-label="普及版"><img class="rc-plan-icon" src="icons/recharge-center/plan-basic.png" alt=""><span class="rc-version-copy"><strong class="rc-version-name">普及版</strong><span class="rc-version-price"><b>¥199</b><small class="rc-duration">/30天</small></span><span class="rc-version-summary">6项功能 · 500次/日</span><span class="rc-version-quota">5家店铺 · 1台设备 · 赠送500算力</span></span></label><label class="rc-version rc-version-advanced selected" data-tier="advanced"><input type="radio" name="membershipVersion" value="advanced" checked aria-label="高级版"><img class="rc-plan-icon" src="icons/recharge-center/plan-advanced.png" alt=""><span class="rc-version-copy"><strong class="rc-version-name">高级版</strong><span class="rc-version-price"><b>¥299</b><small class="rc-duration">/30天</small></span><span class="rc-version-summary">10项全开 · 2,000次/日</span><span class="rc-version-quota">50家店铺 · 5台设备 · 赠送1,000算力</span></span><span class="rc-recommend">推荐</span></label><label class="rc-version rc-version-flagship" data-tier="flagship"><input type="radio" name="membershipVersion" value="flagship" aria-label="旗舰版"><img class="rc-plan-icon" src="icons/recharge-center/plan-flagship.png" alt=""><span class="rc-version-copy"><strong class="rc-version-name">旗舰版</strong><span class="rc-version-price"><b>¥499</b><small class="rc-duration">/30天</small></span><span class="rc-version-summary">10项全开 · 10,000次/日</span><span class="rc-version-quota">200家店铺 · 10台设备 · 赠送5,000算力</span></span></label></div></section>
+          <section class="rc-version-detail rc-detail-advanced" id="rcVersionDetail" aria-live="polite" aria-atomic="true" aria-labelledby="rcDetailName">
+            <header class="rc-detail-header"><div><img class="rc-plan-icon" id="rcDetailIcon" src="icons/recharge-center/plan-advanced.png" alt=""><span><h3 id="rcDetailName">高级版</h3><p id="rcDetailDescription">完整功能，适合多店铺使用</p></span></div><p class="rc-detail-price"><span>¥</span><strong id="rcDetailPrice">299</strong><small id="rcDetailDuration">/30天</small></p></header>
+            <dl class="rc-detail-quotas"><div><dt>一刀不剪</dt><dd id="rcCutQuota">2,000<small>次/日</small></dd></div><div><dt>绑定店铺</dt><dd id="rcShopQuota">50<small>家</small></dd></div><div><dt>登录设备</dt><dd id="rcDeviceQuota">5<small>台</small></dd></div><div><dt>赠送算力</dt><dd id="rcGiftQuota">1,000<small>算力</small></dd></div></dl>
+            <p class="rc-gift-note" id="rcGiftNote">赠送算力按当前30天套餐展示</p>
+            <section class="rc-extra-features"><h4 id="rcExtraHeading">比普及版多这4项功能</h4><ul class="rc-feature-list rc-extra-list"><li><img class="rc-feature-check" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgZmlsbD0iY3VycmVudENvbG9yIiBjbGFzcz0iYmkgYmktY2hlY2stY2lyY2xlLWZpbGwiIHZpZXdCb3g9IjAgMCAxNiAxNiI+CiAgPHBhdGggZD0iTTE2IDhBOCA4IDAgMSAxIDAgOGE4IDggMCAwIDEgMTYgMG0tMy45Ny0zLjAzYS43NS43NSAwIDAgMC0xLjA4LjAyMkw3LjQ3NyA5LjQxNyA1LjM4NCA3LjMyM2EuNzUuNzUgMCAwIDAtMS4wNiAxLjA2TDYuOTcgMTEuMDNhLjc1Ljc1IDAgMCAwIDEuMDc5LS4wMmwzLjk5Mi00Ljk5YS43NS43NSAwIDAgMC0uMDEtMS4wNXoiLz4KPC9zdmc+" alt="">批量短视频混剪</li><li><img class="rc-feature-check" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgZmlsbD0iY3VycmVudENvbG9yIiBjbGFzcz0iYmkgYmktY2hlY2stY2lyY2xlLWZpbGwiIHZpZXdCb3g9IjAgMCAxNiAxNiI+CiAgPHBhdGggZD0iTTE2IDhBOCA4IDAgMSAxIDAgOGE4IDggMCAwIDEgMTYgMG0tMy45Ny0zLjAzYS43NS43NSAwIDAgMC0xLjA4LjAyMkw3LjQ3NyA5LjQxNyA1LjM4NCA3LjMyM2EuNzUuNzUgMCAwIDAtMS4wNiAxLjA2TDYuOTcgMTEuMDNhLjc1Ljc1IDAgMCAwIDEuMDc5LS4wMmwzLjk5Mi00Ljk5YS43NS43NSAwIDAgMC0uMDEtMS4wNXoiLz4KPC9zdmc+" alt="">选品中心</li><li><img class="rc-feature-check" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgZmlsbD0iY3VycmVudENvbG9yIiBjbGFzcz0iYmkgYmktY2hlY2stY2lyY2xlLWZpbGwiIHZpZXdCb3g9IjAgMCAxNiAxNiI+CiAgPHBhdGggZD0iTTE2IDhBOCA4IDAgMSAxIDAgOGE4IDggMCAwIDEgMTYgMG0tMy45Ny0zLjAzYS43NS43NSAwIDAgMC0xLjA4LjAyMkw3LjQ3NyA5LjQxNyA1LjM4NCA3LjMyM2EuNzUuNzUgMCAwIDAtMS4wNiAxLjA2TDYuOTcgMTEuMDNhLjc1Ljc1IDAgMCAwIDEuMDc5LS4wMmwzLjk5Mi00Ljk5YS43NS43NSAwIDAgMC0uMDEtMS4wNXoiLz4KPC9zdmc+" alt="">短视频裂变</li><li><img class="rc-feature-check" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgZmlsbD0iY3VycmVudENvbG9yIiBjbGFzcz0iYmkgYmktY2hlY2stY2lyY2xlLWZpbGwiIHZpZXdCb3g9IjAgMCAxNiAxNiI+CiAgPHBhdGggZD0iTTE2IDhBOCA4IDAgMSAxIDAgOGE4IDggMCAwIDEgMTYgMG0tMy45Ny0zLjAzYS43NS43NSAwIDAgMC0xLjA4LjAyMkw3LjQ3NyA5LjQxNyA1LjM4NCA3LjMyM2EuNzUuNzUgMCAwIDAtMS4wNiAxLjA2TDYuOTcgMTEuMDNhLjc1Ljc1IDAgMCAwIDEuMDc5LS4wMmwzLjk5Mi00Ljk5YS43NS43NSAwIDAgMC0uMDEtMS4wNXoiLz4KPC9zdmc+" alt="">自动创建计划</li></ul><p class="rc-basic-upgrade" id="rcBasicUpgrade" hidden>升级高级版或旗舰版，即可使用以上4项功能。</p></section>
+            <section class="rc-core-features"><h4 id="rcCoreHeading">同时包含6项核心功能</h4><ul class="rc-feature-list rc-core-list"><li><img class="rc-feature-check" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgZmlsbD0iY3VycmVudENvbG9yIiBjbGFzcz0iYmkgYmktY2hlY2stY2lyY2xlLWZpbGwiIHZpZXdCb3g9IjAgMCAxNiAxNiI+CiAgPHBhdGggZD0iTTE2IDhBOCA4IDAgMSAxIDAgOGE4IDggMCAwIDEgMTYgMG0tMy45Ny0zLjAzYS43NS43NSAwIDAgMC0xLjA4LjAyMkw3LjQ3NyA5LjQxNyA1LjM4NCA3LjMyM2EuNzUuNzUgMCAwIDAtMS4wNiAxLjA2TDYuOTcgMTEuMDNhLjc1Ljc1IDAgMCAwIDEuMDc5LS4wMmwzLjk5Mi00Ljk5YS43NS43NSAwIDAgMC0uMDEtMS4wNXoiLz4KPC9zdmc+" alt="">千川多店管理</li><li><img class="rc-feature-check" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgZmlsbD0iY3VycmVudENvbG9yIiBjbGFzcz0iYmkgYmktY2hlY2stY2lyY2xlLWZpbGwiIHZpZXdCb3g9IjAgMCAxNiAxNiI+CiAgPHBhdGggZD0iTTE2IDhBOCA4IDAgMSAxIDAgOGE4IDggMCAwIDEgMTYgMG0tMy45Ny0zLjAzYS43NS43NSAwIDAgMC0xLjA4LjAyMkw3LjQ3NyA5LjQxNyA1LjM4NCA3LjMyM2EuNzUuNzUgMCAwIDAtMS4wNiAxLjA2TDYuOTcgMTEuMDNhLjc1Ljc1IDAgMCAwIDEuMDc5LS4wMmwzLjk5Mi00Ljk5YS43NS43NSAwIDAgMC0uMDEtMS4wNXoiLz4KPC9zdmc+" alt="">千川中控台</li><li><img class="rc-feature-check" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgZmlsbD0iY3VycmVudENvbG9yIiBjbGFzcz0iYmkgYmktY2hlY2stY2lyY2xlLWZpbGwiIHZpZXdCb3g9IjAgMCAxNiAxNiI+CiAgPHBhdGggZD0iTTE2IDhBOCA4IDAgMSAxIDAgOGE4IDggMCAwIDEgMTYgMG0tMy45Ny0zLjAzYS43NS43NSAwIDAgMC0xLjA4LjAyMkw3LjQ3NyA5LjQxNyA1LjM4NCA3LjMyM2EuNzUuNzUgMCAwIDAtMS4wNiAxLjA2TDYuOTcgMTEuMDNhLjc1Ljc1IDAgMCAwIDEuMDc5LS4wMmwzLjk5Mi00Ljk5YS43NS43NSAwIDAgMC0uMDEtMS4wNXoiLz4KPC9zdmc+" alt="">图文批量下载</li><li><img class="rc-feature-check" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgZmlsbD0iY3VycmVudENvbG9yIiBjbGFzcz0iYmkgYmktY2hlY2stY2lyY2xlLWZpbGwiIHZpZXdCb3g9IjAgMCAxNiAxNiI+CiAgPHBhdGggZD0iTTE2IDhBOCA4IDAgMSAxIDAgOGE4IDggMCAwIDEgMTYgMG0tMy45Ny0zLjAzYS43NS43NSAwIDAgMC0xLjA4LjAyMkw3LjQ3NyA5LjQxNyA1LjM4NCA3LjMyM2EuNzUuNzUgMCAwIDAtMS4wNiAxLjA2TDYuOTcgMTEuMDNhLjc1Ljc1IDAgMCAwIDEuMDc5LS4wMmwzLjk5Mi00Ljk5YS43NS43NSAwIDAgMC0uMDEtMS4wNXoiLz4KPC9zdmc+" alt="">ROI计算器</li><li><img class="rc-feature-check" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgZmlsbD0iY3VycmVudENvbG9yIiBjbGFzcz0iYmkgYmktY2hlY2stY2lyY2xlLWZpbGwiIHZpZXdCb3g9IjAgMCAxNiAxNiI+CiAgPHBhdGggZD0iTTE2IDhBOCA4IDAgMSAxIDAgOGE4IDggMCAwIDEgMTYgMG0tMy45Ny0zLjAzYS43NS43NSAwIDAgMC0xLjA4LjAyMkw3LjQ3NyA5LjQxNyA1LjM4NCA3LjMyM2EuNzUuNzUgMCAwIDAtMS4wNiAxLjA2TDYuOTcgMTEuMDNhLjc1Ljc1IDAgMCAwIDEuMDc5LS4wMmwzLjk5Mi00Ljk5YS43NS43NSAwIDAgMC0uMDEtMS4wNXoiLz4KPC9zdmc+" alt="">AI图文</li><li><img class="rc-feature-check" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgZmlsbD0iY3VycmVudENvbG9yIiBjbGFzcz0iYmkgYmktY2hlY2stY2lyY2xlLWZpbGwiIHZpZXdCb3g9IjAgMCAxNiAxNiI+CiAgPHBhdGggZD0iTTE2IDhBOCA4IDAgMSAxIDAgOGE4IDggMCAwIDEgMTYgMG0tMy45Ny0zLjAzYS43NS43NSAwIDAgMC0xLjA4LjAyMkw3LjQ3NyA5LjQxNyA1LjM4NCA3LjMyM2EuNzUuNzUgMCAwIDAtMS4wNiAxLjA2TDYuOTcgMTEuMDNhLjc1Ljc1IDAgMCAwIDEuMDc5LS4wMmwzLjk5Mi00Ljk5YS43NS43NSAwIDAgMC0uMDEtMS4wNXoiLz4KPC9zdmc+" alt="">AI商品卡</li></ul></section>
+            <p class="rc-capacity-note" id="rcCapacityNote">旗舰版功能相同，额度提升至：10,000次/日 · 200家店铺 · 10台设备 · 5,000算力</p>
+          </section>
+        </div>
+        <section class="activation-panel" aria-labelledby="activationPanelTitle">
+          <div class="activation-panel-title"><span class="rc-key-circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="15" cy="8" r="5"/><path d="m11 12-8 8v2h4v-3h3v-3l3-3"/></svg></span><span><strong id="activationPanelTitle">已有激活码？</strong><small>输入激活码，直接开通对应版本。</small></span></div>
+          <div class="activation-form"><label class="activation-code-field" for="activationCodeInput"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="15" cy="8" r="5"/><path d="m11 12-8 8v2h4v-3h3v-3l3-3"/></svg><input id="activationCodeInput" aria-label="激活码" type="text" maxlength="160" placeholder="请输入激活码" autocomplete="off" spellcheck="false" aria-describedby="activationFeedback"></label><button class="activate-now" id="activateNowButton" type="button">立即激活</button></div>
+          <p class="activation-feedback" id="activationFeedback" role="status" aria-live="polite"></p>
+          <p class="activation-helper"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7h.01"/></svg>激活后将绑定当前账号与本机设备，请妥善保管激活码。</p>
+        </section>
+        <p class="rc-membership-disclaimer">具体权益以实际购买套餐为准。</p>
+      </div>
+      <div id="computePanel" class="rc-compute" role="tabpanel" aria-labelledby="computeTab" hidden>
+        <section class="rc-compute-selection" aria-labelledby="computeHeading"><div class="rc-section-heading"><h2 id="computeHeading">选择套餐</h2><p>多充多享，低至0.008元/算力</p></div><div class="rc-packages" role="radiogroup" aria-label="算力充值金额"><button class="rc-package" type="button" role="radio" aria-checked="false" tabindex="-1" data-amount="10" data-credits="1000" data-unit="0.01" data-discount="原价" aria-label="10元，1,000算力，原价，每算力0.01元">
+      <span class="rc-package-check" aria-hidden="true">✓</span><strong class="rc-package-price"><small>¥</small>10</strong><span class="rc-package-credits">共 <strong>1,000</strong> 算力</span><span class="rc-package-unit">0.01元/算力</span></button>
+<button class="rc-package" type="button" role="radio" aria-checked="false" tabindex="-1" data-amount="30" data-credits="3000" data-unit="0.01" data-discount="原价" aria-label="30元，3,000算力，原价，每算力0.01元">
+      <span class="rc-package-check" aria-hidden="true">✓</span><strong class="rc-package-price"><small>¥</small>30</strong><span class="rc-package-credits">共 <strong>3,000</strong> 算力</span><span class="rc-package-unit">0.01元/算力</span></button>
+<button class="rc-package" type="button" role="radio" aria-checked="false" tabindex="-1" data-amount="50" data-credits="5000" data-unit="0.01" data-discount="原价" aria-label="50元，5,000算力，原价，每算力0.01元">
+      <span class="rc-package-check" aria-hidden="true">✓</span><strong class="rc-package-price"><small>¥</small>50</strong><span class="rc-package-credits">共 <strong>5,000</strong> 算力</span><span class="rc-package-unit">0.01元/算力</span></button>
+<button class="rc-package selected" type="button" role="radio" aria-checked="true" tabindex="0" data-amount="100" data-credits="10526" data-unit="0.0095" data-discount="9.5折" aria-label="100元，10,526算力，9.5折，每算力0.0095元">
+      <span class="rc-discount">9.5折</span><span class="rc-package-check" aria-hidden="true">✓</span><strong class="rc-package-price"><small>¥</small>100</strong><span class="rc-package-credits">共 <strong>10,526</strong> 算力</span><span class="rc-package-unit">0.0095元/算力</span></button>
+<button class="rc-package" type="button" role="radio" aria-checked="false" tabindex="-1" data-amount="300" data-credits="35294" data-unit="0.0085" data-discount="8.5折" aria-label="300元，35,294算力，8.5折，每算力0.0085元">
+      <span class="rc-discount">8.5折</span><span class="rc-package-check" aria-hidden="true">✓</span><strong class="rc-package-price"><small>¥</small>300</strong><span class="rc-package-credits">共 <strong>35,294</strong> 算力</span><span class="rc-package-unit">0.0085元/算力</span></button>
+<button class="rc-package" type="button" role="radio" aria-checked="false" tabindex="-1" data-amount="500" data-credits="62500" data-unit="0.008" data-discount="8折" aria-label="500元，62,500算力，8折，每算力0.008元">
+      <span class="rc-discount">8折</span><span class="rc-package-check" aria-hidden="true">✓</span><strong class="rc-package-price"><small>¥</small>500</strong><span class="rc-package-credits">共 <strong>62,500</strong> 算力</span><span class="rc-package-unit">0.008元/算力</span></button>
+</div><p class="rc-compute-note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7h.01"/></svg>折扣已计入算力单价，到账算力取整数。</p></section>
+        <aside class="rc-payment" aria-labelledby="paymentHeading"><h2 id="paymentHeading" class="rc-section-title">扫码支付</h2><div class="rc-summary" aria-live="polite" aria-atomic="true"><dl><div><dt>充值金额</dt><dd id="computeAmount">¥100</dd></div><div><dt>获得算力</dt><dd id="computeCredits" class="rc-blue">10,526</dd></div><div><dt>套餐折扣</dt><dd id="computeDiscount" class="rc-coral">9.5折</dd></div></dl><div class="rc-total"><span>实付金额</span><strong><small>¥</small><span id="computeTotal">100</span></strong></div></div><div class="rc-payment-method"><img src="icons/recharge-center/alipay.png" alt="">支付宝扫码支付</div><div class="rc-payment-unavailable" role="status"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5M3 12h18"/></svg><strong>支付服务暂未开通</strong><p>暂时无法生成付款码</p></div><p class="rc-payment-help">开通后可选择金额扫码购买</p></aside>
+      </div>
+    </section>
+  </div>
+
+  <div class="busy-layer" id="busyLayer" aria-live="polite"><div class="busy-box"><span class="spinner"></span><strong id="busyText">正在处理…</strong></div></div>
+  <div class="toast" id="toast" role="status"></div>
+  <script src="membership-status.js?v=1.66-custom-dropdowns"></script>
+  <script src="recharge-center.js?v=20260918.1"></script>
+  <script id="membershipComparisonScript">
+(function () {
+  "use strict";
+  // Presentation only: native activation continues to use the submitted code.
+  var plans = {
+    basic: { name:"普及版", description:"6项核心功能，满足基础投放需求", prices:[199,399,799,1299], cut:"500", shops:"5", devices:"1", gift:"500", featureSummary:"6项功能" },
+    advanced: { name:"高级版", description:"完整功能，适合多店铺使用", prices:[299,699,1299,2299], cut:"2,000", shops:"50", devices:"5", gift:"1,000", featureSummary:"10项全开" },
+    flagship: { name:"旗舰版", description:"完整功能，适合多店铺、大批量使用", prices:[499,1299,2299,3999], cut:"10,000", shops:"200", devices:"10", gift:"5,000", featureSummary:"10项全开" }
+  };
+  var periods = ["30天","90天","180天","365天"];
+  var tier = "advanced", period = 0;
+  var cards = Array.prototype.slice.call(document.querySelectorAll(".rc-version"));
+  var buttons = Array.prototype.slice.call(document.querySelectorAll(".rc-durations button"));
+  var detail = document.getElementById("rcVersionDetail");
+  function setText(id, value) { document.getElementById(id).textContent = value; }
+  function quota(id, value, unit) {
+    var node = document.getElementById(id), small = document.createElement("small");
+    node.textContent = value; small.textContent = unit; node.appendChild(small);
+  }
+  function render() {
+    var plan = plans[tier];
+    cards.forEach(function (card) {
+      var name = card.getAttribute("data-tier"), data = plans[name], selected = name === tier;
+      card.classList.toggle("selected", selected);
+      card.querySelector("input").checked = selected;
+      card.querySelector(".rc-version-price b").textContent = "¥" + data.prices[period];
+      card.querySelector(".rc-duration").textContent = "/" + periods[period];
+      card.querySelector(".rc-version-summary").textContent = data.featureSummary + " · " + data.cut + "次/日";
+      card.querySelector(".rc-version-quota").textContent = data.shops + "家店铺 · " + data.devices + "台设备 · " + (period === 0 ? "赠送" + data.gift + "算力" : "算力按激活码套餐");
+    });
+    buttons.forEach(function (button, index) {
+      var selected = index === period;
+      button.classList.toggle("selected", selected);
+      button.setAttribute("aria-checked", String(selected)); button.tabIndex = selected ? 0 : -1;
+    });
+    detail.className = "rc-version-detail rc-detail-" + tier;
+    document.getElementById("rcDetailIcon").src = "icons/recharge-center/plan-" + tier + ".png";
+    setText("rcDetailName", plan.name); setText("rcDetailDescription", plan.description);
+    setText("rcDetailPrice", plan.prices[period]); setText("rcDetailDuration", "/" + periods[period]);
+    quota("rcCutQuota", plan.cut, "次/日"); quota("rcShopQuota", plan.shops, "家"); quota("rcDeviceQuota", plan.devices, "台");
+    quota("rcGiftQuota", period === 0 ? plan.gift : "按套餐", period === 0 ? "算力" : "");
+    setText("rcGiftNote", period === 0 ? "赠送算力按当前30天套餐展示" : "赠送算力以激活码对应套餐为准");
+    setText("rcExtraHeading", tier === "basic" ? "本版不含以下4项功能" : "比普及版多这4项功能");
+    document.getElementById("rcBasicUpgrade").hidden = tier !== "basic";
+    setText("rcCoreHeading", tier === "basic" ? "包含6项核心功能" : "同时包含6项核心功能");
+    setText("rcCapacityNote", tier === "basic" ? "高级版与旗舰版均含10项功能；旗舰版提供更高的次数、店铺和设备额度。" : tier === "flagship" ? "与高级版功能相同；本版提供更高的次数、店铺和设备额度。" : "旗舰版功能相同，额度提升至：10,000次/日 · 200家店铺 · 10台设备" + (period === 0 ? " · 5,000算力" : "；赠送算力以对应套餐为准"));
+  }
+  cards.forEach(function (card) {
+    card.querySelector("input").addEventListener("change", function () { tier = this.value; render(); });
+  });
+  buttons.forEach(function (button, index) {
+    button.addEventListener("click", function () { period = index; render(); });
+    button.addEventListener("keydown", function (event) {
+      var next;
+      if (event.key === "ArrowRight" || event.key === "ArrowDown") next = (index + 1) % buttons.length;
+      else if (event.key === "ArrowLeft" || event.key === "ArrowUp") next = (index + buttons.length - 1) % buttons.length;
+      else if (event.key === "Home") next = 0;
+      else if (event.key === "End") next = buttons.length - 1;
+      else return;
+      event.preventDefault(); period = next; render(); buttons[next].focus();
+    });
+  });
+  render();
+}());
+</script>
+  <script src="app.js?v=account-layout-20261001"></script>
+</body>
+</html>

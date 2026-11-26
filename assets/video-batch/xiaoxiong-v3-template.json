@@ -1,0 +1,27 @@
+{
+  "version": "3.0",
+  "description": "小熊 v3 轻量画面与音频微扰参数库",
+  "note": "仅使用等比例微缩放、Lanczos 重采样、SAR 修正、29/30/31fps 与轻量音频调整；不使用黑边和画质 EQ。",
+  "templates": [
+    { "id": 1, "name": "微缩0.5%", "scale": 0.995, "offset_x": 0, "offset_y": 0, "brightness": 0.0, "contrast": 1.0, "fps_target": 30, "audio_volume": 0.98, "audio_sample_rate": 44100, "description": "缩小0.5%，Lanczos重采样" },
+    { "id": 2, "name": "微放0.5%", "scale": 1.005, "offset_x": 0, "offset_y": 0, "brightness": 0.0, "contrast": 1.0, "fps_target": 30, "audio_volume": 1.02, "audio_sample_rate": 48000, "description": "放大0.5%，Lanczos重采样" },
+    { "id": 3, "name": "微缩1%", "scale": 0.99, "offset_x": 0, "offset_y": 0, "brightness": 0.0, "contrast": 1.0, "fps_target": 29, "audio_volume": 0.99, "audio_sample_rate": 44100, "description": "缩小1%，帧率调整为29fps" },
+    { "id": 4, "name": "微放1%", "scale": 1.01, "offset_x": 0, "offset_y": 0, "brightness": 0.0, "contrast": 1.0, "fps_target": 31, "audio_volume": 1.01, "audio_sample_rate": 48000, "description": "放大1%，帧率调整为31fps" },
+    { "id": 5, "name": "等比例0.5%缩", "scale": 0.995, "offset_x": 0, "offset_y": 0, "brightness": 0.0, "contrast": 1.0, "fps_target": 30, "audio_volume": 0.97, "audio_sample_rate": 48000, "description": "缩小0.5%，音量微降" },
+    { "id": 6, "name": "等比例0.5%放", "scale": 1.005, "offset_x": 0, "offset_y": 0, "brightness": 0.0, "contrast": 1.0, "fps_target": 29, "audio_volume": 1.03, "audio_sample_rate": 44100, "description": "放大0.5%，音量微升" },
+    { "id": 7, "name": "温和缩0.8%", "scale": 0.992, "offset_x": 0, "offset_y": 0, "brightness": 0.0, "contrast": 1.0, "fps_target": 30, "audio_volume": 1.0, "audio_sample_rate": 44100, "description": "缩小0.8%，采样率44100" },
+    { "id": 8, "name": "温和放0.8%", "scale": 1.008, "offset_x": 0, "offset_y": 0, "brightness": 0.0, "contrast": 1.0, "fps_target": 31, "audio_volume": 1.0, "audio_sample_rate": 48000, "description": "放大0.8%，采样率48000" },
+    { "id": 9, "name": "微小缩44100", "scale": 0.997, "offset_x": 0, "offset_y": 0, "brightness": 0.0, "contrast": 1.0, "fps_target": 30, "audio_volume": 0.98, "audio_sample_rate": 44100, "description": "缩小0.3%，最小化扰动" },
+    { "id": 10, "name": "微小放48000", "scale": 1.003, "offset_x": 0, "offset_y": 0, "brightness": 0.0, "contrast": 1.0, "fps_target": 30, "audio_volume": 1.02, "audio_sample_rate": 48000, "description": "放大0.3%，最小化扰动" },
+    { "id": 11, "name": "缩0.6%帧率29", "scale": 0.994, "offset_x": 0, "offset_y": 0, "brightness": 0.0, "contrast": 1.0, "fps_target": 29, "audio_volume": 0.99, "audio_sample_rate": 44100, "description": "缩小0.6%，29fps" },
+    { "id": 12, "name": "放0.6%帧率31", "scale": 1.006, "offset_x": 0, "offset_y": 0, "brightness": 0.0, "contrast": 1.0, "fps_target": 31, "audio_volume": 1.01, "audio_sample_rate": 48000, "description": "放大0.6%，31fps" },
+    { "id": 13, "name": "缩0.4%标准", "scale": 0.996, "offset_x": 0, "offset_y": 0, "brightness": 0.0, "contrast": 1.0, "fps_target": 30, "audio_volume": 0.98, "audio_sample_rate": 48000, "description": "缩小0.4%，标准配置" },
+    { "id": 14, "name": "放0.4%标准", "scale": 1.004, "offset_x": 0, "offset_y": 0, "brightness": 0.0, "contrast": 1.0, "fps_target": 30, "audio_volume": 1.02, "audio_sample_rate": 44100, "description": "放大0.4%，标准配置" },
+    { "id": 15, "name": "缩0.7%综合", "scale": 0.993, "offset_x": 0, "offset_y": 0, "brightness": 0.0, "contrast": 1.0, "fps_target": 29, "audio_volume": 0.97, "audio_sample_rate": 44100, "description": "缩小0.7%，全参数温和调整" },
+    { "id": 16, "name": "放0.7%综合", "scale": 1.007, "offset_x": 0, "offset_y": 0, "brightness": 0.0, "contrast": 1.0, "fps_target": 31, "audio_volume": 1.03, "audio_sample_rate": 48000, "description": "放大0.7%，全参数温和调整" },
+    { "id": 17, "name": "等尺寸A", "scale": 1.0, "offset_x": 0, "offset_y": 0, "brightness": 0.0, "contrast": 1.0, "fps_target": 30, "audio_volume": 0.99, "audio_sample_rate": 44100, "description": "等尺寸Lanczos重采样" },
+    { "id": 18, "name": "等尺寸B", "scale": 1.0, "offset_x": 0, "offset_y": 0, "brightness": 0.0, "contrast": 1.0, "fps_target": 30, "audio_volume": 1.01, "audio_sample_rate": 48000, "description": "等尺寸，仅音频微调" },
+    { "id": 19, "name": "缩0.9%", "scale": 0.991, "offset_x": 0, "offset_y": 0, "brightness": 0.0, "contrast": 1.0, "fps_target": 29, "audio_volume": 0.98, "audio_sample_rate": 44100, "description": "缩小0.9%" },
+    { "id": 20, "name": "放0.9%", "scale": 1.009, "offset_x": 0, "offset_y": 0, "brightness": 0.0, "contrast": 1.0, "fps_target": 31, "audio_volume": 1.02, "audio_sample_rate": 48000, "description": "放大0.9%" }
+  ]
+}

@@ -1,0 +1,93 @@
+﻿<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: blob:; media-src 'self' blob: https://audio-remix-media.chuangbao.local; style-src 'self' https://face-mask.chuangbao.local; script-src 'self' https://face-mask.chuangbao.local; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'">
+  <title>自动混剪</title>
+  <link rel="stylesheet" href="styles.css?v=remix-workspace-20261001">
+  <link rel="stylesheet" href="super-mix.css?v=20261007">
+<link rel="stylesheet" href="https://face-mask.chuangbao.local/ui.css?v=20261008"><link rel="stylesheet" href="custom-workspace.css?v=20261009">
+  <link rel="stylesheet" href="smart-reference.css?v=20261016">
+</head>
+<body class="remix-studio">
+<div class="app">
+  <header class="header">
+    <div class="title-block"><div class="title-line"><h1>自动混剪</h1><span class="cm-subtitle">先选方案，再导入素材</span><span class="saved-state" id="editState" role="status" aria-live="polite">编辑后自动保存</span><button id="saveDraftCopy" class="draft-copy" hidden>保存工程副本</button></div><p id="draftDetail">自由指定素材片段与音频来源，一键批量生成成片</p></div>
+    <div class="header-tools"><button id="undoTop" class="icon-tool" title="撤销" aria-label="撤销"><span data-icon="undo"></span></button><button id="redoTop" class="icon-tool" title="重做" aria-label="重做"><span data-icon="redo"></span></button><button id="showResults" class="button secondary results-entry">成片结果</button><button id="saveTemplate" class="button secondary"><span data-icon="bookmark"></span>保存为模板</button></div>
+  </header>
+  <main class="workspace-grid">
+    <div class="edit-column">
+      <section class="panel source-panel" aria-labelledby="materialsTitle">
+        <div class="panel-head"><div class="panel-title"><span class="section-icon" data-icon="folder" aria-hidden="true"></span><h2 id="materialsTitle">导入素材库</h2><span class="count-badge" id="sourceCount">0</span><span class="muted">个素材</span></div><div class="source-actions"><button id="pickFolder" class="button quiet"><span data-icon="folder"></span>选择文件夹</button><button id="analyze" class="icon-tool" title="重新分析" aria-label="重新分析"><span data-icon="refresh"></span></button><button id="clearSources" class="button quiet">清空</button></div></div>
+        <div class="source-strip"><div class="source-list" id="sourceList"></div><button class="add-material" id="pickVideos"><span data-icon="plus"></span><span>添加视频</span></button></div>
+        <div class="source-empty" id="sourceEmpty"><span data-icon="video"></span><strong>添加视频，开始编排</strong><span>支持选择多个素材视频，或导入整个文件夹</span></div>
+        <div id="materialSummary" class="sr-only"></div>
+      </section>
+      <section class="panel rule-panel" aria-label="编排规则">
+        <div class="rule-head"><div class="mode-tabs" id="modeTabs" role="group" aria-label="混剪方式"></div></div>
+        <div class="rule-table-wrap"><table class="rule-table"><thead><tr><th>片段内容</th><th>使用素材</th><th>取段 / 镜头时长</th><th>方式 / 规则</th><th>操作</th></tr></thead><tbody id="ruleRows"></tbody></table><div id="ruleEmpty" class="rule-empty">添加素材后，设置开头、中段和结尾</div></div>
+        <div class="rule-footer"><div class="rule-toolbar"><button id="addRule" class="button quiet"><span data-icon="plus"></span>添加中段</button><label class="check-label"><input id="applyAll" type="checkbox">固定开头应用到全部成片</label><button id="previewRules" class="button quiet">查看规则说明</button></div><span class="smart-lock-hint" id="smartLockHint" hidden></span><span class="muted" id="overviewMeta"></span></div>
+      </section>
+      <section class="panel enhancement-panel">
+        <div class="audio-panel">
+          <div class="panel-head audio-heading"><div class="panel-title"><span class="section-icon" data-icon="volume"></span><h2>声音与剪辑</h2></div><label class="check-label audio-balance" title="平滑声音的大小变化，保留手动音量调节；可试听前30秒"><input id="audioBalance" type="checkbox">自动平衡音量</label></div>
+          <div class="audio-source-row"><label class="field"><span>音频来源</span><select id="audioSource" aria-label="音频来源"></select></label><label class="field audio-cut-field"><span>剪辑方式</span><select id="cutModeSelect" aria-label="剪辑方式" aria-describedby="audioHelp"><option value="normal">普通混剪</option><option value="music">音乐卡点</option><option value="speech">口播讲解</option></select></label><button class="button secondary audition" id="audition"><span data-icon="play"></span><span id="auditionText">试听</span></button></div>
+          <p id="audioHelp" class="field-help" role="status">使用所选素材原声，画面顺序不影响音频</p>
+          <div class="audition-progress"><input id="audioSeek" type="range" min="0" max="1000" value="0" aria-label="试听进度"><time id="audioTime">00:00 / 00:00</time></div>
+          <audio crossorigin="anonymous" id="sourceAudio" preload="metadata"></audio>
+          <div class="audio-main-fields"><label class="field"><span>应用范围</span><select id="audioScope"></select></label><label class="field"><span>时长处理</span><select id="audioLength"></select></label><label class="field"><span>音量</span><select id="audioVolume"><option value="0">0%</option><option value="0.5">50%</option><option value="1">100%</option><option value="1.5">150%</option><option value="2">200%</option></select></label></div>
+          <details class="advanced"><summary>更多音频设置</summary><div class="audio-fields" id="audioFields"><label class="field range-field" id="rangeField"><span>成片中的应用范围（秒）</span><div><input id="audioStart" type="number" min="0" step="0.1" aria-label="音频应用开始秒数"><span>至</span><input id="audioEnd" type="number" min="0" step="0.1" aria-label="音频应用结束秒数"></div></label><label class="field"><span>淡入</span><select id="audioFadeIn"></select></label><label class="field"><span>淡出</span><select id="audioFadeOut"></select></label></div></details>
+        </div>
+        <div class="watermark-panel">
+          <div class="panel-head"><div class="panel-title"><span class="section-icon" data-icon="edit"></span><h2>水印设置</h2></div><label class="switch"><input id="watermarkEnabled" type="checkbox" role="switch" aria-label="启用文字水印"><span>启用水印</span></label></div>
+          <div class="watermark-top"><label class="field"><span>水印文字</span><input id="watermarkText" type="text" maxlength="40" placeholder="输入品牌名或自定义文字" autocomplete="off"></label><label class="field"><span>起始位置</span><select id="watermarkPosition"><option value="top-right">右上角</option><option value="bottom-right">右下角</option><option value="top-left">左上角</option><option value="bottom-left">左下角</option></select></label></div>
+          <label class="field motion-field"><span>运动方式</span></label><div id="watermarkMotions" class="motion-options" role="group" aria-label="水印运动方式"><button data-motion="fixed">固定位置</button><button data-motion="corner">角落内移动</button><button data-motion="vertical">上下移动</button><button data-motion="horizontal">左右移动</button></div>
+          <p id="watermarkHint" class="field-help">水印保持在画面内，移动至边缘自动折返</p>
+          <div class="watermark-bottom"><label class="field"><span>移动速度</span><select id="watermarkSpeed"><option value="0.5">慢速</option><option value="1">中等</option><option value="2">快速</option></select></label><label class="field"><span>不透明度</span><select id="watermarkOpacity"><option value="0.3">30%</option><option value="0.6">60%</option><option value="0.8">80%</option><option value="1">100%</option></select></label><label class="field"><span>文字大小</span><input id="watermarkFontSize" type="number" min="12" max="64" value="28"></label></div>
+        </div>
+      </section>
+      <details class="panel sequence-panel" id="sequenceDetails"><summary>展开序列轨道<span>拖入素材替换片段，拖动中段调整顺序</span></summary><div class="sequence-head"><div class="sequence-tools"><button id="zoomOut" aria-label="缩小轨道">−</button><button id="zoomIn" aria-label="放大轨道">＋</button><button id="undoTimeline" aria-label="撤销"><span data-icon="undo"></span></button><button id="redoTimeline" aria-label="重做"><span data-icon="redo"></span></button></div></div><div id="timelineRuler" class="timeline-ruler"></div><div id="videoTrack" class="video-track"></div><div hidden><span id="audioTrackLabel"></span><div id="audioWave"></div><span id="playbackTime"></span><i id="playbackValue"></i><span id="playhead"></span><span id="sequenceSummary"></span></div></details>
+    </div>
+    <aside class="preview-column">
+      <section class="panel preview-panel"><div class="panel-head"><div class="panel-title"><span class="section-icon" data-icon="play" aria-hidden="true"></span><h2 id="previewTitle">画面预览</h2></div><span class="muted">9:16</span></div><div class="preview-player" id="previewPlayer"><div class="preview-frame" id="previewFrame"><canvas id="previewBackdrop" aria-hidden="true" hidden></canvas><video crossorigin="anonymous" id="previewVideo" playsinline preload="metadata"></video><div id="previewEmpty" class="preview-empty"><span data-icon="video"></span><span>导入素材后预览画面</span></div><div id="watermarkOverlay" aria-hidden="true"></div></div><div class="preview-controls" role="group" aria-label="画面播放控制"><button id="previewToggle" type="button" aria-label="播放画面" title="播放画面" disabled><span data-icon="playFill"></span></button><time id="previewTime">00:00 / 00:00</time><input id="previewSeek" type="range" min="0" max="1000" step="1" value="0" aria-label="画面播放进度" disabled><button id="previewMute" type="button" aria-label="开启声音" title="开启声音" aria-pressed="true" disabled><span data-icon="volume"></span></button><button id="previewFullscreen" type="button" aria-label="全屏播放" title="全屏播放" disabled><span data-icon="expand"></span></button></div></div><p id="previewHint" class="field-help">点击生成预览，查看实际混剪效果</p><div class="preview-actions"><button id="renderPreview" class="button secondary"><span data-icon="play"></span>生成预览</button><button id="previewInspection" class="button secondary" hidden>检查预览</button><button id="playPreview" class="icon-tool" aria-label="播放预览" title="播放预览"><span data-icon="play"></span></button></div></section>
+      <section class="panel settings-panel"><h2><span class="section-icon" data-icon="video" aria-hidden="true"></span>成片设置</h2><div class="framing-settings"><label for="frameMode">画面适配</label><select id="frameMode" aria-describedby="frameHint"><option value="contain">完整显示</option><option value="cover">铺满画面</option><option value="blur">模糊背景补边</option></select><p id="frameHint" role="status">保留完整画面，空白处补黑边。</p></div><div class="settings-fields"><label class="field"><span>成片时长</span><span class="duration-legacy"><select id="durationSelect"></select></span><span class="duration-input-wrap"><input id="durationInput" type="number" min="1" max="600" step="1" aria-label="成片时长（秒）"><b>秒</b></span></label><label class="field"><span>生成条数</span><input id="countInput" type="number" min="1" max="30" value="3"></label><label class="field"><span>节奏</span><select id="rhythmSelect"></select></label></div><p id="generationEstimate" class="field-help"></p><button id="openVariations" class="variation-entry" type="button"><span>自动微调</span><span id="variationCount">已自动启用</span><b aria-hidden="true">›</b></button></section>
+    </aside>
+  </main>
+  <footer class="footer-bar" data-job-state="idle">
+    <div class="output-directory"><strong class="output-label" id="outputLabel"><span class="section-icon" data-icon="folder" aria-hidden="true"></span>输出目录</strong><button id="pickOutput" class="path-button" title="选择输出目录" aria-describedby="outputLabel"><span id="outputPath"></span></button><button id="changeOutput" class="button secondary">更改目录</button><button id="openOutput" class="button secondary">打开文件夹</button></div>
+    <div class="job-copy" aria-live="polite"><div class="job-heading"><i class="job-indicator" aria-hidden="true"></i><strong id="statusText"></strong><span id="jobPercent"></span></div><p id="resultSummary"></p></div>
+    <div class="footer-utils"><button id="openLatest">播放成片</button><button id="showLog">运行记录</button></div><div class="footer-actions"><button id="generate" class="button primary">开始生成 3 条成片</button><button id="cancel" class="button danger-button">取消任务</button></div><div id="jobProgress" class="progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="100"><i id="progressValue"></i></div>
+  </footer>
+</div>
+<div class="modal-backdrop" id="sourceModal" aria-hidden="true"><div class="modal" role="dialog" aria-modal="true" aria-labelledby="sourceModalTitle"><div class="modal-head"><h3 id="sourceModalTitle">选择画面来源</h3><button id="closeSourceModal" aria-label="关闭">×</button></div><p id="sourceModalHint"></p><div class="source-checks" id="sourceChecks"></div><label class="auto-source" id="autoSourceLabel"><input type="checkbox" id="autoSource">结尾素材自动选择</label><div class="modal-actions"><button class="button secondary" id="cancelSourceModal">取消</button><button class="button primary" id="confirmSourceModal">确定</button></div></div></div>
+<div class="log-drawer" id="logDrawer"><div class="log-head"><strong>运行记录</strong><button id="closeLog" aria-label="关闭运行记录">×</button></div><pre id="logContent">暂无运行记录</pre></div><div id="toast" class="toast" role="status"></div>
+<dialog id="variationsDialog" class="variations-dialog" aria-labelledby="variationsTitle">
+  <div class="variation-heading"><div><h2 id="variationsTitle">画面与声音微调</h2><p>生成时自动选择适合的微调组合，无需设置。参数随工程保存。</p></div><button id="closeVariations" class="icon-tool" aria-label="关闭微调设置">×</button></div>
+  <div class="variation-options">
+    <div class="variation-option" data-variation="hue"><span class="variation-check" aria-hidden="true">✓</span><span><strong>色相偏移</strong><small>轻微偏移 ±2–4°，建议先看肤色与商品颜色</small></span></div>
+    <div class="variation-option" data-variation="noise"><span class="variation-check" aria-hidden="true">✓</span><span><strong>极轻噪点</strong><small>强度 1–3，逐帧加入少量均匀噪点</small></span></div>
+    <div class="variation-option" data-variation="trim"><span class="variation-check" aria-hidden="true">✓</span><span><strong>掐头去尾</strong><small>首尾各最多 0.3 秒；固定开头、锁定首尾和口播受保护</small></span></div>
+    <div class="variation-option" data-variation="pitch"><span class="variation-check" aria-hidden="true">✓</span><span><strong>音高微调</strong><small>±0.2–0.6%，补偿时长；口播模式保留原声</small></span></div>
+    <div class="variation-option" data-variation="gop"><span class="variation-check" aria-hidden="true">✓</span><span><strong>关键帧间隔（GOP）</strong><small>每条在 30–90 帧间选择编码间隔</small></span></div>
+  </div>
+  <p id="variationProtection" class="field-help" role="status"></p>
+  <p id="variationPreview" class="variation-preview" role="status"></p>
+  <p class="field-help">已自动启用，实际应用以每条成片记录为准。裁切后最多缩短 0.6 秒，口播和锁定片段自动受保护。</p>
+  <div class="variation-actions"><button id="doneVariations" class="button primary" type="button">知道了</button></div>
+</dialog>
+<dialog id="resultsDialog" class="results-dialog" aria-labelledby="resultsTitle">
+  <div class="results-header"><div><h2 id="resultsTitle">成片结果</h2><p id="resultsSummary">生成的视频会显示在这里</p></div><button id="closeResults" class="icon-tool" aria-label="关闭成片结果">×</button></div>
+  <div class="results-toolbar"><div class="results-tabs" role="group" aria-label="筛选生成状态"><button data-result-filter="all" aria-pressed="true">全部</button><button data-result-filter="completed" aria-pressed="false">已完成</button><button data-result-filter="unfinished" aria-pressed="false">需处理</button></div><label>查看范围 <select id="resultsScope" aria-label="查看结果范围"><option value="latest">本次生成</option><option value="all">最近记录</option></select></label></div>
+  <p id="resultsWarning" class="results-warning" role="status" hidden></p>
+  <div class="results-body"><section id="resultsCards" class="results-cards" aria-label="视频生成结果"></section><section id="resultReview" class="result-review" aria-label="成片检查与取段" hidden><div class="review-heading"><button id="reviewBack" class="button secondary">返回列表</button><strong id="reviewTitle">检查与取段</strong></div><div class="results-tabs review-tabs" role="group" aria-label="查看检查内容"><button data-review-tab="issues" aria-pressed="true">问题定位</button><button data-review-tab="shots" aria-pressed="false">镜头明细</button><button data-review-tab="comparison" aria-pressed="false">批次对比</button></div><p id="reviewSummary" role="status"></p><div id="reviewContent"></div><div class="results-pages review-pages"><button id="reviewPrev" class="icon-tool" aria-label="上一页检查项">‹</button><span id="reviewPage"></span><button id="reviewNext" class="icon-tool" aria-label="下一页检查项">›</button></div></section><aside class="result-player"><div class="result-player-heading"><strong id="resultPlayerTitle">选择视频播放</strong><span id="resultPlayerDuration"></span></div><div class="result-player-frame"><video id="resultVideo" crossorigin="anonymous" playsinline controls preload="metadata"></video><p id="resultPlayerEmpty">点击左侧已完成的视频<br>在这里查看成片</p></div><p id="resultPlayerHint">成片已包含生成时设置的声音与水印</p></aside></div>
+  <div class="results-bottom"><span>保留最近 100 条记录，原视频文件不受影响</span><div class="results-pages"><button id="resultsPrev" class="icon-tool" aria-label="上一页结果">‹</button><span id="resultsPage"></span><button id="resultsNext" class="icon-tool" aria-label="下一页结果">›</button></div></div>
+</dialog>
+<link rel="stylesheet" href="https://face-mask.chuangbao.local/component-prep.css">
+<script src="https://face-mask.chuangbao.local/component-prep.js"></script>
+<script src="https://face-mask.chuangbao.local/ui.js?v=20261019"></script>
+<script src="app.js?v=remix-workspace-20261001"></script>
+<script src="super-mix.js?v=20261007"></script>
+<script src="custom-workspace.js?v=20261009"></script>
+</body>
+</html>

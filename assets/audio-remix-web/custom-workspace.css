@@ -1,0 +1,169 @@
+/* The custom workflow keeps the existing palette and controls; the document scrolls. */
+#customWorkspace[hidden]{display:none!important}
+.custom-workspace-active{height:auto!important;overflow-y:auto!important;overflow-x:hidden!important;background:#eef5ff}
+.custom-workspace-active .app{height:auto!important;min-height:100vh;display:block!important;padding:10px 12px!important;overflow:visible!important}
+.custom-workspace-active .workspace-grid,.custom-workspace-active .footer-bar{display:none!important}
+.custom-workspace-active .header{height:60px!important;min-height:60px!important;margin:0 0 12px!important;padding:10px 20px!important}
+.custom-workspace-active .header h1{font-size:28px}.custom-workspace-active .title-line{display:flex;align-items:center;gap:24px}
+.custom-workspace-active #editState,.custom-workspace-active #draftDetail,.custom-workspace-active #saveDraftCopy,.custom-workspace-active #undoTop,.custom-workspace-active #redoTop,.custom-workspace-active #saveTemplate{display:none!important}
+.cm-subtitle{font-size:12px;font-weight:400;color:#8397af;display:none}.custom-workspace-active .cm-subtitle{display:block}
+#customWorkspace{color:#17304e;font-size:13px}#customWorkspace h2{font-size:20px;line-height:28px;margin:0;font-weight:700}
+#customWorkspace .panel{border-radius:16px;background:white;box-shadow:0 4px 16px #21466c09;border:1px solid #e8f0fa}
+.cm-top{display:grid;grid-template-columns:minmax(0,2.4fr) minmax(300px,1fr);gap:14px;align-items:stretch}
+.cm-import{padding:14px 22px 26px;min-height:384px}
+#customWorkspace #cmPlan #superModeBar{box-shadow:none;border:0;padding:0;margin:0 0 20px;background:none;height:auto!important;min-height:0!important}
+.cm-plan-title{display:none}#customWorkspace #cmPlan .cm-plan-title{display:block;margin-bottom:8px!important}
+#customWorkspace #cmPlan #modeTabs{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;padding:0;border:0;background:none;height:64px!important;min-height:64px!important}
+#customWorkspace #cmPlan #modeTabs .mode-tab{display:flex!important;align-items:center;gap:10px;justify-content:flex-start;padding:10px!important;border:1px solid #e4eaf3!important;border-radius:10px;background:white!important;height:64px!important;min-height:64px!important;box-shadow:none;color:#20334d!important;transform:none!important}
+#customWorkspace #cmPlan #modeTabs .mode-tab.active{border-color:#236ceb!important;background:#edf4ff!important;color:#2265d3!important}
+#customWorkspace #cmPlan .cm-mode-copy{display:flex;flex-direction:column;min-width:0;gap:3px;text-align:left}
+#customWorkspace #cmPlan .mode-label{font-size:16px!important;font-weight:600;line-height:21px}#customWorkspace #cmPlan .mode-description{display:block!important;font-size:12px!important;font-weight:400;color:#8b9cb1!important;line-height:17px!important;white-space:normal}
+.cm-mode-icon{display:none}#customWorkspace #cmPlan .cm-mode-icon{display:flex;width:28px;height:28px;flex:none;color:#377dfa}#customWorkspace #cmPlan .cm-mode-icon svg{width:28px;height:28px}
+.cm-drop{width:100%;height:188px;margin-top:8px;border:1px dashed #9bb9df;border-radius:10px;background:#fbfdff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;color:#29415f;cursor:pointer}.cm-drop strong{font-size:13px;font-weight:500}.cm-drop small{font-size:13px;color:#8a9cb2}.cm-plus{display:flex;align-items:center;justify-content:center;width:60px;height:60px;color:#2479fa;background:#ecf5ff;border-radius:50%;margin-bottom:2px}.cm-plus svg{width:40px;height:40px}
+.cm-drop.has-sources{height:104px}.cm-drop.has-sources .cm-plus{width:28px;height:28px}.cm-sources{display:flex;gap:8px;overflow-x:auto;padding-top:10px;height:86px}.cm-sources button{flex:0 0 136px;border:1px solid #e5edf6;background:white;border-radius:7px;overflow:hidden;color:#45617f}.cm-sources img{height:40px;width:100%;object-fit:cover}.cm-sources span{display:block;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;font-size:12px;padding:3px}
+#cmPreview>.preview-panel{height:100%;padding:14px 20px 20px;display:flex;flex-direction:column;gap:0}#cmPreview .panel-head{margin:0 0 6px}#cmPreview .panel-title>.section-icon,#cmPreview .panel-head>.muted,#cmPreview #previewHint,#cmPreview #playPreview,#cmPreview #previewInspection{display:none!important}
+#cmPreview #previewPlayer{height:auto!important;min-height:0!important;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;background:none;padding:0}
+#cmPreview #previewFrame{width:142px!important;height:252.444px!important;aspect-ratio:9/16!important;flex:none;border:1px solid #e4edf9;border-radius:12px;background:#eef5ff;overflow:hidden;position:relative;margin:0 auto}
+#cmPreview #previewVideo{width:100%;height:100%;object-fit:contain}#cmPreview #previewEmpty{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:18px;font-size:13px;color:#8b9db4;background:#eef5ff}#cmPreview #previewEmpty svg{height:44px;width:44px;color:#6098ee}
+#cmPreview .preview-controls{width:100%;max-width:100%;margin-top:6px}#cmPreview:has(#previewEmpty[style*="flex"]) .preview-controls{display:none}
+#cmPreview .preview-actions{margin-top:auto;display:block}#cmPreview #renderPreview{height:30px;width:100%;font-size:16px;min-height:30px;padding:0}
+.cm-rules{width:calc((100% - 14px)*.705882);padding:14px 22px 18px;margin-top:14px;min-height:286px}.cm-rules>header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;gap:10px}.cm-rules h2{display:flex;align-items:center;gap:8px}.cm-rules h2 svg{height:20px;width:20px;color:#327cfa}.cm-rules p{margin:0;font-size:12px;color:#8a9bb2;line-height:20px}.cm-rules header>div:last-child{display:flex;align-items:center;gap:12px;flex:none}.cm-badge{border-radius:16px;background:#f0f5ff;color:#3978d9;padding:5px 12px;white-space:nowrap}
+.cm-table-head,.cm-rule{display:grid;grid-template-columns:1.1fr 1.3fr 1.1fr 1.1fr 76px;align-items:center;gap:12px;padding:0 12px}.cm-table-head{height:30px;border-radius:7px;background:#eef3ff;color:#4b6180;font-size:12px}.cm-rows{height:164px;overflow-y:auto;scrollbar-gutter:stable}.cm-rule{height:41px;border-bottom:1px solid #edf1f7}.cm-rule>strong{display:flex;align-items:center;gap:9px;font-size:14px;white-space:nowrap}.cm-rule strong b{font-size:14px;width:27px;line-height:29px;text-align:center;background:#eaf1ff;border-radius:6px}.cm-rule:nth-child(3n) strong b{background:#e1f4f6}.cm-rule:nth-child(3n+1) strong b{background:#f0e9fc}.cm-times{display:flex;align-items:center;gap:6px;min-width:0}.cm-times input{min-width:0;width:45px!important;text-align:center;padding:3px!important}.cm-times span{color:#8d9db3}.cm-rule-tag{justify-self:start;font-size:12px;background:#eef4ff;color:#3c79d1;border-radius:5px;padding:5px 10px;white-space:nowrap}
+.cm-settings{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:14px;align-items:stretch}.cm-settings>.panel{min-height:204px;padding:12px 22px 18px!important;border:2px solid!important}.cm-settings .cm-sound{border-color:#9977e6!important}.cm-settings .cm-watermark{border-color:#43b7ad!important}.cm-settings .cm-output-settings{border-color:#d8b352!important}.cm-settings h2{display:flex;align-items:center;gap:6px;margin-bottom:6px!important}.cm-settings h2 svg{width:18px;height:18px}
+.cm-line{display:flex;align-items:center;gap:10px;margin:0 0 12px;min-height:34px}.cm-line>span:first-child{color:#8194ad;font-size:12px;flex:none;width:56px}.cm-line>select,.cm-line>input{flex:1;min-width:0}.cm-line .button{flex:none}.cm-sound #cmVolume{max-width:190px}.cm-audio-player{display:flex;align-items:center;gap:6px;min-width:0;flex:1;height:32px;border:1px solid #d7e3f2;border-radius:7px;padding:0 6px}.cm-audio-player button{padding:0;border:0;color:#9670e5;background:none;width:23px;height:23px;flex:none}.cm-audio-player svg{width:23px;height:23px}.cm-audio-player input{min-width:20px;width:100%;height:20px;border:0;padding:0}.cm-audio-player time{font-size:12px;color:#899db7}#cmAudioStatus{font-size:12px;color:#a44545;margin:0}.cm-watermark-middle,.cm-watermark-bottom{display:flex;align-items:center;gap:10px;margin-top:12px}.cm-watermark-middle>label,.cm-watermark-bottom>label{display:flex;align-items:center;gap:6px;color:#8194ad;font-size:11px;min-width:0;flex:1}.cm-watermark-middle select,.cm-watermark-bottom select{min-width:0;flex:1;padding-left:7px!important}.cm-watermark-bottom{gap:8px}.cm-watermark-bottom>label{white-space:nowrap}.cm-output-settings .cm-line>span{font-size:15px;font-weight:600;color:#17304e;width:102px}.cm-output-settings .cm-line{margin-bottom:12px}
+.cm-footer{display:flex;align-items:center;gap:12px;margin-top:14px;padding:18px 22px;min-height:78px;flex-wrap:wrap}.cm-footer>strong{font-size:20px;width:132px}.cm-footer>input{flex:1;min-width:180px;max-width:420px}.cm-footer .button{height:40px;font-size:15px}.cm-footer #cmGenerate{margin-left:auto;width:184px}.cm-footer #cmJob{width:100%;margin:0;font-size:13px}
+#customWorkspace input:not([type=range]),#customWorkspace select{height:32px;border:1px solid #d4e1ef;border-radius:7px;background-color:white;color:#304963;padding:4px 10px;font-family:inherit;font-size:13px;box-sizing:border-box}#customWorkspace select{appearance:auto;padding-right:4px}#customWorkspace .button{font-family:inherit;border-radius:8px}#customWorkspace .button.secondary{background:#edf3ff;color:#2b6fd5;border:0}#customWorkspace [hidden]{display:none!important}
+@media(max-width:1100px){.cm-settings>.panel{padding:12px!important}.cm-watermark-middle,.cm-watermark-bottom{gap:5px}.cm-watermark-bottom>label{flex-direction:column;align-items:stretch}.cm-rules{width:100%}.cm-output-settings .cm-line>span{width:76px}}
+
+#customWorkspace #cmPlan #superModeBar{padding:0!important;margin:0 0 20px!important;height:auto!important;min-height:0!important}
+#customWorkspace #cmPlan #superModeBar #modeTabs .mode-tab{flex-direction:row!important;align-items:center!important;justify-content:flex-start!important;height:64px!important;min-height:64px!important;padding:10px!important;background:#fff!important}
+#customWorkspace #cmPlan #superModeBar #modeTabs .mode-tab.active{background:#edf4ff!important;border-color:#236ceb!important}
+#customWorkspace #cmPlan #superModeBar #modeTabs .mode-label{color:inherit!important}
+#customWorkspace #cmPlan #superModeBar #modeTabs .mode-description{color:#8194ad!important}
+#customWorkspace .cm-import,#customWorkspace #cmPreview>.preview-panel{min-height:384px!important}
+
+#customWorkspace #cmPlan #superModeBar{max-height:none!important}
+#customWorkspace select{appearance:none;background-image:url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2214%22 height=%2214%22 viewBox=%220 0 20 20%22 fill=%22none%22 stroke=%22%23668099%22 stroke-width=%221.8%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22m5 7.5 5 5 5-5%22/%3E%3C/svg%3E');background-repeat:no-repeat;background-position:right 8px center;padding-right:26px!important}
+
+
+#customWorkspace .cm-rows{scrollbar-width:thin;scrollbar-color:#a9c4f2 #f0f3f8}
+#customWorkspace .cm-rows::-webkit-scrollbar{display:block;width:6px}
+#customWorkspace .cm-rows::-webkit-scrollbar-track{background:#f0f3f8;border-radius:6px}
+#customWorkspace .cm-rows::-webkit-scrollbar-thumb{background:#a9c4f2;border-radius:6px}
+#customWorkspace .cm-drop{border-color:#9bb9df!important}
+#customWorkspace .cm-sound h2 svg{color:#9977e6}#customWorkspace .cm-watermark h2 svg{color:#43b7ad}#customWorkspace .cm-output-settings h2 svg{color:#c5a147}
+
+/* Reserve a real layout row for output controls; only the editor scrolls. */
+html:has(body.custom-workspace-active){height:100%!important;overflow:hidden!important}
+body.custom-workspace-active{height:100%!important;min-height:0;overflow:hidden!important}
+body.custom-workspace-active .app{height:100vh!important;height:100dvh!important;min-height:0;display:grid!important;grid-template-rows:60px minmax(0,1fr);gap:12px;padding:10px 12px 12px!important;overflow:hidden!important}
+body.custom-workspace-active .header{margin:0!important}
+body.custom-workspace-active #customWorkspace{display:grid;grid-template-rows:minmax(0,1fr) auto;gap:12px;height:100%;min-height:0;overflow:hidden}
+#customWorkspace .cm-scroll{min-height:0;overflow-y:auto;overflow-x:hidden;padding:0 8px 24px 0;scrollbar-width:thin;scrollbar-color:#a9c4f2 #eef5ff;scroll-padding-bottom:24px}
+#customWorkspace .cm-scroll::-webkit-scrollbar{width:8px;height:0}
+#customWorkspace .cm-scroll::-webkit-scrollbar-thumb{background:#a9c4f2;border-radius:6px}
+#customWorkspace .cm-scroll::-webkit-scrollbar-track{background:#eef5ff}
+#customWorkspace .cm-scroll{scrollbar-width:none}
+#customWorkspace .cm-scroll::-webkit-scrollbar{display:none;width:0;height:0}
+#customWorkspace .cm-scroll:focus-visible{outline:1px solid #a9c4f2;outline-offset:-1px;border-radius:12px}
+#customWorkspace>.cm-footer{margin:0;min-height:64px;padding:12px 18px;gap:10px;box-shadow:0 -2px 12px #21466c09}
+#customWorkspace>.cm-footer>strong{width:90px;font-size:18px}
+#customWorkspace>.cm-footer>input{max-width:none;min-width:160px}
+#customWorkspace>.cm-footer #cmGenerate{width:158px}
+#customWorkspace .cm-import{padding-bottom:14px;min-height:368px!important}
+#customWorkspace #cmPreview>.preview-panel{min-height:368px!important}
+#customWorkspace .cm-rules,#customWorkspace .cm-settings{margin-top:12px}
+
+/* Keep the three settings cards visible in the desktop's shorter embedded viewport. */
+@media(min-width:981px) and (max-height:980px){
+ #customWorkspace .cm-import{min-height:300px!important;padding-top:12px;padding-bottom:12px}
+ #customWorkspace #cmPlan #superModeBar{margin-bottom:12px!important}
+ #customWorkspace .cm-drop{height:118px;gap:6px}
+ #customWorkspace .cm-drop .cm-plus{width:44px;height:44px;margin-bottom:0}
+ #customWorkspace .cm-drop .cm-plus svg{width:32px;height:32px}
+ #customWorkspace .cm-drop.has-sources{height:62px}
+ #customWorkspace .cm-sources{height:66px}
+ #customWorkspace #cmPreview>.preview-panel{min-height:300px!important;padding-top:12px;padding-bottom:12px}
+ #cmPreview #previewFrame{width:110.25px!important;height:196px!important}
+ #customWorkspace .cm-rules{min-height:0;padding-top:12px;padding-bottom:12px}
+ #customWorkspace .cm-rules>header{margin-bottom:8px}
+ #customWorkspace .cm-rules h2{line-height:26px}
+ #customWorkspace .cm-rules p{line-height:16px}
+}
+
+/* Keep each grid child inside its own row, including when the host banner closes. */
+#customWorkspace .cm-top{grid-template-rows:minmax(0,1fr)}
+#customWorkspace .cm-drop.has-sources{display:none}
+#customWorkspace .cm-import:has(.has-sources){display:flex;flex-direction:column}
+#customWorkspace .cm-sources{height:170px;min-height:0;container-type:size;display:flex;align-items:stretch;gap:12px;padding:8px 0 2px;overflow-x:auto;overflow-y:hidden;scrollbar-width:none}
+#customWorkspace .cm-sources::-webkit-scrollbar{display:none}
+#customWorkspace .cm-sources .cm-source-card{display:flex;flex-direction:column;align-items:center;flex:0 0 auto;width:calc((100cqh - 8px)*.5625 + 8px);height:100%;padding:3px;border:1px solid #dbe7f7;border-radius:8px;background:#fff;overflow:hidden;min-width:0}
+#customWorkspace .cm-sources .cm-source-picture{position:relative;display:block;flex:none;min-height:0;padding:0;aspect-ratio:9/16;height:100%;width:auto;border-radius:5px;background:#f0f5fb;overflow:hidden}
+#customWorkspace .cm-sources img{display:block;width:100%;height:100%;object-fit:contain}
+#customWorkspace .cm-sources .cm-source-duration{position:absolute;bottom:4px;left:4px;padding:2px 4px;border-radius:4px;background:#18304dcc;color:white;font-size:10px;line-height:14px}
+#customWorkspace .cm-sources .cm-source-name{display:none}
+#customWorkspace .cm-source-placeholder{display:grid;place-items:center;height:100%;font-size:11px;color:#8294ac}
+#customWorkspace .cm-sources .cm-source-add{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:0 0 90px;gap:8px;border:1px dashed #a7c5ee;background:#f7faff;border-radius:8px;color:#2874ed;padding:6px}
+#customWorkspace .cm-sources .cm-add-symbol{font-size:30px;line-height:34px;padding:0}
+#customWorkspace .cm-source-card:hover{border-color:#7aaaff;background:#f5f9ff}
+
+/* The output row owns its space; all three settings cards retain their full outline. */
+@media(min-width:981px) and (min-height:850px){
+ #customWorkspace .cm-scroll{display:grid;grid-template-columns:minmax(0,2.4fr) minmax(300px,1fr);grid-template-rows:minmax(0,1fr) 240px 180px;gap:10px 14px;padding:0 0 4px;overflow:hidden}
+ #customWorkspace .cm-top{display:contents}
+ #customWorkspace .cm-import{grid-column:1;grid-row:1;min-width:0;min-height:0!important;height:100%;padding:12px 16px;display:flex;flex-direction:column}
+ #customWorkspace #cmPlan{flex:none}
+ #customWorkspace #cmPlan #superModeBar{margin-bottom:8px!important}
+ #customWorkspace #cmPlan #modeTabs,#customWorkspace #cmPlan #superModeBar #modeTabs .mode-tab{height:58px!important;min-height:58px!important}
+ #customWorkspace .cm-drop{flex:1;min-height:0;height:auto;gap:5px}
+ #customWorkspace .cm-drop .cm-plus{width:36px;height:36px;margin-bottom:0;flex:none}
+ #customWorkspace .cm-drop .cm-plus svg{width:28px;height:28px}
+ #customWorkspace .cm-sources{flex:1;height:0;min-height:0}
+ #customWorkspace #cmPreview{grid-column:2;grid-row:1 / span 2;min-width:0;min-height:0;container-type:size}
+ #customWorkspace #cmPreview>.preview-panel{height:100%;min-height:0!important;padding:12px 16px}
+ #customWorkspace #cmPreview #previewPlayer{display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr) auto;justify-content:stretch;justify-items:center;align-items:center;width:100%;min-height:0}
+ #customWorkspace #cmPreview #previewFrame{height:auto!important;width:min(calc((100cqh - 144px)*.5625),calc(100cqw - 32px))!important;max-height:100%;max-width:100%;aspect-ratio:9/16}
+ #customWorkspace .cm-rules{grid-column:1;grid-row:2;width:100%;min-width:0;min-height:0;height:240px;margin:0;padding:8px 16px}
+ #customWorkspace .cm-rules>header{margin-bottom:4px}
+ #customWorkspace .cm-rules h2{line-height:26px}
+ #customWorkspace .cm-rules p{line-height:16px}
+ #customWorkspace .cm-table-head{height:28px}
+ #customWorkspace .cm-rows{height:144px}
+ #customWorkspace .cm-rule{height:36px}
+ #customWorkspace .cm-settings{grid-column:1 / -1;grid-row:3;min-width:0;min-height:0;height:180px;margin:0}
+ #customWorkspace .cm-settings>.panel{min-height:0;height:100%;padding:10px 16px!important}
+ #customWorkspace .cm-settings .cm-line{margin-bottom:6px}
+}
+
+/* Fullscreen is a separate viewport, not the small preview card's grid track. */
+#customWorkspace #cmPreview #previewPlayer:fullscreen{display:grid!important;grid-template-columns:minmax(0,1fr)!important;grid-template-rows:minmax(0,1fr) 40px!important;justify-content:stretch!important;align-items:center!important;justify-items:center!important;gap:12px!important;width:100vw!important;width:100dvw!important;height:100vh!important;height:100dvh!important;min-height:0!important;max-width:none!important;max-height:none!important;padding:16px!important;margin:0!important;background:#000!important;box-sizing:border-box}
+#customWorkspace #cmPreview #previewPlayer:fullscreen #previewFrame{width:min(calc((100dvh - 88px)*.5625),calc(100dvw - 32px))!important;height:auto!important;aspect-ratio:9/16!important;max-height:100%!important;max-width:100%!important;margin:0!important;border:0!important;border-radius:0!important;justify-self:center;align-self:center;background:#000}
+#customWorkspace #cmPreview #previewPlayer:fullscreen #previewVideo{width:100%;height:100%;object-fit:contain;background:#000}
+#customWorkspace #cmPreview #previewPlayer:fullscreen .preview-controls{width:min(100%,800px)!important;max-width:none!important;height:40px;margin:0!important;justify-self:center}
+
+/* One consistent menu for every custom-workspace select, above clipped cards. */
+#customWorkspace select{cursor:pointer;text-overflow:ellipsis;white-space:nowrap}
+#customWorkspace select:hover:not(:disabled){border-color:#8db5f3}
+#customWorkspace select:focus-visible,#customWorkspace select[aria-expanded="true"]{outline:none;border-color:#397cf5;box-shadow:0 0 0 3px #397cf51a}
+#customWorkspace select:disabled{cursor:not-allowed;color:#94a3b8;background-color:#f5f8fc}
+.cm-select-menu{position:fixed;inset:auto;margin:0;padding:5px;box-sizing:border-box;border:1px solid #d6e4f7;border-radius:10px;background:#fff;color:#304963;box-shadow:0 8px 28px #19365c24;overflow-x:hidden;overflow-y:auto;z-index:2147483000;font-family:"Microsoft YaHei UI","Microsoft YaHei",sans-serif;font-size:13px;line-height:20px;scrollbar-width:thin;scrollbar-color:#b4c9e8 transparent;overscroll-behavior:contain}
+.cm-select-menu[hidden]{display:none!important}
+.cm-select-menu::backdrop{background:transparent;pointer-events:none}
+.cm-select-option{position:relative;min-height:34px;box-sizing:border-box;display:flex;align-items:center;padding:7px 30px 7px 11px;border-radius:6px;cursor:pointer;overflow-wrap:anywhere;white-space:normal}
+.cm-select-option[hidden]{display:none}
+.cm-select-option[aria-selected="true"]{color:#246de0;background:#edf4ff;font-weight:600}
+.cm-select-option[aria-selected="true"]::after{content:"";position:absolute;right:12px;top:50%;width:5px;height:9px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:translateY(-65%) rotate(45deg)}
+.cm-select-option.is-active{background:#e4efff;color:#2368ce}
+.cm-select-option[aria-disabled="true"]{color:#a2adbb;background:transparent;cursor:not-allowed;font-weight:400}
+
+/* Editing a custom duration and choosing its mode share one stable field. */
+#customWorkspace .cm-duration-control{position:relative;flex:1;min-width:0;height:32px}
+#customWorkspace #cmDurationMode{width:100%;height:100%}
+#customWorkspace .cm-duration-control.is-custom #cmDurationMode{color:transparent}
+#customWorkspace #cmDurationField{position:absolute;inset:1px 32px 1px 1px;display:flex;align-items:center;gap:6px;pointer-events:none}
+#customWorkspace #cmDurationField #cmDuration{pointer-events:auto;flex:1;width:0;min-width:0;height:100%;padding:3px 9px;border:0;background:transparent;box-shadow:none;outline:none;appearance:textfield}
+#customWorkspace #cmDuration::-webkit-inner-spin-button,#customWorkspace #cmDuration::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+#customWorkspace #cmDurationField>span{flex:none;color:#8194ad;font-size:13px;padding-right:8px}
+#customWorkspace .cm-duration-control:focus-within #cmDurationMode{border-color:#397cf5;box-shadow:0 0 0 3px #397cf51a}
+#customWorkspace .cm-duration-control:has([aria-invalid="true"]):has(#cmDurationField:not([hidden])) #cmDurationMode{border-color:#dc6262}
+#customWorkspace .cm-duration-control:has(select:disabled){opacity:.65}

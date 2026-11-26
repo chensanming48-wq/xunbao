@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>上传记录</title>
+  <link rel="stylesheet" href="styles.css?v=10383">
+  <link rel="stylesheet" href="history-fixes.css?v=10383-stat-card-layout-v1">
+  <link rel="stylesheet" href="../ai-product-card-ui/shell.css?v=1">
+  <link rel="stylesheet" href="../ai-product-card-ui/fit.css?v=2">
+  <link rel="stylesheet" href="../ai-product-card-ui/desktop.css?v=4">
+</head>
+<body data-card-page="history">
+  <script src="../ai-product-card-ui/shell.js?v=4"></script>
+  <main class="page-shell">
+    <header class="page-header">
+      <div>
+        <h1>上传记录</h1>
+        <p>查看素材上传进度、平台回执与失败原因</p>
+      </div>
+      <div class="header-actions">
+        <button class="button primary-outline" id="refreshButton"><img class="card-line-icon" src="../ai-product-card-ui/refresh-cw.svg" alt="">刷新记录</button>
+        <button class="button" id="exportButton"><img class="card-line-icon" src="../ai-product-card-ui/download.svg" alt="">导出记录</button>
+        <span class="updated">最近更新 <b id="updatedAt">--:--</b></span>
+      </div>
+    </header>
+
+    <section class="stats" aria-label="上传统计">
+      <button class="stat-card" type="button" data-status-filter="" aria-pressed="false">
+        <span class="stat-icon blue document" aria-hidden="true">
+          <svg viewBox="0 0 48 48" focusable="false">
+            <path d="M14 6.5h14.5L36 14v27.5H14z" />
+            <path d="M28.5 6.5V14H36" />
+            <path d="M19 22h12M19 28h12M19 34h9" />
+          </svg>
+        </span>
+        <div><span>全部</span><strong id="totalStat">0</strong></div>
+      </button>
+      <button class="stat-card" type="button" data-status-filter="上传成功" aria-pressed="false">
+        <span class="stat-icon green" aria-hidden="true">
+          <svg viewBox="0 0 48 48" focusable="false">
+            <circle cx="24" cy="24" r="18" />
+            <path d="m15.8 24.5 5.3 5.4 11.5-13.1" />
+          </svg>
+        </span>
+        <div><span>成功</span><strong id="successStat">0</strong></div>
+      </button>
+      <button class="stat-card" type="button" data-status-filter="上传失败" aria-pressed="false">
+        <span class="stat-icon red" aria-hidden="true">
+          <svg viewBox="0 0 48 48" focusable="false">
+            <circle cx="24" cy="24" r="18" />
+            <path d="m18 18 12 12m0-12-12 12" />
+          </svg>
+        </span>
+        <div><span>失败</span><strong id="failedStat">0</strong></div>
+      </button>
+      <button class="stat-card" type="button" data-status-filter="上传中" aria-pressed="false">
+        <span class="stat-icon blue" aria-hidden="true">
+          <svg viewBox="0 0 48 48" focusable="false">
+            <circle cx="24" cy="24" r="18" />
+            <path d="M24 33V15m-7 7 7-7 7 7" />
+          </svg>
+        </span>
+        <div><span>上传中</span><strong id="runningStat">0</strong></div>
+      </button>
+      <button class="button danger-outline" id="clearButton">清空记录</button>
+    </section>
+
+    <section class="records-card">
+      <div class="toolbar">
+        <label class="search"><img class="card-line-icon" src="../ai-product-card-ui/search.svg" alt=""><input id="searchInput" aria-label="搜索素材、店铺或计划" placeholder="搜索素材文件、店铺或计划"></label>
+        <select id="storeFilter" aria-label="筛选店铺"><option value="">全部店铺</option></select>
+        <select id="statusFilter" aria-label="筛选状态">
+          <option value="">全部状态</option><option>上传成功</option><option>上传失败</option><option>上传中</option><option>等待重试</option><option>已取消</option><option>已跳过</option>
+        </select>
+        <select id="typeFilter" aria-label="筛选类型"><option value="">全部类型</option><option value="图片">图片</option></select>
+        <select id="rangeFilter" aria-label="筛选时间"><option value="7">近7天</option><option value="30">近30天</option><option value="0">全部时间</option></select>
+        <div class="toolbar-spacer"></div>
+
+
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>上传时间</th><th>图片预览</th><th>上传计划</th><th>图片数量</th><th>店铺</th><th>目标计划</th><th>状态</th><th>备注</th><th class="actions-col">操作</th></tr></thead>
+          <tbody id="recordsBody"></tbody>
+        </table>
+        <div class="empty" id="emptyState"><span>▤</span><strong>暂无上传记录</strong><p>完成一次素材上传后，批次记录会显示在这里</p></div>
+      </div>
+      <footer class="pagination">
+        <span class="record-count" id="recordCount">共0条记录</span><span id="selectionHint" hidden></span>
+        <div class="pager-group">
+          <div id="paginationButtons" aria-label="上传记录分页"></div>
+          <select id="pageSize" aria-label="每页记录数"><option value="8">8条/页</option><option value="10" selected>10条每页</option></select>
+        </div>
+      </footer>
+    </section>
+  </main>
+
+  <div class="modal-backdrop" id="previewModal" aria-hidden="true">
+    <section class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <header class="modal-header">
+        <div><h2 id="modalTitle">本上传计划全部图片</h2><p id="modalSubtitle"></p></div>
+        <button class="icon-button" id="modalClose" aria-label="关闭">×</button>
+      </header>
+      <div class="modal-tools">
+        <label class="select-all"><input type="checkbox" id="modalSelectAll"> 全选</label>
+        <span id="modalSelectedCount">已选择 0 张</span>
+        <div class="toolbar-spacer"></div>
+        <button class="button" id="openFolderButton">打开文件位置</button>
+      </div>
+      <div class="asset-grid" id="assetGrid"></div>
+      <footer class="modal-footer">
+        <span class="download-note">多张素材将自动打包为 ZIP</span>
+        <button class="button" id="modalCancel">取消</button>
+        <button class="button primary-outline" id="downloadSelectedButton">下载选中</button>
+        <button class="button primary" id="downloadAllButton">全部下载</button>
+      </footer>
+    </section>
+  </div>
+
+  <div class="toast" id="toast"></div>
+  <script src="app.js?v=10549-upload-plan-grouping-v1"></script>
+  <script src="../ai-product-card-ui/fit.js?v=4"></script>
+</body>
+</html>

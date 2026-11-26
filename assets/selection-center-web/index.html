@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>创爆选品中心</title>
+  <link rel="stylesheet" href="styles.css?v=10686">
+  <link rel="stylesheet" href="responsive.css?v=10686">
+</head>
+<body>
+  <div id="app" class="selection-app">
+    <nav class="site-nav" aria-label="罗盘栏目">
+      <div class="site-tabs" id="siteTabs">
+        <button data-section="trade">交易</button>
+        <button data-section="live">直播</button>
+        <button class="active" data-section="shortvideo">短视频</button>
+        <button data-section="productcard">商品卡</button>
+        <button data-section="search">搜索</button>
+        <button data-section="talent">达人</button>
+        <button data-section="product">商品</button>
+        <button data-section="marketing">营销</button>
+        <button data-section="experience">体验</button>
+        <button data-section="audience">人群</button>
+        <button data-section="market">市场</button>
+        <button data-section="factory">数据工厂</button>
+      </div>
+      <div class="site-actions">
+        <label class="global-search" aria-label="页面搜索">
+          <input id="globalSearch" type="search" autocomplete="off">
+          <span class="mdl-icon" aria-hidden="true">&#xE721;</span>
+        </label>
+        <button id="refreshButton" class="icon-action" title="刷新数据"><span class="mdl-icon" aria-hidden="true">&#xE72C;</span><em>刷新</em></button>
+        <button id="platformButton" class="icon-action" title="打开罗盘原页面"><span class="mdl-icon" aria-hidden="true">&#xE774;</span><em>原页面</em></button>
+      </div>
+    </nav>
+
+    <main class="content">
+      <section class="ranking-header">
+        <div class="title-row">
+          <h1><span id="titlePrefix">抖音商品</span> <em>TOP200</em></h1>
+          <div class="date-tools">
+            <span id="dateRange">2026/08/19 - 2026/08/25</span>
+            <select id="periodSelect" aria-label="数据周期"><option>实时</option><option>近1天</option><option>近7天</option><option>近30天</option></select>
+          </div>
+        </div>
+
+        <div class="rank-tabs" id="rankTabs" role="tablist" aria-label="商品榜单">
+          <button data-view="total">总榜</button>
+          <button data-view="search">搜索榜</button>
+          <button data-view="live">直播榜</button>
+          <button data-view="productcard">商品卡榜</button>
+          <button data-view="talent">达人带货榜</button>
+          <button class="active" data-view="shortvideo">短视频榜</button>
+          <button data-view="realtime">实时爆品挖掘榜</button>
+        </div>
+      </section>
+
+      <section class="filters" aria-label="榜单筛选">
+        <label class="keyword-search">
+          <span class="mdl-icon" aria-hidden="true">&#xE721;</span>
+          <input id="keyword" type="search" placeholder="请输入商品名称、关键词或商品ID搜索" autocomplete="off">
+        </label>
+        <div class="filter-line">
+          <label class="category-field"><span>行业类目</span><select id="category"><option>美妆护肤 / 护肤清洁 / 个人护理 / 口腔护理</option><option>家居日用 / 纸品湿巾</option><option>食品饮料 / 休闲食品</option></select></label>
+          <div class="segmented-field" data-filter="brand"><span>品牌类型</span><button class="active" data-value="all">不限</button><button data-value="known">知名品牌</button><button data-value="other">非知名品牌</button></div>
+          <div class="segmented-field prices" data-filter="price"><span>价格带</span><button class="active" data-value="all">不限</button><button data-value="0-10">0-10</button><button data-value="10-20">10-20</button><button data-value="20-40">20-40</button><button data-value="40-60">40-60</button><button data-value="60+">60以上</button><button data-value="custom">自定义</button></div>
+        </div>
+      </section>
+
+      <section class="workflow-bar" aria-label="TOP10视频处理">
+        <div class="workflow-title"><strong id="workflowTitle">商品榜单 · TOP10 视频</strong><span id="workflowMeta">正在等待罗盘榜单数据</span></div>
+        <div class="workflow-actions">
+          <button id="copyButton" class="secondary-button"><span class="mdl-icon" aria-hidden="true">&#xE8C8;</span>复制本页面商品视频</button>
+          <button id="bulkOneCutButton" class="primary-button"><span class="mdl-icon" aria-hidden="true">&#xE768;</span>批量送入一刀不剪</button>
+        </div>
+      </section>
+
+      <section class="table-card" aria-label="选品榜单">
+        <div class="selection-grid table-head">
+          <div class="select-column"><input id="selectAll" type="checkbox" aria-label="全选当前商品"></div>
+          <div>排名</div>
+          <div>商品</div>
+          <div id="mediaColumnTitle">带货短视频</div>
+          <div>店铺名称</div>
+          <div id="amountColumnTitle">短视频用户支付金额</div>
+          <div>销量</div>
+          <div>发布时间</div>
+          <div>操作</div>
+        </div>
+        <div id="tableRows" class="table-rows" aria-live="polite"></div>
+        <div id="emptyState" class="empty-state">
+          <div class="loading-mark" aria-hidden="true"></div>
+          <strong>正在读取罗盘榜单</strong>
+          <span>登录完成后，商品、视频和店铺数据会自动显示在这里。</span>
+          <button id="loginButton" class="primary-button">打开罗盘登录</button>
+        </div>
+      </section>
+    </main>
+
+    <footer id="batchBar" class="batch-bar" hidden>
+      <div>已选择 <strong id="selectedCount">0</strong> 个商品</div>
+      <div>
+        <button id="batchSelectButton" class="secondary-button">批量添加自选</button>
+        <button id="batchTrackButton" class="secondary-button">批量加入追踪</button>
+        <button id="batchOneCutFooterButton" class="primary-button">批量送入一刀不剪</button>
+      </div>
+    </footer>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  </div>
+  <script src="app.js?v=10686"></script>
+</body>
+</html>

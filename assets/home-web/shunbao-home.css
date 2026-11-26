@@ -1,0 +1,39 @@
+/* Shunbao presentation only. Data cards, charts and table behavior use the shared page. */
+/* Preserve the V1.57.2 screenshot arrangement at every desktop width:
+   identity card starts at the metric grid's left edge; actions follow it. */
+html[data-brand="shunbao"] .topbar { justify-content: flex-start; align-items: center; }
+html[data-brand="shunbao"] .home-header-tools { width: 100%; min-width: 0; }
+html[data-brand="shunbao"] .header-actions { flex: 1 1 auto; width: 100%; min-width: 0; flex-direction: row; flex-wrap: wrap; justify-content: flex-start; align-items: center; gap: 16px; }
+html[data-brand="shunbao"] .account-overview-card { flex: 0 1 660px; width: 660px; grid-template-columns: minmax(176px, 1fr) 1px minmax(180px, 1.2fr) 1px minmax(110px, .7fr); }
+html[data-brand="shunbao"] #accountId { white-space: nowrap; overflow-wrap: normal; }
+html[data-brand="shunbao"] .shunbao-account-summary { cursor: default; }
+html[data-brand="shunbao"] .shunbao-account-summary:hover { background: transparent; }
+html[data-brand="shunbao"] #purchaseEntryButton,
+html[data-brand="shunbao"] #cb-watch-tutorial {
+  box-sizing: border-box; display: inline-flex !important; flex: 0 0 138px !important;
+  align-items: center !important; justify-content: center !important; align-self: center !important;
+  width: 138px !important; min-width: 138px !important; height: 46px !important;
+  padding: 0 18px !important; margin: 0 !important; gap: 8px !important;
+  color: #fff !important; background: var(--primary) !important; border: 1px solid var(--primary) !important;
+  border-radius: 8px !important; box-shadow: 0 4px 10px rgba(47,115,237,.18) !important;
+  font: 600 14px/20px "Microsoft YaHei UI", "Microsoft YaHei", sans-serif !important;
+  transform: none !important;
+}
+html[data-brand="shunbao"] #purchaseEntryButton:hover,
+html[data-brand="shunbao"] #cb-watch-tutorial:hover { background: #2165db !important; border-color: #2165db !important; }
+html[data-brand="shunbao"] #cb-watch-tutorial svg { width: 20px !important; height: 20px !important; }
+html[data-brand="shunbao"] .shunbao-delete { min-width: 44px; margin-left: 5px; padding: 0 7px; color: #e44b5a; }
+html[data-brand="shunbao"] .shunbao-delete:hover { background: #fff5f5; border-color: #f5c5ca; }
+html[data-brand="shunbao"] th:last-child { width: 176px; }
+html[data-brand="shunbao"] td:last-child { white-space: nowrap; }
+@media (max-width: 980px) {
+  html[data-brand="shunbao"] .topbar { display: flex; }
+  html[data-brand="shunbao"] .header-actions { flex-wrap: wrap; justify-content: flex-start; width: 100%; gap: 10px; }
+  html[data-brand="shunbao"] .account-overview-card { flex-basis: 100%; width: 100%; }
+}
+@media (max-width: 760px) {
+  html[data-brand="shunbao"] .account-overview-card { grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: 12px; }
+}
+@media (max-width: 540px) {
+  html[data-brand="shunbao"] .account-overview-card { grid-template-columns: minmax(0, 1fr); }
+}

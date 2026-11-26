@@ -1,0 +1,21 @@
+# ===== 凭据与账号数据：公开仓库绝不收录 =====
+xw.key
+*.key
+*.pem
+*.pfx
+data/
+
+# ===== 大文件：走 Release 附件（GitHub 仓库单文件上限 100MB）=====
+*.zip
+Tools/FFmpeg/ffmpeg.exe
+Tools/FFmpeg/ffprobe.exe
+Tools/Speech/ggml-small-q5_1.bin
+Tools/Watermark/lib/cv2/cv2.pyd
+Tools/Watermark/models/lama_fp32.onnx
+
+# ===== 系统与临时文件 =====
+Thumbs.db
+desktop.ini
+.DS_Store
+*.tmp
+*.log.tmp

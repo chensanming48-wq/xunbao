@@ -1,0 +1,10 @@
+{
+  "fixtures": [
+    {"title":"花朵吸管玻璃杯大容量随行水杯","expected":"水杯饮具"},
+    {"title":"神经酰胺修护保湿精华液","expected":"面部护肤"},
+    {"title":"浅蓝棉麻夏季连衣裙","expected":"服装"},
+    {"title":"茉莉柠檬茶饮料礼盒","expected":"饮料茶咖"},
+    {"title":"头戴式蓝牙主动降噪耳机","expected":"耳机音频"},
+    {"title":"挂脖便携充电小风扇","expected":"环境电器"}
+  ]
+}

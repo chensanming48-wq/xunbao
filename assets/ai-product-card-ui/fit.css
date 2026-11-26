@@ -1,0 +1,98 @@
+/* A complete desktop canvas fits the available WebView, including at OS DPI
+   scaling. These final rules deliberately replace the earlier stacked layout. */
+html, body[data-card-page] { width:100%; height:100%; min-height:0; overflow:hidden; margin:0; }
+body[data-card-page] { display:block; }
+.card-stage { position:absolute; top:0; left:0; transform-origin:top left; display:flex; flex-direction:column; overflow:hidden; }
+.card-stage > .card-shell-header { flex:0 0 125px; height:125px; padding:16px 28px 6px; grid-template-columns:1fr auto; gap:8px 12px; }
+.card-stage .card-header-actions { grid-column:auto; gap:12px; }
+.card-stage .card-heading h1 { font-size:32px; }
+.card-stage .card-brand { width:46px; height:46px; }
+.card-stage .card-button { min-height:48px; padding:0 22px; font-size:17px; }
+.card-stage .card-tabs { gap:12px; }
+.card-stage .card-tab { flex:0 0 auto; min-width:174px; padding:10px 25px; font-size:19px; gap:14px; }
+.card-stage .card-tab .card-icon { width:23px; height:23px; }
+.card-stage #cb-watch-tutorial { margin-left:0!important; }
+.card-stage .section-title,.card-stage .assistant-title { font-size:21px; }
+.card-stage .card-step { width:32px; height:32px; flex-basis:32px; margin-right:12px; font-size:20px; }
+body[data-card-page="generate"] .card-stage > .app { flex:1; width:100%; height:auto; min-height:0; display:grid; grid-template-rows:minmax(0,1fr) 70px; gap:12px; padding:14px 18px 16px; overflow:hidden; }
+body[data-card-page="generate"] .card-stage .workspace { display:grid; grid-template-columns:minmax(250px,24fr) minmax(560px,44fr) minmax(340px,29fr); min-height:0; overflow:visible; }
+body[data-card-page="generate"] .card-stage .product-panel { height:auto; grid-template-rows:32px 94px 38px minmax(0,1fr) 34px; }
+.card-stage .product-list { overflow:hidden; display:grid; grid-template-rows:repeat(6,minmax(0,1fr)); gap:8px; }
+.card-stage .product-card { min-height:0; padding:6px; gap:8px; }
+.card-stage .product-thumb,.card-stage .thumb-empty { width:68px; height:68px; flex-basis:68px; }
+.card-stage .product-name { font-size:15px; }
+.card-stage .product-id { font-size:13px; }
+body[data-card-page="generate"] .card-stage .center-panel { height:auto; min-height:0; grid-template-rows:210px 246px minmax(0,1fr); }
+.card-stage .center-panel .gallery { grid-template-rows:40px minmax(0,1fr) auto; }
+body[data-card-page="generate"] .card-stage .asset-grid { grid-template-rows:repeat(2,minmax(0,1fr)); grid-auto-rows:minmax(0,1fr); overflow:hidden; }
+.card-stage .config-row { grid-template-columns:repeat(2,minmax(0,1fr)); grid-auto-rows:56px; }
+.card-stage .config-label { font-size:15px; }
+.card-stage .mini-btn { font-size:13px; }
+.card-stage .assistant-panel { grid-column:auto; height:auto; min-height:0; grid-template-rows:46px minmax(0,1fr) 58px; overflow:hidden; }
+.card-stage .assistant-body { display:flex; flex-direction:column; min-height:0; overflow:hidden; gap:10px; }
+.card-stage .assistant-card { flex-shrink:0; }
+.card-stage .assistant-selector-card { display:grid; grid-template-columns:1fr; gap:12px; }
+.card-stage .idea-card { flex:1 1 0; min-height:130px; }
+.card-stage .idea-card textarea { min-height:40px; }
+.card-stage .action-bar { flex-wrap:nowrap; min-height:0; }
+.card-stage .action-status { min-width:0; }
+.card-stage .action-bar .generate-btn { min-width:250px; }
+
+body[data-card-page="upload"] .card-stage > .upload-page { flex:1; height:auto; min-height:0; padding:18px 26px; gap:16px; }
+.card-stage .config-grid { display:grid; grid-template-columns:minmax(240px,1.2fr) minmax(250px,1.2fr) auto minmax(250px,1fr); gap:14px; }
+.card-stage .config-grid .retry-field { grid-column:4; grid-row:1; }
+.card-stage .config-grid .refresh-plan { grid-column:3; grid-row:1; justify-self:stretch; }
+.card-stage .work-grid { min-height:0; }
+.card-stage .queue-card { min-height:0; gap:12px; }
+.card-stage .queue-head { flex-wrap:nowrap; }
+.card-stage .drop-zone { min-height:100px; padding:10px; }
+.card-stage .queue-table { min-height:0; overflow:hidden; grid-template-rows:44px minmax(0,1fr) auto; }
+.card-stage .queue-columns { min-width:0; min-height:44px; }
+.card-stage .queue-body { min-height:60px; overflow:hidden; }
+.card-stage .queue-row { min-width:0; min-height:54px; height:54px; }
+.card-stage .queue-row .preview-thumb { max-height:44px; }
+.card-stage .empty-queue { min-height:100%; }
+body[data-card-page="upload"] .card-stage .automation-card { display:grid; grid-template-columns:auto minmax(200px,1fr) auto auto; gap:12px 20px; padding:14px 20px; }
+.card-stage .secondary-actions { grid-row:1; grid-column:3; }
+.card-stage .automation-card .start-button { grid-row:1; grid-column:4; justify-self:stretch; }
+.card-stage .log-output { max-height:110px; }
+.card-stage .checks ul { margin:4px 0; }
+
+body[data-card-page="history"] .card-stage > .page-shell { flex:1; height:auto; min-height:0; margin:18px 28px; padding:18px; }
+.card-stage .page-header { flex-wrap:nowrap; }
+.card-stage .header-actions .button { height:50px; font-size:18px; padding:0 22px; }
+.card-stage .stats { grid-template-columns:repeat(4,minmax(0,1fr)) 170px; gap:14px; padding:14px; }
+.card-stage .stat-card { gap:12px; padding:10px 16px; }
+.card-stage .stat-card>div>span { font-size:19px; }
+.card-stage .stat-icon svg,.card-stage .stat-icon.document svg { width:40px; height:40px; }
+.card-stage #clearButton { grid-column:auto; height:50px; }
+.card-stage .toolbar { grid-template-columns:minmax(220px,1.5fr) repeat(4,minmax(120px,1fr)); gap:14px; }
+.card-stage .toolbar .search { grid-column:auto; }
+.card-stage .records-card .table-wrap { min-height:0; overflow:hidden; }
+.card-stage .records-card table { min-width:0; width:100%; }
+.card-stage .records-card th { height:50px; font-size:15px; padding:0 8px; }
+.card-stage .records-card td { height:44px; padding:4px 8px; font-size:13px; }
+.card-stage .records-card th:nth-child(n) { width:auto; }
+.card-stage .records-card th:nth-child(1) { width:11%; }
+.card-stage .records-card th:nth-child(2) { width:11%; }
+.card-stage .records-card th:nth-child(3) { width:15%; }
+.card-stage .records-card th:nth-child(4) { width:8%; }
+.card-stage .records-card th:last-child { width:14%; }
+.card-stage .records-card .preview-stack img { max-height:32px; max-width:32px; }
+.card-stage .records-card .preview-stack { height:32px; }
+.card-stage .records-card .thumb,.card-stage .records-card .preview-more { width:32px; height:30px; flex-shrink:0; }
+.card-stage .records-card .preview-count { margin-left:6px; font-size:11px; }
+.card-stage .records-card .empty { inset:51px 0 0; }
+.card-stage .pagination { flex-wrap:nowrap; height:56px; padding-top:8px; margin-top:8px; font-size:14px; }
+.card-stage .pagination button { height:36px; font-size:14px; }
+.card-stage .pagination select { height:36px; font-size:14px; }
+
+.card-page-hidden { display:none!important; }
+.card-local-pager { display:flex; justify-content:center; align-items:center; gap:12px; min-height:28px; font-size:12px; }
+.card-local-pager button { border:1px solid #cddff9; border-radius:5px; background:white; color:#0860ff; padding:3px 10px; }
+.card-local-pager button:disabled { color:#9babc0; }
+/* Popup menus, long text and logs retain keyboard/wheel access without a
+   scrollbar. Main lists use paging above; no main-page content is cropped. */
+body[data-card-page] * { scrollbar-width:none; }
+body[data-card-page] *::-webkit-scrollbar { display:none; width:0; height:0; }
+.modal-backdrop .asset-grid { grid-template-columns:repeat(4,minmax(0,1fr)); overflow:hidden; }

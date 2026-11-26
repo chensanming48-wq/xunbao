@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; media-src https:; img-src data:; connect-src 'none'; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="no-referrer"><title>视频教程</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#fff;color:#17213a;font:14px/1.6 'Microsoft YaHei UI','Microsoft YaHei',sans-serif}main{display:flex;flex-direction:column;height:100vh}header{flex:none;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px 22px;background:#fff;border-bottom:1px solid #dce6f5}h1{font-size:20px;margin:0}header p{color:#66758e;font-size:12px;margin:2px 0 0}button,select{font:inherit;cursor:pointer}button{padding:8px 14px;border:1px solid #cad8ed;border-radius:6px;background:#fff;color:#285fbf}#video-area{position:relative;background:#fff;flex:1;min-height:0;display:grid;place-items:center;overflow:hidden}video{display:block;width:100%;height:auto;min-width:0;min-height:0;object-fit:contain;background:#fff}#message{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;padding:24px;color:#62728c;text-align:center;background:#f7f9fc}#message p{margin:0;font-size:16px}#message button{background:#2d68ea;border-color:#2d68ea;color:#fff}footer{flex:none;display:flex;align-items:center;flex-wrap:wrap;gap:12px;padding:12px 22px;background:#fff;color:#62728c}footer span{flex:1}select{padding:5px;border:1px solid #cad8ed;border-radius:5px;background:#fff;color:#17213a}[hidden]{display:none!important}@media(max-width:500px){header{padding:12px}h1{font-size:17px}footer{padding:12px}}
+#catalog{flex:1;min-height:0;overflow:auto;background:#f7f9fc;padding:24px}#catalog-tools{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:18px}#catalog-summary{margin:0;color:#62728c}#tutorial-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.tutorial-card{display:flex;align-items:center;gap:14px;min-height:94px;padding:20px;text-align:left;color:#17213a;background:#fff;border:1px solid #dce6f5;border-radius:10px}.tutorial-card:hover,.tutorial-card:focus-visible{border-color:#2d68ea;box-shadow:0 3px 12px #2d68ea12}.play-icon{display:grid;place-items:center;flex:none;width:42px;height:42px;border-radius:50%;color:#2d68ea;background:#edf3ff;font-size:19px}.tutorial-copy{min-width:0}.tutorial-copy strong{display:block;font-size:16px;overflow-wrap:anywhere}.tutorial-copy small{display:block;margin-top:3px;color:#62728c}.header-actions{display:flex;flex:none;gap:8px}#catalog-back{font-size:13px}@media(max-width:600px){#catalog{padding:16px}#tutorial-list{grid-template-columns:1fr}header{flex-wrap:wrap}.tutorial-card{min-height:80px;padding:16px}}
+</style></head>
+<body><main>
+<header><div><h1 id="title">视频教程</h1><p id="subtitle">跟着教程，完成当前功能的操作</p></div><div class="header-actions"><button type="button" id="catalog-back" hidden>返回教程列表</button><button type="button" id="close">返回操作</button></div></header>
+<section id="catalog" aria-label="已有视频教程" hidden><div id="catalog-tools"><p id="catalog-summary" role="status"></p><button id="catalog-refresh" type="button">刷新列表</button></div><div id="tutorial-list"></div></section>
+<section id="video-area" aria-label="教程播放器"><video id="video" controls playsinline preload="metadata"></video><div id="message"><p id="message-text" role="status">正在读取教程…</p><button id="retry" type="button" hidden>重新加载</button><button id="start" type="button" hidden>开始播放</button></div></section>
+<footer><span id="status" role="status">视频加载后可拖动进度、调整音量或全屏观看</span><label id="speed-control">播放速度 <select id="speed"><option value="1">1.0×</option><option value="1.25">1.25×</option><option value="1.5">1.5×</option><option value="2">2.0×</option></select></label></footer>
+</main><script>
+(() => {
+  'use strict';
+  const video=document.getElementById('video'), overlay=document.getElementById('message'), message=document.getElementById('message-text'),
+    retry=document.getElementById('retry'), start=document.getElementById('start'), status=document.getElementById('status');
+  let loadTimer, completed=false, playbackGeneration=0, view='player', reportedProgress=false;
+  const area=document.getElementById('video-area'), catalog=document.getElementById('catalog'), back=document.getElementById('catalog-back'),
+    speedControl=document.getElementById('speed-control'), title=document.getElementById('title'), subtitle=document.getElementById('subtitle');
+  function fitPicture(){
+    const ratio=video.videoWidth&&video.videoHeight?video.videoWidth/video.videoHeight:16/9;
+    const width=Math.max(1,Math.min(area.clientWidth,area.clientHeight*ratio));
+    video.style.width=width+'px';video.style.height=(width/ratio)+'px';
+  }
+  new ResizeObserver(fitPicture).observe(area);
+  const post=(type,extra={})=>window.chrome?.webview?.postMessage({type,...extra});
+  function stop(){++playbackGeneration;clearTimeout(loadTimer);video.pause();video.removeAttribute('src');video.load();}
+  function show(text,canRetry){overlay.hidden=false;message.textContent=text;retry.hidden=!canRetry;start.hidden=true;}
+  function failure(){clearTimeout(loadTimer);show('视频暂时无法播放，请检查网络或稍后重试',true);status.textContent='如持续失败，请联系管理员检查教程链接。';}
+  async function play(){const generation=playbackGeneration;try{await video.play();}catch{if(generation===playbackGeneration&&view==='player'&&video.getAttribute('src')&&!video.error){clearTimeout(loadTimer);show('教程已就绪，点击开始播放',false);start.hidden=false;}}}
+  window.cbTutorialReceive=data=>{
+    if(data.type==='catalog'){
+      stop();view='catalog';catalog.hidden=false;area.hidden=true;back.hidden=true;speedControl.hidden=true;
+      title.textContent='视频教程';subtitle.textContent='选择教程，了解软件各项功能';
+      const items=Array.isArray(data.items)?data.items:[], list=document.getElementById('tutorial-list');list.replaceChildren();
+      items.forEach(item=>{
+        const button=document.createElement('button');button.type='button';button.className='tutorial-card';button.dataset.feature=item.featureCode;
+        const icon=document.createElement('span');icon.className='play-icon';icon.textContent='▶';icon.setAttribute('aria-hidden','true');
+        const copy=document.createElement('span');copy.className='tutorial-copy';const name=document.createElement('strong');name.textContent=item.title||'视频教程';
+        const hint=document.createElement('small');hint.textContent='点击观看';copy.append(name,hint);button.append(icon,copy);
+        button.onclick=()=>post('cb-tutorial-select',{featureCode:item.featureCode});list.append(button);
+      });
+      document.getElementById('catalog-summary').textContent=`共 ${items.length} 个可观看教程`;
+      status.textContent=data.partial?'部分教程暂时未能读取，可刷新列表重试。':'选择一个教程即可开始播放';return;
+    }
+    if(data.type==='loading'){stop();completed=false;view=data.catalog?'catalog-loading':'player';catalog.hidden=true;area.hidden=false;back.hidden=!data.canBrowse;speedControl.hidden=!!data.catalog;if(data.catalog){title.textContent='视频教程';subtitle.textContent='选择教程，了解软件各项功能';}show(data.catalog?'正在读取教程列表…':'正在读取教程…',false);status.textContent=data.catalog?'正在获取可观看的教程':'正在获取最新教程链接';return;}
+    if(data.type==='error'){stop();catalog.hidden=true;area.hidden=false;back.hidden=!data.canBrowse;show(data.message,!!data.retry);status.textContent='返回操作后，可以继续使用软件。';return;}
+    if(data.type!=='tutorial')return;
+    stop();completed=false;reportedProgress=false;view='player';catalog.hidden=true;area.hidden=false;back.hidden=!data.canBrowse;speedControl.hidden=false;title.textContent=data.title||'视频教程';subtitle.textContent='跟着教程，完成当前功能的操作';
+    show('正在加载视频…',false);status.textContent='正在连接视频';
+    video.src=data.videoUrl;video.playbackRate=Number(document.getElementById('speed').value);
+    loadTimer=setTimeout(()=>{if(video.readyState<2)failure();},20000);void play();
+  };
+  video.addEventListener('playing',()=>{if(view!=='player')return;clearTimeout(loadTimer);overlay.hidden=true;status.textContent='正在播放';post('cb-tutorial-playback',{state:'playing',seconds:video.currentTime});});
+  video.addEventListener('timeupdate',()=>{if(view==='player'&&!video.paused&&!reportedProgress&&video.currentTime>=3){reportedProgress=true;post('cb-tutorial-playback',{state:'progress',seconds:video.currentTime});}});
+  video.addEventListener('loadedmetadata',()=>{
+    if(view!=='player')return;
+    fitPicture();
+  });
+  video.addEventListener('loadeddata',()=>{if(view!=='player')return;clearTimeout(loadTimer);if(video.paused){show('教程已就绪，点击开始播放',false);start.hidden=false;}});
+  video.addEventListener('waiting',()=>{status.textContent='正在缓冲…';});
+  video.addEventListener('pause',()=>{if(video.currentSrc&&!completed)status.textContent='已暂停';});
+  video.addEventListener('ended',()=>{completed=true;status.textContent='已观看完毕，可以返回软件操作';});
+  video.addEventListener('error',()=>{if(video.getAttribute('src'))failure();});
+  document.getElementById('speed').onchange=event=>{video.playbackRate=Number(event.target.value);};
+  document.getElementById('close').onclick=()=>{stop();post('cb-tutorial-close');};
+  back.onclick=()=>{stop();post('cb-tutorial-catalog');};document.getElementById('catalog-refresh').onclick=()=>post('cb-tutorial-retry');
+  retry.onclick=()=>post('cb-tutorial-retry');start.onclick=()=>void play();
+  document.addEventListener('keydown',event=>{if(event.key==='Escape'&&!document.fullscreenElement){stop();post('cb-tutorial-close');}});
+  window.addEventListener('pagehide',stop);
+  window.chrome?.webview?.addEventListener('message',event=>window.cbTutorialReceive(event.data));
+  post('cb-tutorial-player-ready');
+})();
+</script></body></html>

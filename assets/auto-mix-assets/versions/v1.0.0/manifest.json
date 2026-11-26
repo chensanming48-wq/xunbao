@@ -1,0 +1,15 @@
+{
+  "files": [
+    {
+      "source": "https://github.com/notofonts/noto-cjk",
+      "name": "Noto Sans CJK 简体中文",
+      "category": "fonts",
+      "license": "SIL Open Font License 1.1 (fonts/LICENSE.txt)",
+      "duration": 0,
+      "path": "fonts/NotoSansCJKsc-Regular.otf",
+      "id": "noto-sans-sc",
+      "sha256": "2c76254f6fc379fddfce0a7e84fb5385bb135d3e399294f6eeb6680d0365b74b"
+    }
+  ],
+  "version": "1.0.0"
+}

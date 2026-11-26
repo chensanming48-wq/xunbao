@@ -1,0 +1,65 @@
+/* Shunbao keeps its simplified content, while all typography and controls
+   inherit the shared calculator stylesheet. No other brand matches this scope. */
+html[data-brand="shunbao"] #headerDescription,
+html[data-brand="shunbao"] .context-strip,
+html[data-brand="shunbao"] .metric-grid,
+html[data-brand="shunbao"] .decision-note,
+html[data-brand="shunbao"] .creator-explainer,
+html[data-brand="shunbao"] .footer-bar > p,
+html[data-brand="shunbao"] #cb-watch-tutorial {
+  display:none !important;
+}
+
+/* Keep explicit row placement after removing the explanatory strip. */
+html[data-brand="shunbao"] .roi-app {
+  grid-template-rows:minmax(76px,auto) 0 minmax(0,1fr) minmax(64px,auto);
+}
+html[data-brand="shunbao"] .calculator-workspace { grid-row:3; }
+html[data-brand="shunbao"] .footer-bar { grid-row:4; justify-content:flex-end; }
+html[data-brand="shunbao"] .window-header {
+  /* Tutorial injection can set the header columns inline. Keep its empty slot
+     flexible, with the same reset/close control widths as the shared page. */
+  grid-template-columns:56px minmax(0,1fr) auto 164px 48px !important;
+}
+html[data-brand="shunbao"] .roi-app .result-panel {
+  grid-template-rows:auto minmax(210px,1.8fr) minmax(86px,.85fr);
+}
+/* Removing the context strip must not stretch the input boxes or mode buttons.
+   Leave that space below the form, keeping their shared viewport-based sizes. */
+html[data-brand="shunbao"] .roi-app .input-panel { padding-bottom:70px; }
+html[data-brand="shunbao"] .roi-app[data-density="comfortable"] {
+  grid-template-rows:68px 0 minmax(0,1fr) 58px;
+}
+html[data-brand="shunbao"] .roi-app[data-density="comfortable"] .result-panel {
+  grid-template-rows:auto minmax(190px,1.65fr) minmax(82px,.78fr);
+}
+html[data-brand="shunbao"] .roi-app[data-density="comfortable"] .input-panel { padding-bottom:55px; }
+html[data-brand="shunbao"] .roi-app[data-density="compact"] {
+  grid-template-rows:58px 0 minmax(0,1fr) 52px;
+}
+html[data-brand="shunbao"] .roi-app[data-density="compact"] .result-panel {
+  grid-template-rows:auto minmax(164px,1.5fr) minmax(72px,.72fr);
+}
+html[data-brand="shunbao"] .roi-app[data-density="compact"] .input-panel { padding-bottom:46px; }
+html[data-brand="shunbao"] .roi-app[data-density="ultra-compact"] {
+  grid-template-rows:54px 0 minmax(0,1fr) 48px;
+}
+html[data-brand="shunbao"] .roi-app[data-density="ultra-compact"] .result-panel {
+  grid-template-rows:auto minmax(158px,1.45fr) minmax(68px,.7fr);
+}
+html[data-brand="shunbao"] .roi-app[data-density="ultra-compact"] .input-panel { padding-bottom:42px; }
+@media (max-width:1120px) {
+  html[data-brand="shunbao"] .window-header {
+    grid-template-columns:44px minmax(0,1fr) auto 120px 38px !important;
+  }
+}
+@media (max-height:780px) {
+  html[data-brand="shunbao"] .window-header {
+    grid-template-columns:42px minmax(0,1fr) auto 110px 36px !important;
+  }
+}
+@media (max-width:900px), (max-height:620px) {
+  html[data-brand="shunbao"] .window-header {
+    grid-template-columns:34px minmax(0,1fr) auto 96px 30px !important;
+  }
+}

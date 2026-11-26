@@ -1,0 +1,7 @@
+Additional icons for the reference-sized revision:
+- adjustments-horizontal.svg: Tabler Icons v3.31.0, MIT (LICENSE-tabler.txt)
+- image-fill.svg, image-landscape.svg: Bootstrap Icons v1.11.3, MIT (LICENSE-bootstrap.txt); image-landscape is the upstream image.svg.
+- chart-line.svg: Lucide v0.468.0, existing Lucide license applies.
+All SVG paths retained from their upstream icon libraries.
+
+Typography/color revision: SVG root color attributes now use the page palette (#005cff, #4c60a4, #e1e7f0); original path geometry is unchanged.

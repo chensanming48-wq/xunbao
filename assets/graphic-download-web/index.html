@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: https:; style-src 'self'; script-src 'self'; connect-src 'none'; object-src 'none'; frame-src 'none'">
+<title>图文下载</title><link rel="preload" href="fonts/noto-sans-sc.woff" as="font" type="font/woff" crossorigin><link rel="stylesheet" href="styles.css?v=graphic-download-ui-3"></head>
+<body><div class="app-shell">
+<header class="page-header"><h1><img class="line-icon" src="icons/download.svg" alt="" aria-hidden="true">图文下载</h1></header><main class="workspace"><div class="left-column"><section class="card input-card"><div class="section-heading"><h2><img class="line-icon" src="icons/link.svg" alt="" aria-hidden="true">导入抖音图文链接</h2><div class="button-row"><button type="button" id="importTxt" class="btn "><img class="line-icon" src="icons/file-text.svg" alt="" aria-hidden="true"><span>导入TXT</span></button><button type="button" id="clearInput" class="btn "><img class="line-icon" src="icons/trash-2.svg" alt="" aria-hidden="true"><span>清空</span></button></div></div>
+<textarea id="batchInput" aria-label="抖音图文链接，每行一个链接" placeholder="请输入图文链接，每行一个链接"></textarea></section>
+<section class="card preview-detail-card"><h2><img class="line-icon" src="icons/image-landscape.svg" alt="" aria-hidden="true">图文预览</h2>
+<div id="taskList" class="task-list"><div class="empty-state"><img class="line-icon" src="icons/image-fill.svg" alt="" aria-hidden="true"><span>暂无图文预览</span></div></div>
+<div class="detail-panel" id="detailCard"><div class="title-field"><label for="titleInput"><img class="line-icon" src="icons/type.svg" alt="" aria-hidden="true">图文标题</label><textarea id="titleInput" maxlength="50" placeholder="请输入图文标题" disabled></textarea></div>
+<div class="content-field"><label for="contentInput"><img class="line-icon" src="icons/file-text.svg" alt="" aria-hidden="true">图文内容</label><textarea id="contentInput" maxlength="1000" placeholder="请输入图文内容" disabled></textarea></div></div></section></div>
+<aside class="right-column"><section class="card settings-card"><h2><img class="line-icon" src="icons/adjustments-horizontal.svg" alt="" aria-hidden="true">处理设置</h2>
+<div class="select-row"><label id="shopSelectLabel" for="shopSelectTrigger">目标店铺</label>
+    <div class="ui-select" id="shopSelectUi"><select class="native-select" id="shopSelect" tabindex="-1" aria-hidden="true"></select>
+    <button class="ui-select-trigger" id="shopSelectTrigger" type="button" role="combobox" aria-haspopup="listbox" aria-expanded="false" aria-controls="shopSelectMenu" aria-labelledby="shopSelectLabel shopSelectValue"><img class="line-icon" src="icons/store.svg" alt="" aria-hidden="true"><span class="ui-select-value" id="shopSelectValue">请选择目标店铺</span><img class="line-icon" src="icons/chevron-down.svg" alt="" aria-hidden="true"></button>
+    <div class="ui-select-menu" id="shopSelectMenu" role="listbox" aria-labelledby="shopSelectLabel" hidden></div></div></div><div class="select-row"><label id="planSelectLabel" for="planSelectTrigger">千川计划</label>
+    <div class="ui-select" id="planSelectUi"><select class="native-select" id="planSelect" tabindex="-1" aria-hidden="true"></select>
+    <button class="ui-select-trigger" id="planSelectTrigger" type="button" role="combobox" aria-haspopup="listbox" aria-expanded="false" aria-controls="planSelectMenu" aria-labelledby="planSelectLabel planSelectValue"><img class="line-icon" src="icons/clipboard-list.svg" alt="" aria-hidden="true"><span class="ui-select-value" id="planSelectValue">请选择千川计划</span><img class="line-icon" src="icons/chevron-down.svg" alt="" aria-hidden="true"></button>
+    <div class="ui-select-menu" id="planSelectMenu" role="listbox" aria-labelledby="planSelectLabel" hidden></div></div></div>
+<div class="select-row"><label id="processModeLabel" for="processModeTrigger">处理方式</label><div class="ui-select" id="processModeUi">
+<select class="native-select" id="processMode" tabindex="-1" aria-hidden="true"><option value="automatic">下载并自动上传</option><option value="download">仅下载图文</option></select>
+<button class="ui-select-trigger" id="processModeTrigger" type="button" role="combobox" aria-haspopup="listbox" aria-expanded="false" aria-controls="processModeMenu" aria-labelledby="processModeLabel processModeValue"><img class="line-icon" src="icons/settings.svg" alt="" aria-hidden="true"><span class="ui-select-value" id="processModeValue">下载并自动上传</span><img class="line-icon" src="icons/chevron-down.svg" alt="" aria-hidden="true"></button>
+<div class="ui-select-menu" id="processModeMenu" role="listbox" aria-labelledby="processModeLabel" hidden></div></div></div></section>
+<section class="card directory-card"><h2><img class="line-icon" src="icons/folder.svg" alt="" aria-hidden="true">下载目录</h2><div id="outputDirectory" class="output-path" aria-label="当前下载目录"></div>
+<div class="button-row directory-actions"><button type="button" id="chooseOutput" class="btn "><img class="line-icon" src="icons/folder.svg" alt="" aria-hidden="true"><span>选择下载目录</span></button><button type="button" id="openOutput" class="btn "><img class="line-icon" src="icons/folder.svg" alt="" aria-hidden="true"><span>打开文件夹</span></button></div>
+<div class="action-panel"><button type="button" id="startBatch" class="btn primary wide"><img class="line-icon" src="icons/play.svg" alt="" aria-hidden="true"><span>开始批量处理</span></button><button type="button" id="cancelAll" class="btn danger-text wide hidden"><img class="line-icon" src="icons/x.svg" alt="" aria-hidden="true"><span>取消正在执行的任务</span></button></div></section></aside></main>
+<section class="card progress-card" aria-label="任务进度"><div class="progress-summary"><h2><img class="line-icon" src="icons/chart-line.svg" alt="" aria-hidden="true">任务进度</h2><div class="progress-meter"><b id="batchProgressText">批量任务 0/0</b><div class="progress-track" role="progressbar" aria-label="批量任务进度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i id="progressBar"></i></div><strong id="progressPercent">0%</strong></div></div>
+<div class="task-filters" aria-label="任务筛选"><button type="button" id="showAllTasks" class="btn active"><img class="line-icon" src="icons/list.svg" alt="" aria-hidden="true"><span>全部任务</span></button><button type="button" id="showFailedTasks" class="btn "><img class="line-icon" src="icons/circle-alert.svg" alt="" aria-hidden="true"><span>仅看失败</span></button></div></section></div>
+  <div class="task-detail-modal hidden" id="taskDetailModal" role="dialog" aria-modal="true" aria-labelledby="taskDetailTitle" aria-hidden="true">
+    <div class="task-detail-backdrop" id="taskDetailBackdrop"></div>
+    <section class="task-detail-card">
+      <header class="task-detail-header">
+        <div>
+          <span class="task-detail-kicker">图文作品详情</span>
+          <h2 id="taskDetailTitle">正在读取作品信息…</h2>
+        </div>
+        <button class="task-detail-close" id="closeTaskDetail" type="button" aria-label="关闭详情">×</button>
+      </header>
+      <div class="task-detail-meta" id="taskDetailMeta"></div>
+      <div class="task-detail-source" id="taskDetailSource"></div>
+      <div class="task-detail-gallery" id="taskDetailGallery"></div>
+      <footer class="task-detail-footer">
+        <span id="taskDetailCount">共 0 张图片</span>
+        <div>
+          <button class="task-detail-folder hidden" id="openTaskDetailFolder" type="button">打开本地图片目录</button>
+          <button class="task-detail-more hidden" id="loadMoreTaskDetail" type="button">继续加载</button>
+        </div>
+      </footer>
+    </section>
+  </div>
+  <div id="toast" class="toast"></div>
+  <script src="app.js?v=graphic-download-ui-1"></script>
+</body>
+</html>

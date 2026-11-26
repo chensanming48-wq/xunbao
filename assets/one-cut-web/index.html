@@ -1,0 +1,408 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+  <meta name="color-scheme" content="light">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: https:; style-src 'self'; script-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <title>一刀不剪</title>
+  <link rel="stylesheet" href="styles.css?v=task-status-20261008">
+  <script src="app.js?v=account-offline-20261008" defer></script>
+</head>
+<body>
+  <main class="one-cut-page" aria-label="一刀不剪原视频下载与自动上传工作台">
+    <header class="page-header">
+      <div class="title-copy">
+        <h1>一刀不剪</h1>
+        <p>原视频下载完成后，自动识别保存文件夹并上传到指定千川计划</p>
+      </div>
+      <div class="header-actions">
+        <button class="outline-button" id="downloadSettings" type="button">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8.3a3.7 3.7 0 1 0 0 7.4 3.7 3.7 0 0 0 0-7.4Z"></path><path d="M19 13.4a7.5 7.5 0 0 0 0-2.8l2-1.5-2-3.4-2.5 1a8 8 0 0 0-2.4-1.4L13.8 2h-3.9l-.4 3.3a8 8 0 0 0-2.4 1.4l-2.5-1-2 3.4 2 1.5a7.5 7.5 0 0 0 0 2.8l-2 1.5 2 3.4 2.5-1a8 8 0 0 0 2.4 1.4l.4 3.3h3.9l.4-3.3a8 8 0 0 0 2.4-1.4l2.5 1 2-3.4-2.1-1.5Z"></path></svg>
+          <span>下载与上传设置</span>
+        </button>
+        <button class="outline-button wide" id="openOutputDirectory" type="button">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6.8h6l2 2h10v9.7a1.5 1.5 0 0 1-1.5 1.5h-16A1.5 1.5 0 0 1 2 18.5V8.3A1.5 1.5 0 0 1 3.5 6.8Z"></path><path d="M3.5 6.8V5.5A1.5 1.5 0 0 1 5 4h5l2 2h6"></path></svg>
+          <span>打开输出目录</span>
+        </button>
+      </div>
+    </header>
+
+    <section class="workflow-card" aria-label="任务流程">
+      <div class="workflow-step active" data-step="0">
+        <span class="step-icon blue"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12"></path><path d="m7.5 11 4.5 4.5 4.5-4.5"></path><path d="M4 17.5V21h16v-3.5"></path></svg></span>
+        <span class="step-copy"><strong>下载完成</strong><small>原视频保存到本地</small></span>
+      </div>
+      <span class="workflow-arrow" aria-hidden="true"></span>
+      <div class="workflow-step" data-step="1">
+        <span class="step-icon violet"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 18H5.8a3.8 3.8 0 0 1-.4-7.6A6.7 6.7 0 0 1 18.2 9a4.6 4.6 0 0 1 .3 9H17"></path><path d="M12 20V10"></path><path d="m8.5 13.5 3.5-3.5 3.5 3.5"></path></svg></span>
+        <span class="step-copy"><strong>添加到已选计划</strong><small>沿用已选择的计划</small></span>
+      </div>
+      <span class="workflow-arrow" aria-hidden="true"></span>
+      <div class="workflow-step" data-step="2">
+        <span class="step-icon green"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="m8 12 2.6 2.7L16.5 9"></path></svg></span>
+        <span class="step-copy"><strong>成功</strong><small>记录添加结果</small></span>
+      </div>
+    </section>
+
+    <section class="configuration-grid">
+      <article class="configuration-card download-card">
+        <header class="section-heading"><span>01</span><h2>获取原视频</h2></header>
+        <div class="link-editor">
+          <textarea id="linkInput" aria-label="抖音视频链接或分享文案" spellcheck="false" placeholder="在这里粘贴抖音视频链接或分享文案…"></textarea>
+          <div class="link-editor-footer"><span id="inputWarning"></span><span id="recognizedCount">已识别 0 条链接</span></div>
+        </div>
+        <div class="field-block output-field-block">
+          <label>原视频保存文件夹</label>
+          <div class="path-row">
+            <button class="path-display" id="outputPath" type="button" title="更改原视频保存文件夹"></button>
+            <button class="icon-button folder-button" id="chooseOutputDirectory" type="button" aria-label="选择原视频保存文件夹">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6.8h6l2 2h10v9.7a1.5 1.5 0 0 1-1.5 1.5h-16A1.5 1.5 0 0 1 2 18.5V8.3A1.5 1.5 0 0 1 3.5 6.8Z"></path></svg>
+            </button>
+          </div>
+        </div>
+      </article>
+
+      <article class="configuration-card upload-card">
+        <header class="section-heading"><span>02</span><h2>自动上传到千川</h2></header>
+
+        <div class="selector-grid">
+          <div class="select-field">
+            <label id="shopSelectLabel" for="shopSelectTrigger">选择店铺</label>
+            <div class="ui-select" data-ui-select>
+              <select class="ui-select-native" id="shopSelect" aria-hidden="true" tabindex="-1"></select>
+              <button class="ui-select-trigger" id="shopSelectTrigger" type="button" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="shopSelectLabel shopSelectValue">
+                <span class="ui-select-value" id="shopSelectValue"></span>
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 9.5 5 5 5-5"></path></svg>
+              </button>
+              <div class="ui-select-menu" id="shopSelectMenu" role="listbox" aria-labelledby="shopSelectLabel" hidden></div>
+            </div>
+          </div>
+          <div class="select-field">
+            <label id="deliveryTypeSelectLabel" for="deliveryTypeSelectTrigger">投放方式</label>
+            <div class="ui-select" data-ui-select>
+              <select class="ui-select-native" id="deliveryTypeSelect" aria-hidden="true" tabindex="-1"></select>
+              <button class="ui-select-trigger" id="deliveryTypeSelectTrigger" type="button" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="deliveryTypeSelectLabel deliveryTypeSelectValue">
+                <span class="ui-select-value" id="deliveryTypeSelectValue"></span>
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 9.5 5 5 5-5"></path></svg>
+              </button>
+              <div class="ui-select-menu" id="deliveryTypeSelectMenu" role="listbox" aria-labelledby="deliveryTypeSelectLabel" hidden></div>
+            </div>
+          </div>
+          <div class="select-field plan-select-field">
+            <div class="select-label-row">
+              <label id="planSelectLabel" for="planSelectTrigger">选择计划</label>
+              <button class="inline-plan-refresh clear-upload-plan" id="clearUploadPlan" type="button" title="取消当前计划选择，之后只下载到本机" hidden>清空</button>
+              <button class="inline-plan-refresh" id="refreshPlans" type="button" title="立即从千川重新读取当前店铺计划">刷新计划</button>
+            </div>
+            <div class="ui-select" data-ui-select>
+              <select class="ui-select-native" id="planSelect" aria-hidden="true" tabindex="-1"></select>
+              <button class="ui-select-trigger" id="planSelectTrigger" type="button" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="planSelectLabel planSelectValue">
+                <span class="ui-select-value" id="planSelectValue"></span>
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 9.5 5 5 5-5"></path></svg>
+              </button>
+              <div class="ui-select-menu ui-select-menu-searchable" id="planSelectMenu" role="group" aria-labelledby="planSelectLabel" hidden>
+                <div class="ui-select-search-row">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"></circle><path d="m16 16 4.5 4.5"></path></svg>
+                  <input class="ui-select-search" id="planSearchInput" type="search" placeholder="搜索计划标题或关键词" aria-label="搜索计划标题或关键词" aria-controls="planSelectOptions" autocomplete="off" spellcheck="false">
+                  <button class="ui-select-search-clear" type="button" aria-label="清空计划搜索" title="清空搜索" hidden>×</button>
+                </div>
+                <div class="ui-select-options" id="planSelectOptions" data-ui-select-options role="listbox" aria-labelledby="planSelectLabel"></div>
+                <div class="ui-select-empty" role="status" hidden>未找到匹配计划，试试其他关键词</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="plan-title-row">
+          <label class="plan-title-label" for="planTitleManualText">标题</label>
+          <input id="planTitleManualText" type="text" autocomplete="off" placeholder="计划无标题时补充一条">
+          <label class="plan-title-original"><input id="planTitleUseOriginal" type="checkbox"><span>使用首条原标题</span></label>
+        </div>
+
+        <div class="watched-folder">
+          <button class="watched-folder-open" id="watchedFolder" type="button" aria-label="选择已绑定下载文件夹">
+            <span class="watched-copy"><strong>已绑定下载文件夹</strong><small id="watchedFolderPath"></small></span>
+          </button>
+          <div class="video-adaptation-control">
+            <span class="video-adaptation-label" title="开启后，下载完成前适配为合规 9:16 尺寸，保留原文件名；比例不符时居中裁剪，分辨率超限时缩小"><span aria-hidden="true">▣</span> 9:16 自动适配</span>
+            <button class="toggle-switch toggle-switch-compact" id="videoAdaptationToggle" type="button" role="switch" aria-checked="false" aria-label="视频 9:16 自动适配"><span></span></button>
+          </div>
+          <button class="icon-button watched-folder-icon" id="watchedFolderIcon" type="button" aria-label="选择已绑定下载文件夹"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6.8h6l2 2h10v9.7a1.5 1.5 0 0 1-1.5 1.5h-16A1.5 1.5 0 0 1 2 18.5V8.3A1.5 1.5 0 0 1 3.5 6.8Z"></path></svg></button>
+        </div>
+
+        <div class="auto-upload-option mode-upload-toolbar target-info" id="autoUploadOption">
+          <div class="mode-upload-mode">
+            <strong class="mode-upload-label" id="performanceModeHeading">运行模式</strong>
+            <span class="performance-mode-control">
+              <button class="performance-mode-button" id="performanceModeButton" type="button" aria-haspopup="menu" aria-expanded="false" aria-controls="performanceModeMenu" aria-labelledby="performanceModeHeading performanceModeLabel">
+                <!-- Lucide sliders-horizontal, ISC license; see source asset notice. -->
+                <svg class="performance-mode-icon" aria-hidden="true"
+  xmlns="http://www.w3.org/2000/svg"
+  width="24"
+  height="24"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <path d="M10 5H3" />
+  <path d="M12 19H3" />
+  <path d="M14 3v4" />
+  <path d="M16 17v4" />
+  <path d="M21 12h-9" />
+  <path d="M21 19h-5" />
+  <path d="M21 5h-7" />
+  <path d="M8 10v4" />
+  <path d="M8 12H3" />
+</svg>
+
+                <span id="performanceModeLabel">智能极速模式</span>
+                <svg class="performance-mode-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m7 9.5 5 5 5-5"></path></svg>
+              </button>
+              <span class="performance-mode-menu" id="performanceModeMenu" role="menu" hidden><button type="button" role="menuitemradio" data-performance-mode="smart" aria-checked="true"><span class="performance-mode-choice"><strong>智能极速（推荐）</strong><small>默认同时上传5条，遇限流自动降速</small></span><b aria-hidden="true">✓</b></button><button type="button" role="menuitemradio" data-performance-mode="stable" aria-checked="false"><span class="performance-mode-choice"><strong>稳定模式</strong><small>逐条上传，降低网络占用</small></span><b aria-hidden="true">✓</b></button><button type="button" role="menuitemradio" data-performance-mode="custom" aria-checked="false"><span class="performance-mode-choice"><strong>自定义</strong><small>手动设置下载与上传并发</small></span><b aria-hidden="true">✓</b></button><small class="performance-mode-note"><span aria-hidden="true">i</span> 已锁定当前批次计划，不会串计划</small></span>
+            </span>
+          </div>
+          <div class="mode-upload-auto">
+            <span class="option-copy">
+              <strong id="automaticUploadHeading">按计划自动识别</strong>
+              <small id="autoUploadStatus">未选计划，直接下载到本机</small>
+              <small class="mode-upload-accessible" id="uploadTargetMessage">选择计划后自动检查，通过后可开始下载并上传</small>
+              <small class="mode-upload-accessible" id="autoUploadHint" hidden>仅计划无可用标题时，请先在千川创建标题；本功能不会自动补标题。</small>
+            </span>
+            <button hidden class="toggle-switch" id="autoUploadToggle" type="button" role="switch" aria-checked="false" aria-label="下载完成后自动上传" aria-describedby="uploadTargetMessage autoUploadHint" disabled><span></span></button>
+          </div>
+        </div>
+
+        <div class="upload-action-row" id="uploadActionRow">
+          <div class="upload-target-lock status-not_checked" id="uploadTargetLock" hidden>
+            <span class="upload-target-lock-icon" aria-hidden="true"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="7.5"></circle><path d="m6.8 10.1 2.1 2.1 4.3-4.5"></path></svg></span>
+            <span id="uploadTargetLockText">选择计划后将自动校验上传准备</span>
+            <button class="upload-session-check upload-target-lock-check" id="checkUploadSession" type="button">重新检查</button>
+          </div>
+          <button class="primary-button upload-action-primary" id="startAutomatic" type="button">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 18H5.8a3.8 3.8 0 0 1-.4-7.6A6.7 6.7 0 0 1 18.2 9a4.6 4.6 0 0 1 .3 9H17"></path><path d="M12 20V10"></path><path d="m8.5 13.5 3.5-3.5 3.5 3.5"></path></svg>
+            <span>开始下载</span>
+          </button>
+        </div>
+      </article>
+    </section>
+
+    <section class="task-card" id="taskCard" aria-label="下载与上传任务">
+      <header class="task-toolbar">
+        <nav class="task-filters" aria-label="任务状态筛选">
+          <button class="active" type="button" data-filter="all"><span>全部</span> <b id="countAll">0</b></button>
+          <button type="button" data-filter="downloading"><span>下载中</span> <b id="countDownloading">0</b></button>
+          <button type="button" data-filter="uploading"><span>上传中</span> <b id="countUploading">0</b></button>
+          <button type="button" data-filter="completed"><span>已完成</span> <b id="countCompleted">0</b></button>
+          <button type="button" data-filter="failed"><span>失败</span> <b id="countFailed">0</b></button>
+        </nav>
+        <div class="task-actions">
+          <button id="exportTaskDiagnostics" type="button" title="检查软件各模块，查看结论并导出诊断包">软件诊断</button>
+          <button id="pauseAll" type="button">全部继续</button>
+          <button class="danger" id="clearFinished" type="button">清空记录</button>
+        </div>
+      </header>
+      <div class="task-table" role="table" aria-label="任务列表，可横向滚动查看全部列" tabindex="0">
+        <div class="task-table-header" role="row">
+          <span role="columnheader">视频信息</span>
+          <span role="columnheader">当前状态</span>
+          <span role="columnheader">店铺/计划</span>
+          <span role="columnheader">文件大小</span>
+          <span role="columnheader">当前进度</span>
+          <span role="columnheader">操作</span>
+        </div>
+        <div class="task-table-body" id="taskBody" role="rowgroup"></div>
+      </div>
+    </section>
+
+  </main>
+  <div class="background-modal-backdrop" id="backgroundSubmissionModal" hidden>
+    <section class="background-modal" role="dialog" aria-modal="true" aria-labelledby="backgroundModalTitle" aria-describedby="backgroundModalSubtitle">
+      <button class="background-modal-close" id="backgroundModalClose" type="button" aria-label="关闭提示">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 7 10 10"></path><path d="m17 7-10 10"></path></svg>
+      </button>
+
+      <header class="background-modal-header">
+        <span class="background-success-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"></circle><path d="m8.2 12.1 2.3 2.4 5.4-5.3"></path></svg>
+        </span>
+        <span class="background-modal-heading">
+          <h2 id="backgroundModalTitle">计划已转入后台</h2>
+          <p id="backgroundModalSubtitle">素材任务已安全保存并进入后台队列</p>
+        </span>
+      </header>
+
+      <dl class="background-summary" aria-label="后台任务快照">
+        <div><dt>店铺</dt><dd id="backgroundAccountName">—</dd></div>
+        <div><dt>目标计划</dt><dd id="backgroundPlanName">—</dd></div>
+        <div><dt>素材任务</dt><dd id="backgroundMaterialCount">0 条</dd></div>
+        <div><dt>批次编号</dt><dd id="backgroundBatchId">—</dd></div>
+      </dl>
+
+      <div class="background-modal-message">
+        <p>该计划会继续在后台下载和上传，你现在可以提交 B、C、E 等其他计划。</p>
+        <p>切换店铺或计划不会改变已提交任务的目标，不会串账号、串计划。</p>
+      </div>
+
+      <p class="background-modal-safety">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.2 20 6v5.3c0 4.6-3.2 8.1-8 9.5-4.8-1.4-8-4.9-8-9.5V6Z"></path><path d="m8.4 11.8 2.2 2.3 5-5"></path></svg>
+        <span>素材入库并绑定完成后，仍需你确认正式启动投放</span>
+      </p>
+
+      <footer class="background-modal-actions">
+        <button class="background-task-button" id="viewBackgroundTasks" type="button">查看后台任务</button>
+        <button class="background-continue-button" id="continueOtherPlan" type="button">继续提交其他计划</button>
+      </footer>
+    </section>
+  </div>
+  <div class="download-settings-backdrop" id="downloadSettingsModal" hidden>
+    <section class="download-settings-modal" role="dialog" aria-modal="true" aria-labelledby="downloadSettingsTitle" aria-describedby="downloadSettingsSubtitle">
+      <button class="download-settings-close" id="downloadSettingsClose" type="button" aria-label="关闭下载与上传设置">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 7 10 10"></path><path d="m17 7-10 10"></path></svg>
+      </button>
+      <header class="download-settings-header">
+        <span class="download-settings-hero-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M12 8.3a3.7 3.7 0 1 0 0 7.4 3.7 3.7 0 0 0 0-7.4Z"></path><path d="M19 13.4a7.5 7.5 0 0 0 0-2.8l2-1.5-2-3.4-2.5 1a8 8 0 0 0-2.4-1.4L13.8 2h-3.9l-.4 3.3a8 8 0 0 0-2.4 1.4l-2.5-1-2 3.4 2 1.5a7.5 7.5 0 0 0 0 2.8l-2 1.5 2 3.4 2.5-1a8 8 0 0 0 2.4 1.4l.4 3.3h3.9l.4-3.3a8 8 0 0 0 2.4-1.4l2.5 1 2-3.4-2.1-1.5Z"></path></svg>
+        </span>
+        <span class="download-settings-heading">
+          <h2 id="downloadSettingsTitle">下载与上传设置</h2>
+          <p id="downloadSettingsSubtitle">分别配置下载、上传任务数与文件保存规则</p>
+        </span>
+      </header>
+
+      <div class="download-settings-body">
+        <section class="download-settings-section" aria-labelledby="downloadQueueHeading">
+          <h3 id="downloadQueueHeading">下载队列</h3>
+          <div class="download-settings-row">
+            <span class="download-settings-row-icon blue" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="m10.2 13.8 3.6-3.6"></path><path d="m8.1 16.1-1.2 1.2a3.1 3.1 0 1 1-4.4-4.4l4-4a3.1 3.1 0 0 1 4.4 0"></path><path d="m15.9 7.9 1.2-1.2a3.1 3.1 0 1 1 4.4 4.4l-4 4a3.1 3.1 0 0 1-4.4 0"></path></svg>
+            </span>
+            <label class="download-settings-copy" for="settingsMaxInputCount"><strong>单批素材链接数</strong><small>每次从队列中获取的素材链接数量上限</small></label>
+            <input class="download-settings-number" id="settingsMaxInputCount" type="number" min="100" max="5000" step="100" inputmode="numeric" aria-label="单批素材链接数">
+          </div>
+          <div class="download-settings-row">
+            <span class="download-settings-row-icon blue" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M12 3v12"></path><path d="m7.5 11 4.5 4.5 4.5-4.5"></path><path d="M4 17.5V21h16v-3.5"></path></svg>
+            </span>
+            <label class="download-settings-copy" for="settingsMaxConcurrency"><strong>同时下载任务数</strong><small>所有模式均可设置 1–10 个；新任务生效</small></label>
+            <input class="download-settings-number" id="settingsMaxConcurrency" type="number" min="1" max="10" step="1" inputmode="numeric" aria-label="同时下载任务数">
+          </div>
+          <div class="download-settings-row">
+            <span class="download-settings-row-icon violet" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M19.4 7.6A8.1 8.1 0 1 0 20 14"></path><path d="M19.4 4.5v3.9h-3.9"></path><path d="M8.5 12h7"></path></svg>
+            </span>
+            <label class="download-settings-copy" for="settingsMaxRetries"><strong>下载失败自动重试</strong><small>下载失败后自动重试的次数上限</small></label>
+            <span class="download-settings-number-wrap"><input class="download-settings-number" id="settingsMaxRetries" type="number" min="0" max="3" step="1" inputmode="numeric" aria-label="下载失败自动重试次数"><b>次</b></span>
+          </div>
+        </section>
+
+        <section class="download-settings-section" aria-labelledby="uploadQueueHeading">
+          <h3 id="uploadQueueHeading">上传队列</h3>
+          <div class="download-settings-row">
+            <span class="download-settings-row-icon blue" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M12 17V5"></path><path d="m7.5 9.5 4.5-4.5 4.5 4.5"></path><path d="M4 17.5V21h16v-3.5"></path></svg>
+            </span>
+            <label class="download-settings-copy" for="settingsUploadConcurrency"><strong>每账号同时上传任务数</strong><small>自定义模式可设置 1–10 个；其他模式自动调节</small></label>
+            <span class="download-settings-number-wrap"><input class="download-settings-number" id="settingsUploadConcurrency" type="number" min="1" max="10" step="1" inputmode="numeric" aria-label="每个账号同时上传任务数"><b aria-hidden="true">个</b></span>
+          </div>
+        </section>
+
+        <section class="download-settings-section" aria-labelledby="requestCompatibilityHeading">
+          <h3 id="requestCompatibilityHeading">请求兼容</h3>
+          <div class="download-settings-row">
+            <span class="download-settings-row-icon blue" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M4 8h16M4 16h16"></path><path d="m16 4 4 4-4 4M8 12l-4 4 4 4"></path></svg>
+            </span>
+            <span class="download-settings-copy"><strong>强制使用公开接口（fetch）</strong><small>内部通道故障时可开启；保存后对下一次请求生效，已发出的请求不会重发</small></span>
+            <button class="toggle-switch download-settings-toggle" id="settingsForcePublicFetchToggle" type="button" role="switch" aria-checked="false" aria-label="强制使用公开接口"><span></span></button>
+          </div>
+        </section>
+
+        <section class="download-settings-section" aria-labelledby="storageSettingsHeading">
+          <h3 id="storageSettingsHeading">文件保存与清理</h3>
+          <div class="download-settings-row">
+            <span class="download-settings-row-icon blue" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M7 18H5.8a3.8 3.8 0 0 1-.4-7.6A6.7 6.7 0 0 1 18.2 9a4.6 4.6 0 0 1 .3 9H17"></path><path d="M12 20V10"></path><path d="m8.5 13.5 3.5-3.5 3.5 3.5"></path></svg>
+            </span>
+            <span class="download-settings-copy"><strong>上传方式由所选计划自动识别</strong><small id="settingsAutoUploadDescription">仅计划无可用标题时，请先在千川创建标题；本功能不会自动补标题。</small></span>
+            <button hidden class="toggle-switch download-settings-toggle" id="settingsAutoUploadToggle" type="button" role="switch" aria-checked="true" aria-label="下载完成后自动上传"><span></span></button>
+          </div>
+          <div class="download-settings-row">
+            <span class="download-settings-row-icon slate" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M4.5 7h15"></path><path d="M9 7V4.5h6V7"></path><path d="M7.2 7 8 20h8l.8-13"></path><path d="M10 10.5v6"></path><path d="M14 10.5v6"></path></svg>
+            </span>
+            <span class="download-settings-copy"><strong>素材绑定计划后清理临时文件</strong><small>素材成功绑定计划后，自动清理本地临时文件以释放磁盘空间</small></span>
+            <button class="toggle-switch download-settings-toggle" id="settingsCleanupToggle" type="button" role="switch" aria-checked="false" aria-label="素材绑定计划后清理临时文件"><span></span></button>
+          </div>
+          <div class="download-settings-row download-settings-path-row">
+            <span class="download-settings-row-icon blue" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M3 6.8h6l2 2h10v9.7a1.5 1.5 0 0 1-1.5 1.5h-16A1.5 1.5 0 0 1 2 18.5V8.3A1.5 1.5 0 0 1 3.5 6.8Z"></path><path d="M3.5 6.8V5.5A1.5 1.5 0 0 1 5 4h5l2 2h6"></path></svg>
+            </span>
+            <span class="download-settings-copy"><strong>默认保存目录</strong><small id="settingsOutputDirectory" title=""></small></span>
+            <button class="download-settings-folder-button" id="chooseSettingsOutputDirectory" type="button" aria-label="选择默认保存目录">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6.8h6l2 2h10v9.7a1.5 1.5 0 0 1-1.5 1.5h-16A1.5 1.5 0 0 1 2 18.5V8.3A1.5 1.5 0 0 1 3.5 6.8Z"></path><path d="M3.5 6.8V5.5A1.5 1.5 0 0 1 5 4h5l2 2h6"></path></svg>
+            </button>
+          </div>
+        </section>
+      </div>
+
+      <footer class="download-settings-footer">
+        <p><span aria-hidden="true">i</span>任务设置用于新增任务；接口切换用于下一次请求</p>
+        <div class="download-settings-actions">
+          <button class="download-settings-cancel" id="downloadSettingsCancel" type="button">取消</button>
+          <button class="download-settings-save" id="downloadSettingsSave" type="button">保存设置</button>
+        </div>
+      </footer>
+    </section>
+  </div>
+  <div class="portrait-adaptation-backdrop" id="videoAdaptationConfirmationModal" hidden>
+    <section class="portrait-adaptation-modal" role="dialog" aria-modal="true" aria-labelledby="videoAdaptationConfirmationTitle" aria-describedby="videoAdaptationConfirmationMessage">
+      <button class="portrait-adaptation-close" id="videoAdaptationConfirmationClose" type="button" aria-label="关闭"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 7 10 10M17 7 7 17"></path></svg></button>
+      <header class="portrait-adaptation-header">
+        <span class="portrait-adaptation-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5.5 3.5h5v3h3v5h-3v3h-5v-3h-3v-5h3v-3Z"></path><path d="M13.5 10.5h5v3h3v5h-3v3h-5v-3h-3v-5h3v-3Z" transform="translate(1 -1)"></path></svg><b>9:16</b></span>
+        <span><h2 id="videoAdaptationConfirmationTitle">开启 9:16 自动适配？</h2><p id="videoAdaptationConfirmationMessage">下载完成前适配视频尺寸，保留原文件名。<br>比例不符时居中裁剪，分辨率超限时缩小为 1080×1920；符合上传规格的视频不重复处理。</p></span>
+      </header>
+      <p class="portrait-adaptation-note"><span aria-hidden="true">i</span> 处理在后台进行，不影响下载速度</p>
+      <footer class="portrait-adaptation-footer"><button class="portrait-adaptation-cancel" id="videoAdaptationConfirmationCancel" type="button">暂不开启</button><button class="portrait-adaptation-confirm" id="videoAdaptationConfirmationConfirm" type="button">开启适配</button></footer>
+    </section>
+  </div>
+  <div class="download-settings-backdrop auto-upload-confirmation-backdrop" id="autoUploadConfirmationModal" hidden>
+    <section class="download-settings-modal auto-upload-confirmation-modal" role="dialog" aria-modal="true" aria-labelledby="autoUploadConfirmationTitle" aria-describedby="autoUploadConfirmationMessage">
+      <header class="download-settings-header">
+        <span class="download-settings-hero-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3 2.5 20h19L12 3Z"></path><path d="M12 9v5"></path><path d="M12 17h.01"></path></svg></span>
+        <span class="download-settings-heading"><h2 id="autoUploadConfirmationTitle">开启自动上传前请确认</h2></span>
+      </header>
+      <div class="auto-upload-confirmation-body"><p id="autoUploadConfirmationMessage">目标千川计划需已有可用标题。创爆只上传视频，不会自动创建标题；计划未设置标题可能导致加入计划失败。已有标题无需重复创建。</p></div>
+      <footer class="download-settings-footer auto-upload-confirmation-footer">
+        <div class="download-settings-actions">
+          <button class="download-settings-cancel" id="autoUploadConfirmationCancel" type="button">取消</button>
+          <button class="download-settings-save" id="autoUploadConfirmationConfirm" type="button">我已创建标题，开启上传</button>
+        </div>
+      </footer>
+    </section>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
+
+<!--
+Lucide sliders-horizontal: https://lucide.dev
+ISC License
+
+Copyright (c) 2026 Lucide Icons and Contributors
+
+Permission to use, copy, modify, and/or distribute this software for any
+purpose with or without fee is hereby granted, provided that the above
+copyright notice and this permission notice appear in all copies.
+
+THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+-->

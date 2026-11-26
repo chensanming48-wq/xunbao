@@ -1,0 +1,9 @@
+Local video watermark component
+
+Original integration and rendering code: Chuangbao.
+
+Text detection: RapidOCR 3.4.2 (RapidAI), Apache-2.0, using bundled PP-OCRv4 detection models from PaddleOCR (Apache-2.0). Source: https://github.com/RapidAI/RapidOCR and https://github.com/PaddlePaddle/PaddleOCR.
+
+Image repair: LaMa (Roman Suvorov et al., Samsung AI Center) with Carve-Photos ONNX conversion. Apache-2.0. Source: https://github.com/advimman/lama and https://github.com/Carve-Photos/lama. Model: https://huggingface.co/Carve/LaMa-ONNX.
+
+Full notices shipped with all unmodified libraries are retained in lib/*.dist-info and each library directory. Exact versions, wheel hashes and model hash are recorded in component-info.json. This component uses the existing CPython and FFmpeg distributions with their original notices.

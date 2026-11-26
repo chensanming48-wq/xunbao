@@ -1,0 +1,428 @@
+{
+  "version": 1,
+  "source": "AI-generated via imagegen",
+  "date": "2026-10-08",
+  "notes": "Original individual generated PNG assets. Generated alpha preserved without post-processing. No legal review claimed. Central face alpha is near-opaque (251-254), not fully opaque. Renderer should apply privacy masking under the avatar rather than rely only on alpha compositing.",
+  "avatars": [
+    {
+      "id": "avatar-01",
+      "name": "头像 01",
+      "path": "avatar-01.png",
+      "sha256": "366f8f2aadf2c1f6ebfc0853432e656bdfae225d6438c4f3d71d26791d942d6b",
+      "source": "AI-generated via imagegen",
+      "date": "2026-10-08",
+      "width": 1254,
+      "height": 1254,
+      "bytes": 1708929,
+      "cornerAlpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "centralFaceAlphaRange": [
+        251,
+        254
+      ]
+    },
+    {
+      "id": "avatar-02",
+      "name": "头像 02",
+      "path": "avatar-02.png",
+      "sha256": "f8b2790e6ec07d5e95886d991154c255e74b2686f5bbfaa73de391ea60708ab1",
+      "source": "AI-generated via imagegen",
+      "date": "2026-10-08",
+      "width": 1254,
+      "height": 1254,
+      "bytes": 1297230,
+      "cornerAlpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "centralFaceAlphaRange": [
+        252,
+        254
+      ]
+    },
+    {
+      "id": "avatar-03",
+      "name": "头像 03",
+      "path": "avatar-03.png",
+      "sha256": "3e24846ce304ebaba863753b92221c02170ffc25b8d964de8ba0fbea91b23a28",
+      "source": "AI-generated via imagegen",
+      "date": "2026-10-08",
+      "width": 1254,
+      "height": 1254,
+      "bytes": 1623841,
+      "cornerAlpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "centralFaceAlphaRange": [
+        251,
+        254
+      ]
+    },
+    {
+      "id": "avatar-04",
+      "name": "头像 04",
+      "path": "avatar-04.png",
+      "sha256": "960fa78effcc6fd25b4fe7d69a8b946ffca4f1d9e4b4e04ba398399e282b42ac",
+      "source": "AI-generated via imagegen",
+      "date": "2026-10-08",
+      "width": 1254,
+      "height": 1254,
+      "bytes": 1912077,
+      "cornerAlpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "centralFaceAlphaRange": [
+        252,
+        254
+      ]
+    },
+    {
+      "id": "avatar-05",
+      "name": "头像 05",
+      "path": "avatar-05.png",
+      "sha256": "cc4dd64d0ae68a3a20c96062a1a36a685f323d4264b910baf34f5f4776f6da44",
+      "source": "AI-generated via imagegen",
+      "date": "2026-10-08",
+      "width": 1254,
+      "height": 1254,
+      "bytes": 1547740,
+      "cornerAlpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "centralFaceAlphaRange": [
+        251,
+        254
+      ]
+    },
+    {
+      "id": "avatar-06",
+      "name": "头像 06",
+      "path": "avatar-06.png",
+      "sha256": "b0bd00fcb7ab00858d3b6a5822346ab32b8a2dd27b2c1265c716e59c7f79d34b",
+      "source": "AI-generated via imagegen",
+      "date": "2026-10-08",
+      "width": 1254,
+      "height": 1254,
+      "bytes": 1855470,
+      "cornerAlpha": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centralFaceAlphaRange": [
+        251,
+        254
+      ]
+    },
+    {
+      "id": "avatar-07",
+      "name": "头像 07",
+      "path": "avatar-07.png",
+      "sha256": "307a504e3a49a5f3ff23f4ff2e2e1f8d7a26b82679610247347d7d5093531dd0",
+      "source": "AI-generated via imagegen",
+      "date": "2026-10-08",
+      "width": 1254,
+      "height": 1254,
+      "bytes": 1603912,
+      "cornerAlpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "centralFaceAlphaRange": [
+        251,
+        254
+      ]
+    },
+    {
+      "id": "avatar-08",
+      "name": "头像 08",
+      "path": "avatar-08.png",
+      "sha256": "2da9c7012347675691192905a85d67c3a1b696cc226a6b938e4b48467f7b1022",
+      "source": "AI-generated via imagegen",
+      "date": "2026-10-08",
+      "width": 1254,
+      "height": 1254,
+      "bytes": 1956141,
+      "cornerAlpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "centralFaceAlphaRange": [
+        252,
+        254
+      ]
+    },
+    {
+      "id": "avatar-09",
+      "name": "头像 09",
+      "path": "avatar-09.png",
+      "sha256": "8f7e51a9cc6345cbac916b0005ff7efa55de63b053935bdbac305fc292dd3852",
+      "source": "AI-generated via imagegen",
+      "date": "2026-10-08",
+      "width": 1254,
+      "height": 1254,
+      "bytes": 2062032,
+      "cornerAlpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "centralFaceAlphaRange": [
+        251,
+        254
+      ]
+    },
+    {
+      "id": "avatar-10",
+      "name": "头像 10",
+      "path": "avatar-10.png",
+      "sha256": "119fbadaa38fb4ba4eac5adedc6fd28ca8336fbb410abe43f1265efef2f8820d",
+      "source": "AI-generated via imagegen",
+      "date": "2026-10-08",
+      "width": 1254,
+      "height": 1254,
+      "bytes": 1604566,
+      "cornerAlpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "centralFaceAlphaRange": [
+        252,
+        254
+      ]
+    },
+    {
+      "id": "avatar-11",
+      "name": "头像 11",
+      "path": "avatar-11.png",
+      "sha256": "6d2c700bc9f7685a0edf6f86ba494f41384ecd9bd074bd9b0e038e2911b7b0fc",
+      "source": "AI-generated via imagegen",
+      "date": "2026-10-08",
+      "width": 1254,
+      "height": 1254,
+      "bytes": 1495190,
+      "cornerAlpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "centralFaceAlphaRange": [
+        252,
+        254
+      ]
+    },
+    {
+      "id": "avatar-12",
+      "name": "头像 12",
+      "path": "avatar-12.png",
+      "sha256": "3cc73f4bfb64598b79836c0bb7dcfcd481602e2d8a2f9ae19de48c7d4e945582",
+      "source": "AI-generated via imagegen",
+      "date": "2026-10-08",
+      "width": 1254,
+      "height": 1254,
+      "bytes": 1879964,
+      "cornerAlpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "centralFaceAlphaRange": [
+        252,
+        254
+      ]
+    },
+    {
+      "id": "avatar-13",
+      "name": "头像 13",
+      "path": "avatar-13.png",
+      "sha256": "3ca6375541532b2ba2dbd0781cad094a3e19a7da5d1d0ecd2ee6ea2b0862cbbc",
+      "source": "AI-generated via imagegen",
+      "date": "2026-10-08",
+      "width": 1254,
+      "height": 1254,
+      "bytes": 1512603,
+      "cornerAlpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "centralFaceAlphaRange": [
+        252,
+        254
+      ]
+    },
+    {
+      "id": "avatar-14",
+      "name": "头像 14",
+      "path": "avatar-14.png",
+      "sha256": "5382cb83c1fc1439897755e7f96a1e9566cd1904cc5ec388e82b5b83b83d8ebf",
+      "source": "AI-generated via imagegen",
+      "date": "2026-10-08",
+      "width": 1254,
+      "height": 1254,
+      "bytes": 1861304,
+      "cornerAlpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "centralFaceAlphaRange": [
+        251,
+        254
+      ]
+    },
+    {
+      "id": "avatar-15",
+      "name": "头像 15",
+      "path": "avatar-15.png",
+      "sha256": "0f1532dccb64d348e1701aa9270b23f92fcf34677a6d217735382a2ae76f85e6",
+      "source": "AI-generated via imagegen",
+      "date": "2026-10-08",
+      "width": 1254,
+      "height": 1254,
+      "bytes": 1908895,
+      "cornerAlpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "centralFaceAlphaRange": [
+        251,
+        254
+      ]
+    },
+    {
+      "id": "avatar-16",
+      "name": "头像 16",
+      "path": "avatar-16.png",
+      "sha256": "56590f9025d8c7fd4d833d059b8a595f72d550a6c4d5485bc605a2fb190d5906",
+      "source": "AI-generated via imagegen",
+      "date": "2026-10-08",
+      "width": 1254,
+      "height": 1254,
+      "bytes": 1711461,
+      "cornerAlpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "centralFaceAlphaRange": [
+        251,
+        254
+      ]
+    },
+    {
+      "id": "avatar-17",
+      "name": "头像 17",
+      "path": "avatar-17.png",
+      "sha256": "2fe27f32d4626895d9a12c1d29288ab41913891e678bf4fd401db6defabba085",
+      "source": "AI-generated via imagegen",
+      "date": "2026-10-08",
+      "width": 1254,
+      "height": 1254,
+      "bytes": 1446734,
+      "cornerAlpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "centralFaceAlphaRange": [
+        252,
+        254
+      ]
+    },
+    {
+      "id": "avatar-18",
+      "name": "头像 18",
+      "path": "avatar-18.png",
+      "sha256": "8c043d3aed57b9af560295458b127f946ed7d3d272693a64439911d390886f23",
+      "source": "AI-generated via imagegen",
+      "date": "2026-10-08",
+      "width": 1254,
+      "height": 1254,
+      "bytes": 2111372,
+      "cornerAlpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "centralFaceAlphaRange": [
+        251,
+        254
+      ]
+    },
+    {
+      "id": "avatar-19",
+      "name": "头像 19",
+      "path": "avatar-19.png",
+      "sha256": "8db7a3a6d347c67428e0c827a02f48b0d5c2cc8ee09820d50de2db6da9710b1f",
+      "source": "AI-generated via imagegen",
+      "date": "2026-10-08",
+      "width": 1254,
+      "height": 1254,
+      "bytes": 1586163,
+      "cornerAlpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "centralFaceAlphaRange": [
+        251,
+        254
+      ]
+    },
+    {
+      "id": "avatar-20",
+      "name": "头像 20",
+      "path": "avatar-20.png",
+      "sha256": "94339658a712fed28abdef16e8c0e142910714f2cbc8bf6814ba84cee3347a83",
+      "source": "AI-generated via imagegen",
+      "date": "2026-10-08",
+      "width": 1254,
+      "height": 1254,
+      "bytes": 1690804,
+      "cornerAlpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "centralFaceAlphaRange": [
+        251,
+        254
+      ]
+    }
+  ]
+}

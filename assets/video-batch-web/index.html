@@ -1,0 +1,90 @@
+﻿<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://face-mask.chuangbao.local; style-src 'self' https://face-mask.chuangbao.local; img-src 'self' https://video-batch-media.chuangbao.local data:; media-src 'self' https://video-batch-media.chuangbao.local https://video-batch-source.chuangbao.local; object-src 'none'; base-uri 'none'"><title>视频裂变</title><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="https://face-mask.chuangbao.local/ui.css?v=20261008"></head>
+<body><main class="studio">
+<header class="page-header"><div><h1>视频裂变</h1><p>去重处理与比例适配，一次生成多个版本。</p></div><div class="header-actions"><button id="history">处理记录</button></div></header>
+<div class="workspace">
+<div class="settings-column">
+<section class="card source-card"><header class="section-header"><h2>源视频 <span id="sourceCount">0 个</span></h2><nav id="sourceNavigation" class="source-navigation" aria-label="浏览素材" hidden><button id="sourceBack" aria-label="上一组素材">‹</button><button id="sourceForward" aria-label="下一组素材">›</button></nav></header><button id="add" class="source-upload"><span class="upload-symbol"><span class="control-icon icon-plus" aria-hidden="true"></span></span><strong>导入主视频和补充素材</strong><span>上传后将按素材顺序组合生成多条混剪成片</span></button><div id="sourceStrip" class="source-strip" hidden><div id="items" class="source-cards" role="group" aria-label="已导入视频"></div><button id="addMore" class="source-add-more" aria-label="继续导入视频" title="继续导入视频"><span class="control-icon icon-plus" aria-hidden="true"></span></button></div></section>
+<section class="card settings-card" aria-label="处理设置"><div class="settings-heading"><h2>处理设置</h2></div>
+<div class="processing-fields"><label for="gpu">显卡加速</label><select id="gpu" aria-label="显卡加速"><option value="auto">是</option><option value="cpu">否</option></select><label for="mode">处理方式</label><select id="mode" aria-label="处理方式"><option value="dedup">裂变去重</option><option value="ratio">调整比例</option></select></div>
+<div class="processing-fields"><label for="encodingSpeed">编码速度</label><select id="encodingSpeed" aria-label="编码速度" aria-describedby="encodingSpeedHint"><option value="quality">标准</option><option value="speed">快速</option></select></div>
+<p id="encodingSpeedHint" class="encoding-speed-hint">快速模式可缩短编码时间，文件体积和画质可能有所变化；不改变人脸检测设置。</p>
+<section class="framing" id="framingPanel" aria-label="输出画面"><label>视频比例</label><div class="ratios" role="group" aria-label="视频比例"><button data-setting="Ratio" data-value="source"><b>原比例</b><small>跟随素材</small></button><button data-setting="Ratio" data-value="9:16"><b>9:16</b><small>竖屏</small></button><button data-setting="Ratio" data-value="16:9"><b>16:9</b><small>横屏</small></button><button data-setting="Ratio" data-value="1:1"><b>1:1</b><small>方形</small></button><button data-setting="Ratio" data-value="4:3"><b>4:3</b><small>横屏</small></button><button data-setting="Ratio" data-value="3:4"><b>3:4</b><small>竖屏</small></button></div>
+<label>画面适配</label><div class="fit-options"><button data-setting="Fit" data-value="contain"><em class="recommend-badge">推荐</em><strong>完整保留画面</strong><small>完整显示，空白区域用模糊背景填充。</small></button><button data-setting="Fit" data-value="cover"><strong>居中铺满裁切</strong><small>裁去边缘，画面铺满目标比例。</small></button></div></section>
+<div class="extra-settings-card" aria-label="裂变参数与人脸遮挡">
+
+<div class="copies-settings">
+<div class="copy-count-row" role="group" aria-label="生成数量">
+<label for="copies">每个视频生成</label><div class="stepper"><button id="minus" aria-label="减少份数">−</button><input id="copies" aria-label="每条生成份数" aria-describedby="copiesHint" type="number" min="1" max="200" value="3"><button id="plus" aria-label="增加份数">＋</button><span>个</span></div><small id="copiesHint">可输入 1–200 个</small>
+</div>
+<details id="dedupSettings"><summary>更多参数</summary>
+<div class="two-col top-fields"><div id="dedupOptions"><label>处理强度</label><div class="segmented"><button data-setting="Strength" data-value="2" title="轻微调整画面与声音，尽量保留原有观感">标准</button><button data-setting="Strength" data-value="3" title="增加处理幅度，画面与播放节奏变化更明显">强力</button></div></div></div>
+
+</details>
+</div>
+<section id="batchFaceMask" aria-label="人脸遮挡"></section>
+</div></section>
+</div>
+<div class="right-column">
+<section class="card preview-card"><header class="section-header"><h2>效果预览</h2></header>
+<div class="preview-canvas"><div class="preview-stage"><div class="preview-empty" id="previewEmpty"><h3>先看看成片效果</h3><p>添加视频后，选择比例与适配方式，<br>生成前 6 秒的真实对比预览。</p><button id="previewAdd" class="primary">添加视频</button></div><div class="compare" id="compare" hidden><figure><figcaption>原视频</figcaption><div class="source-player"><video id="originalVideo" controls playsinline preload="auto"></video><p id="sourcePlaybackError" hidden>此格式暂不支持直接播放，可生成效果预览查看。</p></div></figure><figure id="resultFigure" hidden><figcaption id="resultCaption">处理后 · 9:16</figcaption><div class="effect-player"><div id="resultPending" class="result-pending" role="status" hidden><span class="preview-spinner" aria-hidden="true"></span><strong>正在生成效果预览…</strong><small id="resultProgress"></small></div><video id="resultVideo" playsinline preload="metadata" hidden></video></div></figure></div></div>
+</div><div class="playback" id="playback" hidden><button id="play">播放</button><input id="seek" type="range" min="0" max="1000" value="0" aria-label="预览进度"><span id="playTime">00:00 / 00:00</span><button id="fullscreen">全屏</button></div>
+<div class="preview-footer"><span id="previewHint">参数变更后，请重新生成预览。</span><details id="actualParameters" hidden><summary>实际参数</summary><p id="parameterText"></p></details><button id="preview" class="soft-primary">生成效果预览</button></div></section>
+
+</div></div>
+<div class="card bottom-bar"><section class="output-card" aria-label="输出目录"><h2><span class="output-icon"><span class="control-icon icon-folder" aria-hidden="true"></span></span>输出目录</h2><div class="output-location"><strong id="outputName">尚未选择输出目录</strong><p id="outputPath">选择保存视频的位置</p></div><button id="output"><span class="control-icon icon-folder" aria-hidden="true"></span><span>更改目录</span></button><button id="openOutput"><span class="control-icon icon-folder-open" aria-hidden="true"></span><span>打开文件夹</span></button></section>
+<footer class="run-bar"><div class="run-status"><strong id="runTitle">准备开始</strong><p id="message" role="status" aria-live="polite">正在连接本地视频引擎…</p></div><button id="cancel">取消任务</button><button id="start" class="primary">开始生成</button></footer></div>
+</main>
+
+<div id="toast" role="alert" hidden></div>
+<dialog id="exportResult" class="export-result" aria-labelledby="exportResultTitle"><h2 id="exportResultTitle">生成成功</h2><p id="exportResultMessage"></p><p id="exportResultPath"></p><div class="export-result-actions"><button id="exportResultClose">知道了</button><button id="exportResultOpen" class="primary">打开文件夹</button></div></dialog>
+<link rel="stylesheet" href="https://face-mask.chuangbao.local/component-prep.css">
+<script src="https://face-mask.chuangbao.local/component-prep.js"></script>
+<script src="select-ui.js"></script><script src="https://face-mask.chuangbao.local/ui.js?v=20261019"></script>
+<script src="app.js"></script><!-- UI icons: Lucide, https://lucide.dev
+ISC License
+
+Copyright (c) 2026 Lucide Icons and Contributors
+
+Permission to use, copy, modify, and/or distribute this software for any
+purpose with or without fee is hereby granted, provided that the above
+copyright notice and this permission notice appear in all copies.
+
+THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+
+—-
+
+The following Lucide icons are derived from the Feather project:
+
+airplay, alert-circle, alert-octagon, alert-triangle, aperture, arrow-down-circle, arrow-down-left, arrow-down-right, arrow-down, arrow-left-circle, arrow-left, arrow-right-circle, arrow-right, arrow-up-circle, arrow-up-left, arrow-up-right, arrow-up, at-sign, calendar, cast, check, chevron-down, chevron-left, chevron-right, chevron-up, chevrons-down, chevrons-left, chevrons-right, chevrons-up, circle, clipboard, clock, code, columns, command, compass, corner-down-left, corner-down-right, corner-left-down, corner-left-up, corner-right-down, corner-right-up, corner-up-left, corner-up-right, crosshair, database, divide-circle, divide-square, dollar-sign, download, external-link, feather, frown, hash, headphones, help-circle, info, italic, key, layout, life-buoy, link-2, link, loader, lock, log-in, log-out, maximize, meh, minimize, minimize-2, minus-circle, minus-square, minus, monitor, moon, more-horizontal, more-vertical, move, music, navigation-2, navigation, octagon, pause-circle, percent, plus-circle, plus-square, plus, power, radio, rss, search, server, share, shopping-bag, sidebar, smartphone, smile, square, table-2, tablet, target, terminal, trash-2, trash, triangle, tv, type, upload, x-circle, x-octagon, x-square, x, zoom-in, zoom-out
+
+The MIT License (MIT) (for the icons listed above)
+
+Copyright (c) 2013-present Cole Bemis
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+--></body></html>

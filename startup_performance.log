@@ -1,0 +1,78 @@
+2026-11-04 15:45:24.433	72fcbcb88e	1ms	process_main_entered
+2026-11-04 15:45:24.628	72fcbcb88e	196ms	startup_admission	Ready
+2026-11-04 15:45:24.628	72fcbcb88e	196ms	login_context_started
+2026-11-04 15:45:24.736	72fcbcb88e	304ms	login_window_shown
+2026-11-04 15:45:24.797	72fcbcb88e	366ms	authentication_succeeded
+2026-11-04 15:45:24.799	72fcbcb88e	368ms	main_window_constructor_started
+2026-11-04 15:45:24.811	72fcbcb88e	378ms	main_form_constructor_entered
+2026-11-04 15:45:25.156	72fcbcb88e	723ms	main_shell_built
+2026-11-04 15:45:25.216	72fcbcb88e	784ms	main_initial_account_presented
+2026-11-04 15:45:25.216	72fcbcb88e	784ms	main_form_constructor_leaving
+2026-11-04 15:45:25.216	72fcbcb88e	784ms	main_window_constructor_completed
+2026-11-04 15:45:25.346	72fcbcb88e	913ms	main_form_shown
+2026-11-04 15:45:25.350	72fcbcb88e	917ms	login_to_main_handoff_completed
+2026-11-04 15:45:25.397	72fcbcb88e	965ms	main_form_presented_after_shown
+2026-11-04 15:45:25.398	72fcbcb88e	966ms	main_window_first_frame_rendered
+2026-11-04 15:45:25.403	72fcbcb88e	971ms	startup_state_restore_queued
+2026-11-04 15:45:25.643	72fcbcb88e	1211ms	startup_background_read_completed	25ms; packetFiles=0
+2026-11-04 15:45:25.644	72fcbcb88e	1211ms	startup_state_restore_started
+2026-11-04 15:45:25.647	72fcbcb88e	1214ms	startup_break_even_settings_loaded
+2026-11-04 15:45:25.648	72fcbcb88e	1215ms	startup_plan_aliases_loaded
+2026-11-04 15:45:25.649	72fcbcb88e	1216ms	startup_roi_edit_states_loaded
+2026-11-04 15:45:25.696	72fcbcb88e	1263ms	startup_saved_sessions_loaded
+2026-11-04 15:45:25.696	72fcbcb88e	1263ms	startup_state_restore_completed	52ms
+2026-11-04 15:45:28.589	72fcbcb88e	4157ms	deferred_auto_plan_workspace_attached
+2026-11-04 15:45:28.589	72fcbcb88e	4157ms	deferred_auto_plan_workspace_created	220ms
+2026-11-04 15:45:35.384	72fcbcb88e	10951ms	main_window_closed
+2026-11-04 15:47:37.265	fb60aeaad7	0ms	process_main_entered
+2026-11-04 15:47:37.320	fb60aeaad7	55ms	startup_admission	Ready
+2026-11-04 15:47:37.320	fb60aeaad7	55ms	login_context_started
+2026-11-04 15:47:37.421	fb60aeaad7	156ms	login_window_shown
+2026-11-04 15:47:37.465	fb60aeaad7	200ms	authentication_succeeded
+2026-11-04 15:47:37.466	fb60aeaad7	202ms	main_window_constructor_started
+2026-11-04 15:47:37.477	fb60aeaad7	212ms	main_form_constructor_entered
+2026-11-04 15:47:37.761	fb60aeaad7	497ms	main_shell_built
+2026-11-04 15:47:37.823	fb60aeaad7	559ms	main_initial_account_presented
+2026-11-04 15:47:37.823	fb60aeaad7	559ms	main_form_constructor_leaving
+2026-11-04 15:47:37.823	fb60aeaad7	559ms	main_window_constructor_completed
+2026-11-04 15:47:37.961	fb60aeaad7	696ms	main_form_shown
+2026-11-04 15:47:37.964	fb60aeaad7	699ms	login_to_main_handoff_completed
+2026-11-04 15:47:37.998	fb60aeaad7	734ms	main_form_presented_after_shown
+2026-11-04 15:47:37.999	fb60aeaad7	734ms	main_window_first_frame_rendered
+2026-11-04 15:47:38.000	fb60aeaad7	736ms	startup_state_restore_queued
+2026-11-04 15:47:38.222	fb60aeaad7	958ms	startup_background_read_completed	22ms; packetFiles=2
+2026-11-04 15:47:38.223	fb60aeaad7	959ms	startup_state_restore_started
+2026-11-04 15:47:38.226	fb60aeaad7	962ms	startup_break_even_settings_loaded
+2026-11-04 15:47:38.227	fb60aeaad7	963ms	startup_plan_aliases_loaded
+2026-11-04 15:47:38.229	fb60aeaad7	964ms	startup_roi_edit_states_loaded
+2026-11-04 15:47:38.280	fb60aeaad7	1016ms	startup_saved_sessions_loaded
+2026-11-04 15:47:38.280	fb60aeaad7	1016ms	startup_state_restore_completed	57ms
+2026-11-04 15:47:40.729	fb60aeaad7	3465ms	deferred_auto_plan_workspace_attached
+2026-11-04 15:47:40.729	fb60aeaad7	3465ms	deferred_auto_plan_workspace_created	245ms
+2026-11-04 15:47:43.520	fb60aeaad7	6256ms	main_window_closed
+2026-11-04 15:47:49.617	413b99b8cd	0ms	process_main_entered
+2026-11-04 15:47:49.667	413b99b8cd	50ms	startup_admission	Ready
+2026-11-04 15:47:49.667	413b99b8cd	50ms	login_context_started
+2026-11-04 15:47:49.748	413b99b8cd	132ms	login_window_shown
+2026-11-04 15:47:49.788	413b99b8cd	171ms	authentication_succeeded
+2026-11-04 15:47:49.790	413b99b8cd	174ms	main_window_constructor_started
+2026-11-04 15:47:49.799	413b99b8cd	183ms	main_form_constructor_entered
+2026-11-04 15:47:50.081	413b99b8cd	465ms	main_shell_built
+2026-11-04 15:47:50.212	413b99b8cd	595ms	main_initial_account_presented
+2026-11-04 15:47:50.212	413b99b8cd	595ms	main_form_constructor_leaving
+2026-11-04 15:47:50.212	413b99b8cd	595ms	main_window_constructor_completed
+2026-11-04 15:47:50.373	413b99b8cd	757ms	main_form_shown
+2026-11-04 15:47:50.377	413b99b8cd	760ms	login_to_main_handoff_completed
+2026-11-04 15:47:50.413	413b99b8cd	797ms	main_form_presented_after_shown
+2026-11-04 15:47:50.414	413b99b8cd	798ms	main_window_first_frame_rendered
+2026-11-04 15:47:50.419	413b99b8cd	803ms	startup_state_restore_queued
+2026-11-04 15:47:50.632	413b99b8cd	1016ms	startup_background_read_completed	24ms; packetFiles=2
+2026-11-04 15:47:50.634	413b99b8cd	1018ms	startup_state_restore_started
+2026-11-04 15:47:50.636	413b99b8cd	1020ms	startup_break_even_settings_loaded
+2026-11-04 15:47:50.637	413b99b8cd	1021ms	startup_plan_aliases_loaded
+2026-11-04 15:47:50.638	413b99b8cd	1022ms	startup_roi_edit_states_loaded
+2026-11-04 15:47:50.689	413b99b8cd	1073ms	startup_saved_sessions_loaded
+2026-11-04 15:47:50.689	413b99b8cd	1073ms	startup_state_restore_completed	55ms
+2026-11-04 15:47:53.142	413b99b8cd	3525ms	deferred_auto_plan_workspace_attached
+2026-11-04 15:47:53.142	413b99b8cd	3525ms	deferred_auto_plan_workspace_created	244ms
+2026-11-04 15:47:53.460	413b99b8cd	3843ms	main_window_closed

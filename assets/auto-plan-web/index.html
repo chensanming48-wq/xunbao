@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: https://auto-plan-data.chuangbao.local; style-src 'self'; script-src 'self'; connect-src 'none'; object-src 'none'; frame-src 'none'; base-uri 'none'; form-action 'none'">
+  <title>自动创建千川计划</title>
+  <link rel="stylesheet" href="styles.css?v=20261006-v155-layout">
+</head>
+<body>
+  <div class="app-shell" id="appShell">
+    <header class="page-header">
+      <div class="title-block">
+        <div class="title-line">
+          <h1>自动创建千川计划</h1>
+          <span class="status-pill waiting" id="loginPill" hidden><span class="status-dot"></span><span id="loginText">千川登录待验证</span></span>
+        </div>
+        
+      </div>
+      <div class="header-actions">
+        <button class="button primary" type="button" id="syncProductsButton"><span class="button-icon" data-icon="refresh"></span><span class="sync-button-text">立即同步商品</span></button>
+        <button class="button secondary" type="button" id="syncPlanStatusesButton" title="只刷新千川计划占用，不重新下载商品"><span class="button-icon" data-icon="refresh"></span><span class="plan-sync-button-text">刷新计划状态</span></button>
+        <button class="button secondary" type="button" id="checkLoginButton"><span class="button-icon" data-icon="shield"></span>检查千川登录</button>
+      </div>
+    </header>
+
+    <main class="workspace-main">
+      <div class="workspace-primary">
+        <section class="metric-grid" aria-label="计划统计">
+          <div class="store-switch-wrap">
+            <button class="metric-card store-card store-switch-card" type="button" id="storeSwitchButton" aria-haspopup="listbox" aria-expanded="false" aria-controls="storeOptionList">
+              <span class="metric-icon blue" data-icon="store"></span>
+              <span class="metric-copy"><span>当前投放账户</span><strong id="metricStore">请先到千川账户页登录</strong><small id="metricStoreHint">请先登录千川账户</small></span>
+              <span class="store-switch-affordance"><span>切换账户</span><span class="store-switch-chevron" data-icon="chevron-up"></span></span>
+            </button>
+            <div class="store-login-actions">
+              <button class="button secondary" type="button" id="loginShopButton">切换店铺</button>
+            </div>
+            <div class="store-menu" id="storeMenu" hidden>
+              <div class="store-menu-heading"><strong>切换千川账户</strong><span id="storeLoginCount">0 个已登录</span></div>
+              <div class="store-option-list" id="storeOptionList" role="listbox" aria-label="已登录千川账户"></div>
+            </div>
+          </div>
+          <article class="metric-card">
+            <span class="metric-icon blue" data-icon="package"></span>
+            <div class="metric-copy"><span>商品总数</span><strong id="metricTotal">0</strong></div>
+          </article>
+          <article class="metric-card">
+            <span class="metric-icon green" data-icon="check-circle"></span>
+            <div class="metric-copy"><span>可创建</span><strong class="green-text" id="metricEligible">0</strong></div>
+          </article>
+        </section>
+
+        <section class="panel catalog-panel">
+          <div class="panel-heading catalog-heading">
+            <div><h2>商品选择</h2><span hidden id="selectionSummary">已选择 0 / 0 个商品（本页 0 个）</span></div>
+            <button class="button secondary clear-selection-button" type="button" id="clearSelectionButton" disabled title="取消所有页已勾选的商品">清空选择</button>
+          </div>
+          <section class="grouping-controls" aria-label="计划创建方式">
+            <div class="grouping-mode"><span>创建方式</span><div class="grouping-buttons" role="group" aria-label="选择创建方式">
+              <button type="button" data-combine="false" aria-pressed="true" aria-describedby="groupingHint"><span class="grouping-button-icon" data-icon="package" aria-hidden="true"></span><span>每品单独建计划</span></button>
+              <button type="button" data-combine="true" aria-pressed="false" aria-describedby="groupingHint"><span class="grouping-button-icon" data-icon="list" aria-hidden="true"></span><span>多商品合建计划</span></button>
+            </div><label class="product-search"><span data-icon="search" aria-hidden="true"></span><input id="productSearch" type="search" autocomplete="off" placeholder="搜索商品名称 / ID" aria-label="搜索商品名称或 ID"></label></div>
+            <p id="groupingHint" aria-live="polite">每款商品独立计划、独立预算</p>
+            <div id="groupingProducts" class="grouping-products" hidden aria-label="本组合建商品"></div>
+          </section>
+          <div class="filter-tabs" id="filterTabs" aria-label="商品计划状态筛选"></div>
+          <p id="hiddenWarehouseNotice" class="hidden-warehouse-notice" hidden></p>
+
+          <div class="catalog-notice"><span data-icon="info"></span><span id="catalogStatus">支持控成本、放量与乘方投放；已有任意千川计划的商品会自动跳过</span></div>
+          <div class="table-frame" tabindex="0" role="region" aria-label="商品列表，可横向和纵向滚动">
+            <table class="product-table">
+              <thead><tr><th class="check-column"><input id="selectPage" type="checkbox" aria-label="选择本页可创建商品"></th><th>商品</th><th>商品状态</th><th>计划状态</th><th>操作</th></tr></thead>
+              <tbody id="productRows"></tbody>
+            </table>
+            <div class="empty-state" id="productEmpty"><span data-icon="package"></span><strong>尚未读取可投商品</strong><small>请点击立即同步商品</small><button id="retryProductsButton" type="button" class="button secondary" hidden>点击重试</button></div>
+          </div>
+          <div class="table-footer">
+            <nav class="pagination" id="pagination" aria-label="商品分页"></nav>
+          </div>
+        </section>
+      </div>
+
+      <aside class="panel rules-panel" tabindex="0" aria-label="投放设置">
+        <div class="action-status" id="actionStatus" role="status" aria-live="polite"></div>
+        <div class="panel-heading"><div><h2>投放设置</h2></div></div>
+        <fieldset class="delivery-fieldset">
+          <legend class="visually-hidden">投放类型</legend>
+          <div class="delivery-options" id="deliveryOptions">
+            <button class="delivery-card" type="button" data-delivery-mode="全域投放" aria-pressed="false"><span class="radio-indicator"></span><span><strong>全域投放</strong><small>净成交ROI<wbr>控成本</small></span></button>
+            <button class="delivery-card" type="button" data-delivery-mode="放量投放" aria-pressed="false"><span class="radio-indicator"></span><span><strong>放量投放</strong><small>快速扩大跑量</small></span></button>
+            <button class="delivery-card" type="button" data-delivery-mode="乘方投放" aria-pressed="false" title="基础投放，按综合营销ROI出价"><span class="radio-indicator"></span><span><strong>乘方投放</strong><small>综合营销ROI</small></span></button>
+          </div>
+        </fieldset>
+        <div class="platform-rule" hidden><span data-icon="info"></span><span id="platformModeHint">发布前会再次校验已有计划、可投商品和计划名称</span></div>
+        <p class="write-availability" id="writeAvailability" hidden></p>
+        <div class="rule-stack" id="ruleGrid">
+          <label class="rule-row" id="combinedPlanCountRow" hidden><span>合建计划数</span><div class="prefix-input"><input data-rule="combinedPlanCount" id="combinedPlanCount" type="number" min="1" max="20" step="1" value="1"><b>个计划</b></div></label>
+          <label class="rule-row" id="plansPerProductRow"><span>每个商品</span><div class="prefix-input"><input data-rule="plansPerProduct" id="plansPerProduct" type="number" min="1" max="20" step="1" value="1"><b>个计划</b></div></label>
+          <label class="rule-row"><span id="dailyBudgetLabel">单计划日预算</span><div class="prefix-input"><em>¥</em><input data-rule="dailyBudget" id="dailyBudget" type="number" min="1" max="1000000"><b>必填</b></div></label>
+          <label class="rule-row roi-rule-row" id="roiTargetRow" hidden><span id="roiTargetLabel">净成交ROI目标</span><div class="prefix-input roi-input"><input data-rule="roiTarget" id="roiTarget" type="number" min="0.01" max="100" step="0.01"><b>必填</b></div></label>
+          <label class="rule-row"><span>投放时间</span><select data-rule="deliveryTime" id="deliveryTime"></select></label>
+          <label class="rule-row naming-row"><span>计划命名</span><input data-rule="namingRule" id="namingRule" type="text" maxlength="80" placeholder="输入自定义名称或命名规则" autocomplete="off" aria-describedby="namingHint"><small hidden id="namingHint">支持商品简称、日期、序号自动替换；批量建议保留日期和序号</small></label>
+          <label class="rule-row material-row"><span>素材方式</span><select data-rule="materialRule" id="materialRule"><option value="智能优选素材">智能优选素材</option></select></label>
+          <label class="rule-row"><span>计划状态</span><select data-rule="autoPauseAfterCreation" id="planState" aria-label="创建后暂停"><option value="true">创建后暂停</option></select></label>
+        </div>
+        <div class="preview-card" hidden>
+          <div class="preview-heading"><strong>创建汇总</strong></div>
+          <div class="preview-grid">
+            <span>已选商品<b id="previewSelected">0 个</b></span>
+            <span id="previewModeRow">投放类型<b id="previewMode">全域投放</b></span>
+            <span>将发布计划<b id="previewPlans">0 个</b></span>
+            <span id="previewBudgetRow"><span id="previewBudgetLabel">单计划日预算</span><b id="previewBudget">¥0</b></span>
+            <span class="roi-summary-row" id="previewRoiRow" hidden><span id="previewRoiLabel">净成交ROI目标</span><b id="previewRoi">—</b></span>
+            <span class="total-row"><span id="previewTotalBudgetLabel">合计日预算</span><b id="previewTotalBudget">¥0</b></span>
+            <span class="safety-row">安全保护<b id="previewProtection"><span data-icon="shield" aria-hidden="true"></span>自动暂停</b></span>
+          </div>
+        </div>
+        <div class="publish-notice" hidden><span data-icon="info"></span><span id="publishNoticeText">创建与暂停分别记录；暂停待确认时请勿重复创建</span></div>
+        <section id="batchRecovery" class="batch-recovery" hidden aria-label="上一批计划处理">
+          <p id="batchRecoveryMessage" role="status"></p>
+          <button class="button" type="button" id="recheckBatchButton">重新核对暂停状态</button>
+          <div id="manualPauseReview" hidden>
+            <label><input type="checkbox" id="manualPauseReviewed"> 我已在千川后台核对上述计划全部已暂停</label>
+            <p>仅在软件仍读不到状态时使用；人工确认不会向千川发送暂停或创建请求。</p>
+            <button class="button" type="button" id="saveManualPauseReview" disabled>我已到千川核实</button>
+          </div>
+          <p id="manualReviewNotice" hidden>本批已记录人工核对；软件尚未回读确认暂停。</p>
+        </section>
+        <div class="rule-actions">
+          <button class="button primary" type="button" id="generateButton">开始创建</button>
+          <button class="button" type="button" id="continueRemainingButton" hidden>继续剩余</button>
+          <button class="button danger-outline" type="button" id="abandonBatchButton" hidden>放弃这一批剩余</button>
+        </div>
+        <section id="abandonBatchConfirmation" class="batch-recovery" hidden>
+          <p>确认放弃本批剩余计划？只停止未发送的任务，不删除记录，也不会暂停或删除已创建的计划。暂停待确认的计划仍需到千川后台检查。</p>
+          <button class="button danger-outline" type="button" id="confirmAbandonBatch">确认放弃剩余计划</button>
+          <button class="button" type="button" id="cancelAbandonBatch">暂不放弃</button>
+        </section>
+      </aside>
+    </main>
+
+    <section class="panel task-queue" id="taskQueue">
+      <div class="queue-summary">
+        <div class="queue-title"><span class="queue-icon" data-icon="list"></span><div><h2>计划发布记录</h2></div></div>
+        <div class="queue-metrics">
+          <span class="publish-result-success" hidden><i class="green-dot"></i>已建好 <b id="queueSuccess">0</b> 个</span>
+          <span hidden><i class="red-dot"></i>没建成 <b id="queueFailed">0</b> 个</span>
+        </div>
+        <button class="button compact secondary" type="button" id="queueToggle"><span>查看记录</span><span class="chevron" data-icon="chevron-up"></span></button>
+      </div>
+      <div class="queue-detail">
+        <div class="queue-toolbar">
+          <div class="queue-filter-tabs" id="queueFilterTabs" aria-label="计划发布结果筛选">
+            <button class="queue-filter-tab active" type="button" data-queue-filter="all">全部 <b id="queueAll">0</b></button>
+            <button class="queue-filter-tab" type="button" data-queue-filter="success" hidden>已建好 <b id="queueSuccessTab">0</b></button>
+            <button class="queue-filter-tab" type="button" data-queue-filter="failed" hidden>没建成 <b id="queueFailedTab">0</b></button>
+          </div>
+          <label class="queue-search"><span data-icon="search" aria-hidden="true"></span><input id="queueSearch" type="search" autocomplete="off" placeholder="搜索商品或计划名称" aria-label="搜索商品或计划名称"></label>
+          <label class="queue-mode-filter"><select id="queueModeFilter" aria-label="筛选投放类型"><option value="all">全部投放类型</option><option value="全域投放">全域投放</option><option value="放量投放">放量投放</option><option value="乘方投放">乘方投放</option></select></label>
+        </div>
+        <p id="queueSkippedReasons" class="queue-skipped-reasons" hidden></p>
+        <div class="queue-table-frame" tabindex="0" role="region" aria-label="计划发布记录，可横向和纵向滚动">
+          <table class="queue-table"><thead><tr><th>商品 / 计划名称</th><th>投放类型</th><th>日预算</th><th>发布时间</th><th>发布结果</th><th>结果说明</th><th>操作</th></tr></thead><tbody id="queueRows"></tbody></table>
+          <div class="queue-empty" id="queueEmpty">当前店铺暂无计划发布结果</div>
+        </div>
+        <div class="queue-footer">
+          <span id="queueTotal">共 0 条记录</span>
+          <nav class="queue-pagination" id="queuePagination" aria-label="计划发布记录分页"></nav>
+        </div>
+      </div>
+    </section>
+  </div>
+  <div class="toast" id="toast" role="status"></div>
+  <script src="app.js?v=20261006-v155-layout"></script>
+</body>
+</html>
